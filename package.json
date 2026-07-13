@@ -1,0 +1,22 @@
+{
+  "name": "them",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^6.0.2",
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/cinzel": "^5.2.8",
+    "@fontsource/space-mono": "^5.2.9",
+    "@fontsource/spectral": "^5.2.8",
+    "astro": "^6.4.4"
+  }
+}

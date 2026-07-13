@@ -1,0 +1,14 @@
+---
+import Base from '../layouts/Base.astro';
+import FacePage from '../components/FacePage.astro';
+import WorksGrid from '../components/WorksGrid.astro';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Arte">
+  <FacePage title={tr('nav.arte')} lead={tr('page.arte.lead')} leadClass="lead-wide">
+    <WorksGrid />
+  </FacePage>
+</Base>

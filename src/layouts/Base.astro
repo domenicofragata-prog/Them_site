@@ -1,0 +1,96 @@
+---
+import '../styles/global.css';
+import Grain from '../components/Grain.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title = 'THEM', description = 'THEM — Domenico Fragata. Arte, suono, parola e codice come un\u2019unica ricerca.' } = Astro.props;
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+
+const site = Astro.site ?? new URL('https://themproject.tech');
+const path = Astro.url.pathname;
+const canonical = new URL(path, site);
+
+// Percorsi equivalenti nelle due lingue (IT senza prefisso, EN sotto /en/)
+const itPath = path.startsWith('/en') ? (path.replace(/^\/en/, '') || '/') : path;
+const enPath = path.startsWith('/en') ? path : ('/en' + (path === '/' ? '' : path));
+const itHref = new URL(itPath, site).href;
+const enHref = new URL(enPath, site).href;
+
+const ogImage = new URL('/og.jpg', site).href;
+const ogLocale = lang === 'en' ? 'en_US' : 'it_IT';
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="alternate" hreflang="it" href={itHref} />
+    <link rel="alternate" hreflang="en" href={enHref} />
+    <link rel="alternate" hreflang="x-default" href={itHref} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="THEM" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={ogLocale} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+  </head>
+  <body>
+    <Grain />
+    <Header />
+    <main id="top">
+      <slot />
+    </main>
+    <Footer />
+    <script>
+      // L'header resta visibile solo in cima (nella sua posizione); appena si scorre via, sparisce
+      const header = document.querySelector('header.site');
+      if (header) {
+        const update = () => {
+          if (window.scrollY > 80) header.classList.add('nav-hidden');
+          else header.classList.remove('nav-hidden');
+        };
+        update();
+        addEventListener('scroll', update, { passive: true });
+      }
+    </script>
+    <script>
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (es) => {
+            es.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('in');
+                io.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.18 }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+      } else {
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.add('in'));
+      }
+    </script>
+  </body>
+</html>

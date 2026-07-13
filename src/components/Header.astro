@@ -1,0 +1,86 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Lang } from '../i18n/ui';
+import LangToggle from './LangToggle.astro';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+// Il blog esiste solo in italiano: qualsiasi lingua rimanda a /blog/
+const url = (p: string) => getRelativeLocaleUrl(p === 'blog' ? 'it' : lang, p);
+
+const items = [
+  { slug: 'bio', label: tr('nav.bio') },
+  { slug: 'formazione', label: tr('nav.formazione') },
+  { slug: 'blog', label: tr('nav.divulgazione') },
+  { slug: 'arte', label: tr('nav.arte') },
+  { slug: 'musica', label: tr('nav.musica') },
+  { slug: 'vibe-coding', label: tr('nav.vibe') },
+];
+---
+<header class="site">
+  <a href={url('')} class="brand nav-hide-mobile" aria-label="THEM"><span class="ascii-text" aria-hidden="true">THEM</span></a>
+  <nav class="top">
+    {items.map((it) => (
+      <a href={url(it.slug)} aria-label={it.label}><span class="ascii-text" aria-hidden="true">{it.label}</span></a>
+    ))}
+    <LangToggle />
+  </nav>
+</header>
+
+<script>
+  const CHARS = '@#%&$80BMW{}<>/\\*=+8.,:;|~'.split('');
+  const rnd = () => CHARS[(Math.random() * CHARS.length) | 0];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const STEP = 90; // ms tra un cambio di carattere e l'altro, pi\u00f9 alto = pi\u00f9 lento
+
+  function scramble(el: HTMLElement, duration = 1500) {
+    const target = el.dataset.text || '';
+    const n = target.length;
+    const start = performance.now();
+    let lastStep = 0;
+    function frame(now: number) {
+      const t = now - start;
+      if (now - lastStep >= STEP || lastStep === 0) {
+        lastStep = now;
+        let out = '';
+        let done = true;
+        for (let i = 0; i < n; i++) {
+          const ch = target[i];
+          if (ch === ' ') { out += ' '; continue; }
+          const settle = (i / n) * duration * 0.7 + duration * 0.22;
+          if (t >= settle) { out += ch; }
+          else { out += rnd(); done = false; }
+        }
+        el.textContent = out;
+        if (done) { el.textContent = target; return; }
+      }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  const els = Array.from(document.querySelectorAll<HTMLElement>('.ascii-text'));
+  els.forEach((el) => { el.dataset.text = (el.textContent || '').trim(); });
+
+  if (!reduce) {
+    els.forEach((el, i) => setTimeout(() => scramble(el, 1500), 150 * i));
+
+    els.forEach((el) => {
+      const trigger = (el.closest('a') as HTMLElement) || el;
+      trigger.addEventListener('mouseenter', () => scramble(el, 900));
+    });
+
+    setInterval(() => {
+      const el = els[(Math.random() * els.length) | 0];
+      const target = el?.dataset.text || '';
+      if (!target) return;
+      const i = (Math.random() * target.length) | 0;
+      if (target[i] === ' ') return;
+      const arr = target.split('');
+      arr[i] = rnd();
+      el.textContent = arr.join('');
+      setTimeout(() => { el.textContent = el.dataset.text || target; }, 90);
+    }, 1500);
+  }
+</script>

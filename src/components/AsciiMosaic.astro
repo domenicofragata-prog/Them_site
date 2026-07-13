@@ -1,0 +1,70 @@
+---
+interface Props { words?: string[]; height?: string; seamless?: boolean; overlay?: boolean; fill?: number; }
+const { words = ['THEM', 'ARTEMIDE'], height = 'clamp(440px,68vh,720px)', seamless = false, overlay = false, fill = 0.84 } = Astro.props;
+---
+<section class:list={['codeband', { seamless, overlay }]} style={`height:${height}`}>
+  <canvas data-mosaic data-words={words.join('|')} data-fill={fill} aria-hidden="true"></canvas>
+  {seamless && <div class="codeband-fade" aria-hidden="true"></div>}
+  <slot />
+</section>
+
+<script>
+  const ART = ['#A8906A','#8A7350','#6E6F52','#9A8460','#7C6E54','#60785F','#5E4B30'];
+  const HI = '#C6AC80', INK = '#000000', DIM = '#3A332A';
+  const DENSE = '@#%&$80BMW{}<>/\\*=+8'.split('');
+  const SPARSE = '.,:;\'`-_~|/\\+'.split('');
+  const cell = 15;
+
+  function initMosaic(canvas: HTMLCanvasElement){
+    const ctx = canvas.getContext('2d')!;
+    const words = (canvas.dataset.words || 'THEM').split('|');
+    const fillFrac = parseFloat(canvas.dataset.fill || '0.84');
+    const reduceM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let wi = 0, dpr = 1, cols = 0, rows = 0, W = 0, H = 0, mask: number[] = [], chars: string[] = [], raf = 0, last = 0, acc = 0;
+
+    const pick = (i: number) => { const s = mask[i] ? DENSE : SPARSE; return s[(Math.random()*s.length)|0]; };
+    function buildMask(word: string){
+      const off = document.createElement('canvas'); off.width = cols; off.height = rows;
+      const o = off.getContext('2d')!;
+      o.fillStyle = '#000'; o.fillRect(0,0,cols,rows);
+      o.fillStyle = '#fff'; o.textAlign = 'center'; o.textBaseline = 'middle';
+      let fs = rows*0.6; o.font = `800 ${fs}px Cinzel, serif`; let g = 0;
+      while(o.measureText(word).width > cols*fillFrac && g < 60){ fs *= 0.94; o.font = `800 ${fs}px Cinzel, serif`; g++; }
+      o.fillText(word, cols/2, rows/2);
+      const d = o.getImageData(0,0,cols,rows).data;
+      mask = new Array(cols*rows);
+      for(let k=0;k<cols*rows;k++) mask[k] = d[k*4] > 90 ? 1 : 0;
+    }
+    function seed(){ chars = new Array(cols*rows); for(let k=0;k<cols*rows;k++) chars[k] = pick(k); }
+    function resize(){
+      dpr = Math.min(devicePixelRatio||1, 2); W = canvas.clientWidth; H = canvas.clientHeight;
+      canvas.width = W*dpr; canvas.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      cols = Math.ceil(W/cell); rows = Math.ceil(H/cell); buildMask(words[wi]); seed();
+    }
+    function draw(){
+      ctx.fillStyle = INK; ctx.fillRect(0,0,W,H);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for(let y=0;y<rows;y++) for(let x=0;x<cols;x++){
+        const i = y*cols+x;
+        if(mask[i]){ ctx.font = '700 14px "Space Mono", monospace';
+          ctx.fillStyle = ((x*7+y*3)%13===0) ? HI : ART[(x*3+y*5)%ART.length]; ctx.globalAlpha = .94; }
+        else { ctx.font = '400 12px "Space Mono", monospace'; ctx.fillStyle = DIM; ctx.globalAlpha = .18; }
+        ctx.fillText(chars[i], x*cell+cell/2, y*cell+cell/2);
+      }
+      ctx.globalAlpha = 1;
+    }
+    function loop(t: number){
+      const dt = t-last; last = t; acc += dt;
+      const mut = (cols*rows*0.014)|0;
+      for(let k=0;k<mut;k++){ const i = (Math.random()*chars.length)|0; chars[i] = pick(i); }
+      draw();
+      if(acc > 4600 && words.length > 1){ acc = 0; wi = (wi+1)%words.length; buildMask(words[wi]); seed(); }
+      raf = requestAnimationFrame(loop);
+    }
+    function start(){ resize(); if(reduceM){ draw(); return; } cancelAnimationFrame(raf); last = performance.now(); raf = requestAnimationFrame(loop); }
+    if(document.fonts?.ready) document.fonts.ready.then(()=>{ buildMask(words[wi]); seed(); if(reduceM) draw(); });
+    addEventListener('resize', ()=>{ resize(); if(reduceM) draw(); }, { passive: true });
+    start();
+  }
+  document.querySelectorAll<HTMLCanvasElement>('[data-mosaic]').forEach(initMosaic);
+</script>

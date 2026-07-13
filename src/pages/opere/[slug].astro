@@ -1,0 +1,49 @@
+---
+import Base from '../../layouts/Base.astro';
+import FacePage from '../../components/FacePage.astro';
+import CodeTexture from '../../components/CodeTexture.astro';
+import AsciiMosaic from '../../components/AsciiMosaic.astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Lang } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  const works = await getCollection('works');
+  return works.map((work) => ({ params: { slug: work.id }, props: { work } }));
+}
+
+const { work } = Astro.props;
+const { Content } = await render(work);
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+const url = (p: string) => getRelativeLocaleUrl(lang, p);
+
+const title = lang === 'en' ? work.data.title_en : work.data.title_it;
+const meta = [title, work.data.series, String(work.data.year)].filter(Boolean).join(' · ');
+---
+<Base title={`THEM · ${work.data.deity}`}>
+  <CodeTexture word={work.data.deity} />
+  <FacePage title={work.data.deity}>
+    <section class="prose" style="max-width:none">
+      <div class="wrap">
+        <p class="mono">{meta}</p>
+      </div>
+    </section>
+
+    {work.data.cover ? (
+      <section class="wrap" style="padding-bottom:clamp(2rem,5vh,4rem)">
+        <Image src={work.data.cover} alt={title} widths={[768, 1280, 1920]} sizes="100vw" style="width:100%;height:auto;border:1px solid var(--hair)" />
+      </section>
+    ) : (
+      <AsciiMosaic words={[work.data.deity.toUpperCase(), 'THEM']} height="clamp(360px,56vh,560px)" />
+    )}
+
+    <section class="prose">
+      <div class="wrap">
+        <Content />
+        <a href={url('arte')} class="back-link">&#8592; {tr('back')}</a>
+      </div>
+    </section>
+  </FacePage>
+</Base>

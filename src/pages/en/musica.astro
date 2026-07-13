@@ -1,0 +1,68 @@
+---
+import Base from '../../layouts/Base.astro';
+import FacePage from '../../components/FacePage.astro';
+import CodeTexture from '../../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import nataraja from '../../assets/nataraja-vedas.png';
+import godsSadlo from '../../assets/gods-sadlo.jpg';
+import { t, type Lang } from '../../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Music">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.musica')} animate={true}>
+    <section class="music-projects">
+      <div class="wrap">
+        <article class="project">
+          <div class="project-text">
+            <div class="pt-copy">
+              <h2 class="project-title" aria-label="Synthetic Vedas Vol. 1"><span class="ascii-text" aria-hidden="true">Synthetic Vedas Vol. 1</span></h2>
+              <p class="project-sub">Indian Holy Cyberpunk</p>
+              <div class="project-body">
+                <p>Synthetic Vedas is an electronic rite that brings Vedic tradition and cyberpunk culture into dialogue — two languages separated by thousands of years, here made to converse until they fuse into an alchemy of ancestral sounds and meanings. The ancient gods are evoked not as characters of a pantheon to be illustrated, but as sublime polymorphous cosmic energies, able to move through Vedic Sanskrit as much as the analog synthesizer without losing power. The mantra is code, the sonic ritual is the program that stirs dormant emotions and energies: a technological liturgy in which the algorithm takes flesh in music to give a new face to the idea of the sacred in the contemporary age. For this operation a genre category of its own was coined, Indian Holy Cyberpunk, which describes not a fusion of styles but a conceptual device: philological fidelity to the sacred text held together, without sweetening mediations, with the violence and precision of contemporary electronic sound.</p>
+                <p>The record gathers twelve tracks, built as a complete ritual arc that opens and closes on two symmetrical thresholds. Open the Gate invokes Ganesha, lord of beginnings and remover of obstacles, since no Hindu liturgy can proceed without his consent: the track grows from a whisper to a cathartic scream over the bilingual hook "open the gate", up to the metaphysical declaration of the Atharvaśīrṣa, tvameva pratyakṣaṃ tattvamasi, you are directly manifest. Closing the rite is the Mahāmṛtyuñjaya, the mantra of victory over death drawn from the Ṛgveda and taken up in the Yajurveda, translated into an ambient dissolution without metric time in which the cyberpunk code itself crumbles into granular particles while the universe is reabsorbed into the breath of Shiva, the mahāpralaya.</p>
+                <p>Between these two thresholds the tracks move through authentic, philologically verified textual sources: the hymns of the Ṛgveda dedicated to Sūrya and Indra, the Cidambara-mūrti-stotra attributed to Patañjali for the cosmic dance of Naṭarāja, the apophatic verses of the Īśā Upaniṣad, the dialogue between Krishna and Arjuna in the Bhagavad Gītā reconstructed through six dramaturgical blocks that move from the warrior's moral paralysis to the revelation of the cosmic form, the mahā-mantra Hare Krishna of the Gauḍīya Vaiṣṇava tradition, and Jayadeva's Gītagovinda for the amorous archetype of Rādhā. Kali enters the project's narrative arc in her tantric radicality as goddess of the cremation ground, without the devotional softening that Western culture has often stitched onto her; the Hare Krishna mahā-mantra itself is here restored to its origin as a Mahābhārata war cry; Rādhā remains in the erotic-mystical dimension of the twelfth-century Bengali text rather than in the edifying form with which devotional tradition has often neutralized her.</p>
+                <p>Sonically, the record holds together a coherent core of compositional choices with lateral variations that widen its range. The ceremonial Sanskrit voice remains the primary element, flanked by a cosmic vocoder that processes it without ever saturating it into total artifice.</p>
+                <p>Synthetic Vedas is the musical chapter of THEM, the transmedia art project by Domenico Fragata, which sets alongside the music the visual series Essence — typographic mosaics built with the same grammar of encounter between ancient sacred and contemporary instrument — as well as the live performances that are the natural home of this material.</p>
+              </div>
+            </div>
+            <a class="course-dl mono" href="https://soundcloud.com/them-802089407/sets/synthetic-vedas-vol-1" target="_blank" rel="noopener noreferrer">Listen to Synthetic Vedas Vol. 1 on SoundCloud &#8599;</a>
+          </div>
+          <figure class="project-img">
+            <Image src={nataraja} alt="Nataraja — Synthetic Vedas" widths={[500, 900, 1400]} sizes="(max-width:820px) 100vw, 44vw" />
+          </figure>
+        </article>
+
+        <article class="project">
+          <div class="project-text">
+            <div class="pt-copy">
+              <h2 class="project-title" aria-label="GODS"><span class="ascii-text" aria-hidden="true">GODS</span></h2>
+              <p class="project-sub">SADLO feat THEM</p>
+              <div class="project-body">
+                <p>GODS is SADLO's first album, part of the wider project "Gods of the Digital Age" in collaboration with Them Art Project and Holy Club Gallery. It was born as an exhibition exploring the union between Greco-Roman deities and artificial intelligence: Uranus, Saturn, Neptune, Pluto, Jupiter, Mercury, Artemis, Apollo, Mars and Venus reimagined as new entities, fusing classical aesthetics with codes and algorithms into a digital pantheon. The music, born from a dialogue with artificial intelligence and the deities it portrays, gives a sonic soul to the works.</p>
+                <p>The tracks are presented live in a largely improvised show, with visuals and dance interventions: a fusion of performing arts with strong visual and emotional impact.</p>
+                <p>SADLO is the musical project of photographer and artist Andrea Nose Barchi. Since 2023 he has expressed himself through digital and analog tools — synths, samples, noise, effects — used as means to reach deep inner dimensions: a practice of constant discovery and experimentation, cathartic in effect, evoking emotions and sensations and creating imaginary places of sound and atmosphere.</p>
+              </div>
+            </div>
+            <a class="course-dl mono" href="https://linktr.ee/sadlo_music" target="_blank" rel="noopener noreferrer">Listen to GODS on Linktree &#8599;</a>
+            <div class="project-links mono">
+              <a href="https://www.instagram.com/sadlo_music/" target="_blank" rel="noopener noreferrer">Instagram &#8599;</a>
+            </div>
+          </div>
+          <figure class="project-img">
+            <Image src={godsSadlo} alt="GODS — SADLO" widths={[500, 900, 1400]} sizes="(max-width:820px) 100vw, 44vw" />
+          </figure>
+        </article>
+
+        <figure class="project-video reveal">
+          <video controls preload="metadata" playsinline poster="/video/gods-live-show.jpg">
+            <source src="/video/gods-live-show.mp4" type="video/mp4" />
+          </video>
+          <figcaption class="mono">GODS · SADLO — Live show / DJ set</figcaption>
+        </figure>
+      </div>
+    </section>
+  </FacePage>
+</Base>

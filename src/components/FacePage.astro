@@ -1,0 +1,23 @@
+---
+interface Props { title: string; lead?: string; titleLines?: string[]; animate?: boolean; leadClass?: string; }
+const { title, lead, titleLines, animate = false, leadClass = '' } = Astro.props;
+const lines = titleLines ?? [title];
+---
+<section class="page-head">
+  <div class="wrap">
+    {animate ? (
+      <h1 class="title-stack" aria-label={lines.join(' ')}>
+        {lines.map((line, i) => (
+          <>
+            {i > 0 && <br />}
+            <span class="ascii-text" aria-hidden="true">{line}</span>
+          </>
+        ))}
+      </h1>
+    ) : (
+      <h1>{title}</h1>
+    )}
+    {lead && <p class:list={['lead', leadClass]}>{lead}</p>}
+  </div>
+</section>
+<slot />

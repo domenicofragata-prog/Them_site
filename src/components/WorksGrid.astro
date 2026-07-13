@@ -1,0 +1,133 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { Image } from 'astro:assets';
+import { type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const url = (p: string) => getRelativeLocaleUrl(lang, p);
+
+type W = CollectionEntry<'works'>;
+const all = await getCollection('works');
+const title = (w: W) => (lang === 'en' ? w.data.title_en : w.data.title_it);
+
+const collections = [
+  {
+    series: 'Essence',
+    name: 'Essence',
+    kicker: '2026',
+    intro_it: [
+      `Ogni opera della serie è il volto di una divinità del pantheon vedico costruito interamente con le lettere del suo mantra, ripetute e accumulate fino a definire forme, paesaggi e corpi. Quello che a distanza si riconosce come immagine, da vicino si rivela per ciò che è: lettere e suoni che si incarnano nella materia.`,
+      `Il linguaggio è il portale attraverso cui l'energia divina si fa forma. Prima della parola c'è soltanto l'indistinto, una potenza cosmica senza contorno né nome. Definire significa porre un confine, tracciare il limite entro cui qualcosa viene alla luce, e il mantra fa esattamente questo, ritaglia dall'energia indifferenziata una figura, le dà un perimetro, la chiama all'esistenza. La tesi è antica quanto il pensiero indiano sul linguaggio. Nella dottrina dello Sphota di Bhartrhari la parola non descrive una realtà già data, la fa scaturire; e prima ancora, nei Veda, Vāc è la dea-parola che nel Rig-Veda dichiara di aver generato le divinità. La forma non è un'entità separata a cui un nome venga apposto come etichetta esterna, è l'emersione stessa del suono reso visibile.`,
+      `Il titolo lavora sulla stessa soglia. Essentia, in latino, è ciò che fa essere una cosa quel che è e resta nascosto sotto l'apparenza fino a quando uno sguardo attento non lo porta alla luce, e qui quell'essenza è scritta, in lettere, dentro l'immagine, offerta a chi si avvicina abbastanza da leggerla. Lo spettatore che lo fa compie, senza saperlo, un movimento di natura iniziatica: dall'icona alla parola, dalla forma manifesta al seme sonoro che la genera.`,
+    ],
+    intro_en: [
+      `Each work in the series is the face of a deity of the Vedic pantheon, built entirely from the letters of its mantra, repeated and layered until they define forms, landscapes and bodies. What from a distance reads as an image, up close reveals itself for what it is: letters and sounds made flesh in matter.`,
+      `Language is the portal through which divine energy takes form. Before the word there is only the undifferentiated, a cosmic potency without outline or name. To define is to set a boundary, to trace the limit within which something comes to light, and this is exactly what the mantra does: it carves a figure out of undifferentiated energy, gives it a perimeter, calls it into existence. The thesis is as old as Indian thought on language. In Bhartrhari's doctrine of Sphota the word does not describe a reality already given, it makes it spring forth; and earlier still, in the Vedas, Vāc is the goddess-word who in the Rig-Veda declares that she generated the deities. Form is not a separate entity to which a name is applied as an external label; it is the very emergence of sound made visible.`,
+      `The title works on the same threshold. Essentia, in Latin, is what makes a thing what it is, and it remains hidden beneath appearance until an attentive gaze brings it to light. Here that essence is written, in letters, inside the image, offered to whoever draws close enough to read it. The viewer who does so performs, without knowing it, a movement of an initiatic nature: from the icon to the word, from manifest form to the sonic seed that generates it.`,
+    ],
+  },
+  {
+    series: 'Archetipi',
+    name: 'Archetypes',
+    kicker: 'Art Dubai, 2025',
+    intro_it: [
+      `Archetipi investiga l'essenza del simbolismo greco dando forma a figure mitologiche che incarnano le tensioni, le contraddizioni e le fragilità della condizione umana. Questi personaggi, spesso eroi e vittime allo stesso tempo, sono simboli eterni del conflitto tra destino e ribellione, memoria e oblio. Le opere si costruiscono attraverso una trama linguistica stratificata: frammenti di lingue antiche e moderne definiscono l'identità dei soggetti, e il linguaggio traccia il passaggio del mito nel tempo e tra le culture. Stampate su materiali organici come carta cotone o tela naturale, le figure riflettono il legame con il mondo vivente e la loro inevitabile deperibilità: a differenza delle divinità digitali, fredde e univoche, gli archetipi umani emanano un'energia imperfetta, fragile e vitale. Le opere di THEM sono un bug nel sistema algoritmico: una frattura che resiste all'accelerazione e invita alla lentezza, immagini da abitare più che da consumare.`,
+    ],
+    intro_en: [
+      `Archetypes explores the deepest essence of humanity by giving form to mythological figures that embody the tensions, contradictions, and fragilities of the human condition. These characters, often both heroes and victims, are timeless symbols of the eternal conflict between fate and rebellion, memory and oblivion. The works are composed through a stratified linguistic texture: fragments of human languages, both ancient and modern, shape each figure's identity, and language becomes a form of collective memory tracing the journey of myth through time and across cultures. Printed on organic materials such as cotton paper or natural canvas, the figures reflect their connection to the living world and their inevitable perishability: unlike the cold perfection of digital deities, THEM's human archetypes carry an imperfect, fragile, and vital energy. THEM's works act as a bug in the algorithmic system: a fracture that resists acceleration and invites slowness, images made to be inhabited rather than consumed.`,
+    ],
+  },
+  {
+    series: 'Gods of the Digital Age',
+    name: 'Gods of the Digital Age',
+    kicker: 'Art Dubai, 2025',
+    intro_it: [
+      `Questa serie nasce da un dialogo estetico e simbolico tra l'antichità mitologica e l'orizzonte digitale contemporaneo. Le figure raffigurate, ispirate alle divinità antiche, fondono l'ideale etereo di bellezza di Botticelli con il drammatico chiaroscuro di Caravaggio; ma la sostanza dell'immagine non è pittura, è codice HTML. Ogni volto, ogni piega, ogni sguardo è composto dallo stesso linguaggio con cui l'immagine è stata generata: il codice sorgente della sua esistenza artificiale. Queste divinità non abitano più l'Olimpo, abitano la rete, infinitamente riproducibili attraverso il calcolo, sospese tra il sacro e il simulato, tra archetipo e automazione. Chi sono i nostri dèi, oggi? Forse, senza accorgercene, siamo diventati gli antichi di un'era digitale.`,
+    ],
+    intro_en: [
+      `This series emerges from an aesthetic and symbolic dialogue between mythological antiquity and the contemporary digital horizon. The depicted figures, inspired by ancient deities, fuse Botticelli's ethereal ideal of beauty with the dramatic chiaroscuro of Caravaggio; yet the substance of the image is not paint but HTML code. Every face, every fold, every gaze is composed of the very language through which the image was generated: the source code of its artificial existence. These deities no longer dwell on Mount Olympus, they dwell in the network, infinitely reproducible through computation, suspended between the sacred and the simulated, between archetype and automation. Who are our gods today? Perhaps, without realizing it, we have become the ancients of a digital age.`,
+    ],
+  },
+  {
+    series: 'The Codes of Beauty',
+    name: 'The Codes of Beauty',
+    kicker: 'Art Dubai, 2024',
+    intro_it: [
+      `La collezione "The Codes of Beauty" esplora il rapporto tra uomo e tecnologia rappresentando esseri cibernetici nati dalla combinazione di codici, che definiscono gli standard estetici di una bellezza artificiale, spesso in contrasto con i canoni comuni. Le persone diventano dati nella rete, influenzate da intelligenze artificiali che ne orientano le decisioni. Numeri e lettere formano la struttura della realtà, condizionando le nostre scelte. Provocatoriamente, il richiamo all'arte rinascimentale suggerisce che l'"Homo Faber" abbia fallito: invece di creare automi al proprio servizio, dà vita a entità potenti che plasmano il destino umano.`,
+    ],
+    intro_en: [
+      `The collection "The Codes of Beauty" explores the relationship between humans and technology by depicting cybernetic beings created from a combination of codes, which determine the aesthetic standards of artificial beauty, often in contrast to common canons. People become data in the network, influenced by artificial intelligences that guide their decisions. Numbers and letters form the structure of reality, influencing our choices. Provocatively, the reference to Renaissance art suggests that the "Homo Faber" has failed: instead of creating automatons at his service, he is giving life to powerful entities that shape human destiny.`,
+    ],
+  },
+  {
+    series: 'Algorithm Monks',
+    name: 'Algorithm Monks',
+    kicker: 'Art Dubai, 2024',
+    intro_it: [
+      `Algorithm Monks raffigura monaci generati dai codici, entità algoritmiche. Sono le creature più devote al sistema di controllo digitale e i responsabili della creazione di nuovi modelli comportamentali e civici, fondati sui dati statistici raccolti dagli esseri umani nella rete.`,
+    ],
+    intro_en: [
+      `Algorithm Monks depicts monks created by codes that generate algorithmic entities. They are the entities most devoted to the digital control system and are responsible for creating new behavioural and civic models based on the statistical data collected by humans in the network.`,
+    ],
+  },
+];
+
+function group(series: string) {
+  const items = all.filter((w) => w.data.series === series).sort((a, b) => a.data.order - b.data.order);
+  const featured = items.find((w) => w.data.featured);
+  const rest = featured ? items.filter((w) => w.id !== featured.id) : items;
+  return { featured, rest };
+}
+---
+<section id="opere" class="works">
+  <div class="wrap">
+    {collections.map((c) => {
+      const { featured, rest } = group(c.series);
+      if (!featured && rest.length === 0) return null;
+      const intro = lang === 'en' ? c.intro_en : c.intro_it;
+      return (
+        <div class="collection">
+          <div class="sec-head reveal">
+            <h2>{c.name}</h2>
+            <span class="mono">{c.kicker}</span>
+          </div>
+
+          {intro.length > 0 && (
+            <div class="coll-intro prose prose-wide reveal">
+              {intro.map((p) => <p>{p}</p>)}
+            </div>
+          )}
+
+          <div class="grid3">
+            {rest.map((w) => (
+              <a href={url('opere/' + w.id)} class="plate reveal">
+                {w.data.cover
+                  ? <Image src={w.data.cover} alt={title(w)} class="plate-cover" style={`object-position:${w.data.focus}`} widths={[400, 768]} sizes="(max-width:820px) 100vw, 33vw" />
+                  : <div class="plate-glyphs" data-glyphs>{('<them deity="' + w.data.deity + '"/> ').repeat(40)}</div>}
+                <div class="plate-cap">
+                  <span class="pname">{w.data.deity}</span>
+                  {w.data.series === 'Essence' && <span class="wtitle">{title(w)}</span>}
+                  {w.data.feat && <span class="wfeat">{w.data.feat}</span>}
+                </div>
+              </a>
+            ))}
+          </div>
+
+          {featured && (
+            <a href={url('opere/' + featured.id)} class="featured reveal" style={featured.data.cover ? `aspect-ratio:${featured.data.cover.width}/${featured.data.cover.height}` : undefined}>
+              {featured.data.cover
+                ? <Image src={featured.data.cover} alt={title(featured)} class="plate-cover" widths={[768, 1280, 1920]} sizes="100vw" />
+                : <div class="plate-glyphs" data-glyphs>{('<them deity="' + featured.data.deity + '">{code}</them> ').repeat(24)}</div>}
+              <div class="pcap">
+                <div class="pname">{featured.data.deity}</div>
+                {featured.data.series === 'Essence' && <div class="pmeta">{title(featured)}</div>}
+                {featured.data.feat && <div class="pmeta">{featured.data.feat}</div>}
+              </div>
+            </a>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</section>

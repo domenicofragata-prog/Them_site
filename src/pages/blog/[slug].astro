@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import FacePage from '../../components/FacePage.astro';
+import CodeTexture from '../../components/CodeTexture.astro';
+import { getCollection, render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Lang } from '../../i18n/ui';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', (p) => p.data.lang === 'it' && !p.data.external);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+const url = (p: string) => getRelativeLocaleUrl(lang, p);
+const fmt = new Intl.DateTimeFormat('it-IT', { day: '2-digit', month: 'long', year: 'numeric' });
+---
+<Base title={`THEM · ${post.data.title}`}>
+  <CodeTexture word="THEM" />
+  <FacePage title={post.data.title}>
+    <section class="prose prose-wide">
+      <div class="wrap">
+        <p class="mono">{fmt.format(post.data.date)} · {tr('writing.kicker')}</p>
+        <Content />
+        <a href={url('blog')} class="back-link">&#8592; {tr('back')}</a>
+      </div>
+    </section>
+  </FacePage>
+</Base>

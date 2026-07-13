@@ -1,0 +1,6 @@
+---
+interface Props { word?: string; repeat?: number; }
+const { word = 'THEM', repeat = 2800 } = Astro.props;
+const FRAG = `<them deity="${word}"/> `;
+---
+<div class="code-texture" aria-hidden="true">{FRAG.repeat(repeat)}</div>

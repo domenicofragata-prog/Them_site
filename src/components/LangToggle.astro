@@ -1,0 +1,18 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+
+// Percorso corrente senza il prefisso di lingua, per puntare alla stessa pagina nell'altra lingua.
+let path = Astro.url.pathname;
+if (path.startsWith('/en')) path = path.slice(3) || '/';
+if (!path.startsWith('/')) path = '/' + path;
+
+const itUrl = getRelativeLocaleUrl('it', path === '/' ? '' : path.replace(/^\//, ''));
+const enUrl = getRelativeLocaleUrl('en', path === '/' ? '' : path.replace(/^\//, ''));
+---
+<span class="langtog" role="group" aria-label="Language">
+  <a href={itUrl} class={lang === 'it' ? 'on' : ''} aria-current={lang === 'it' ? 'true' : 'false'}>IT</a>
+  <a href={enUrl} class={lang === 'en' ? 'on' : ''} aria-current={lang === 'en' ? 'true' : 'false'}>EN</a>
+</span>

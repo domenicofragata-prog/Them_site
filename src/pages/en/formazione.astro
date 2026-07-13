@@ -1,0 +1,86 @@
+---
+import Base from '../../layouts/Base.astro';
+import FacePage from '../../components/FacePage.astro';
+import CodeTexture from '../../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import urano from '../../assets/urano.jpg';
+import marte from '../../assets/marte.jpg';
+import giove from '../../assets/giove.jpg';
+import { t, type Lang } from '../../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Training">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.formazione')} lead={tr('page.formazione.lead')} leadClass="lead-wide">
+    <section class="courses">
+      <div class="wrap">
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="Technoethics and philosophy of technology"><span class="ascii-text" aria-hidden="true">Technoethics and philosophy of technology</span></h2>
+            <span class="mono">Schools · Companies · Public sector</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">Beyond the screen. Technoethics and digital culture for companies and public administrations.</p>
+              <div class="course-body">
+                <p>A philosophical-formative path to navigate digital transformation consciously, a journey from Prometheus to artificial intelligence. Technology is not an external tool, it is a constitutive part of how organisations, public and private, create value and serve people.</p>
+                <p>The path rests on three pillars, organisational technoethics, the pedagogy of technics and critical professional consciousness, and on a practical philosophy methodology made of Socratic dialogue, hands-on work with the tools and professional reflection. Its foundations run through the great thinkers of technics, from Anders to Stiegler, from Flusser to Ascott.</p>
+                <p>The goal is to prepare workers to use technology in the algorithmic age consciously and responsibly. To make them capable of autonomous judgement within increasingly automated organisations. Modular format, from 4 to 16 hours, adaptable to public administrations and private companies.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/oltre-lo-schermo.pdf" download>Download the presentation &darr; <span class="ash-note">PDF · 7 MB · Italian</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={urano} alt="Uranus" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="AI for public administration and business"><span class="ascii-text" aria-hidden="true">AI for public administration and business</span></h2>
+            <span class="mono">Schools · Companies · Public sector</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">Artificial intelligence tools and prompt engineering, with a focus on the Claude ecosystem.</p>
+              <div class="course-body">
+                <p>From technoethics to operational workflows, a program that teaches how to understand, use and govern artificial intelligence in companies and public administrations. True innovation does not lie in adopting AI to simplify work, it lies in governing it with method, awareness and responsibility.</p>
+                <p>The modules combine theory, practice and consulting on real cases from the organisation: ethics and philosophy of AI, prompt engineering and LLMs, document hubs with NotebookLM and Gemini, verifiable research with Perplexity, visual content creation, workflow optimisation. At the centre is Claude understood as a complete working environment, from conversation to the agents operating on documents, spreadsheets and presentations.</p>
+                <p>Each participant leaves with usable outputs, personalised workflows, a working document hub, presentations ready for distribution, good governance practices, source verification, privacy and traceability.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/strumenti-ai-prompt-engineering.pdf" download>Download the presentation &darr; <span class="ash-note">PDF · 9 MB · Italian</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={giove} alt="Jupiter" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="AI creativity tools"><span class="ascii-text" aria-hidden="true">AI creativity tools</span></h2>
+            <span class="mono">Practical course · 20 hours · 2026</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">A lab to master the tools of generative creativity: Midjourney, Nano Banana, Veo/Flow, Runway, Suno, Gamma.</p>
+              <div class="course-body">
+                <p>Generative tools have reached a maturity that makes them an integral part of creative work: image, video, music and visual communication are now designed in dialogue with the models, not in their place. The course moves through six reference platforms in their latest versions, with a workshop approach, where 70% of the time is spent on the tools, with one's own accounts and real projects.</p>
+                <p>Six modules, from foundations to project: the foundations of the machine and the art of the prompt, image with Midjourney and Nano Banana, video with Veo inside Flow and Runway, music with Suno, communication with Gamma. One language, six tools, where the prompt is writing and the same sensibility runs through image, video and sound.</p>
+                <p>The thread running through the twenty hours is a personal project, a brand, a work, a campaign, a story: each module adds a layer to it and the last hour recomposes it into a complete micro campaign, visual, video, sound and pitch. Participants leave with a portfolio and with the materials they generated, whose rights remain their own.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/ai-creativity-tools.pdf" download>Download the presentation &darr; <span class="ash-note">PDF · 0.6 MB · Italian</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={marte} alt="Mars" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </FacePage>
+</Base>

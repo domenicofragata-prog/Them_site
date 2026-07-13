@@ -1,0 +1,34 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+// Il blog esiste solo in italiano: qualsiasi lingua rimanda a /blog/
+const url = (p: string) => getRelativeLocaleUrl(p === 'blog' ? 'it' : lang, p);
+
+const faces = [
+  { slug: 'formazione', label: tr('nav.formazione'), desc: tr('face.formazione'), meta: tr('face.formazione.meta') },
+  { slug: 'blog', label: tr('nav.divulgazione'), desc: tr('face.divulgazione'), meta: tr('face.divulgazione.meta') },
+  { slug: 'arte', label: tr('nav.arte'), desc: tr('face.arte'), meta: tr('face.arte.meta') },
+  { slug: 'musica', label: tr('nav.musica'), desc: tr('face.musica'), meta: tr('face.musica.meta') },
+  { slug: 'vibe-coding', label: tr('nav.vibe'), desc: tr('face.vibe'), meta: tr('face.vibe.meta') },
+];
+---
+<section id="volti">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <h2 aria-label={tr('faces.title')}><span class="ascii-text" aria-hidden="true">{tr('faces.title')}</span></h2>
+      <span class="mono">{tr('faces.kicker')}</span>
+    </div>
+    <div class="faces">
+      {faces.map((f) => (
+        <a href={url(f.slug)} class="face reveal" aria-label={f.label}>
+          <span class="fname"><span class="ascii-text" aria-hidden="true">{f.label}</span></span>
+          <span class="fdesc">{f.desc}</span>
+          <span class="fmeta">{f.meta} <span class="arrow">&#8594;</span></span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

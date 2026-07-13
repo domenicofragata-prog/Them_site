@@ -1,0 +1,15 @@
+:root{
+  /* palette calda campionata dall'Artemide, nessun saffron */
+  --ink:#000000;          /* fondo, nero pieno */
+  --ink-raised:#0C0C0C;   /* superfici sollevate */
+  --bone:#EDE6D8;         /* testo */
+  --bronze:#B49A72;       /* accento unico, ex oro */
+  --bronze-hi:#C6AC80;    /* colmo di luce, uso raro */
+  --umber:#8A5A30;        /* accento profondo, uso raro */
+  --ash:#7A7163;          /* etichette, didascalie, taupe caldo */
+  --hair:rgba(237,230,216,.13);
+
+  --display:'Cinzel', serif;
+  --body:'Spectral', serif;
+  --mono:'Space Mono', monospace;
+}

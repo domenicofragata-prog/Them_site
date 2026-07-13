@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import FacePage from '../components/FacePage.astro';
+import CodeTexture from '../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import domenico from '../assets/domenico.png';
+import work from '../assets/fragata-work.png';
+import monitors from '../assets/them-monitors.png';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Bio">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.bio')} lead={tr('bio.lead')}>
+    <section class="bio">
+      <div class="wrap">
+
+        <div class="bio-row">
+          <figure class="bio-img is-portrait reveal">
+            <Image src={domenico} alt="Domenico Fragata" widths={[400, 768]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+          <div class="bio-text reveal">
+            <p>Domenico Fragata, filosofo di formazione, artista, autore e comunicatore culturale, costruisce il proprio lavoro attorno alle frizioni tra linguaggio, tecnica e identità nell'epoca delle intelligenze artificiali, interrogando che cosa rimanga di umano quando percezione, memoria e immaginazione passano attraverso apparati algoritmici. La sua ricerca non separa la riflessione teorica dalla pratica: scrive, cura, insegna e produce opere che mettono alla prova, di volta in volta, le stesse domande sull'autorialità, sul sacro, sul confine tra naturale e simulato.</p>
+            <p>In ambito artistico adotta lo pseudonimo THEM, progetto con cui esplora l'autorialità diffusa e la co-creazione tra uomo e macchina, generando le proprie immagini in dialogo diretto con i sistemi di intelligenza artificiale e intrecciando codici linguistici, riferimenti mitologici e immagini sintetiche. Le serie <em>Gods of the Digital Age</em>, <em>Archetipi</em> ed <em>Essence</em> trasformano divinità e figure del mito classico e delle tradizioni spirituali in mosaici tipografici, dove il linguaggio diventa la materia stessa con cui l'icona prende corpo; la tensione che percorre tutto il progetto mette il mito e la spiritualità in cortocircuito con la creazione tecnologica, un attrito che Fragata abita invece di risolvere.</p>
+          </div>
+        </div>
+
+        <div class="bio-row reverse">
+          <div class="bio-text reveal">
+            <p>La parola scritta occupa nel suo lavoro lo stesso peso dell'immagine. Ha pubblicato due volumi dedicati ai tarocchi e alla cabala, <em>Il libro di Ermete</em>, il libro <em>Gopal</em> dedicato alla cultura orientale e <em>Visioni Sintetiche</em>, la rubrica che cura sulla rivista Artuu, spazio in cui sviluppa un dialogo continuo con i sistemi di intelligenza artificiale e ne fa un terreno di indagine critica. La sua scrittura attraversa estetica contemporanea, mito e cultura pop con la stessa naturalezza con cui le sue opere mescolano immagine, testo e codice, e trova in autori come Flusser, Stiegler, Ascott e Anders gli strumenti per pensare alla tecnica come parte integrante della nostra stessa umanità.</p>
+            <p>A completare la pratica c'è la dimensione sonora di THEM, in cui mantra e tradizioni rituali incontrano la sintesi elettronica, ulteriore versante di una ricerca che tratta l'intelligenza artificiale come materia d'artista e ne fa, insieme, oggetto di pensiero e linguaggio espressivo.</p>
+          </div>
+          <figure class="bio-img reveal">
+            <Image src={monitors} alt="THEM, installazione" widths={[500, 900]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+        </div>
+
+        <div class="bio-row">
+          <figure class="bio-img reveal">
+            <Image src={work} alt="Domenico Fragata al lavoro" widths={[400, 768]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+          <div class="bio-text reveal">
+            <p>THEM ha avuto il suo primo sviluppo significativo con la personale <em>Gods of the Digital Age, il dilemma della scelta nell'era dell'AI</em>, ospitata nel 2024 alla Sa Manifattura di Cagliari; da lì il lavoro è entrato nella programmazione internazionale, da Art Dubai Digital alla Miami Art Week 2025, mantenendo il legame con il contesto sperimentale in cui era nato. Accanto alle opere, il progetto vive di talk, installazioni e performance multisensoriali, dispositivi mobili con cui Fragata sposta la mostra dal piano dell'oggetto a quello del rito collettivo.</p>
+            <p>Dirige Holy Club, piattaforma con cui progetta e cura mostre, programmi pubblici e percorsi di formazione rivolti a istituzioni, amministrazioni e aziende. Nei suoi format didattici tiene insieme la teoria e gli strumenti operativi, dall'etica dell'intelligenza artificiale al prompt design fino alle applicazioni per la creatività e per i beni culturali, con l'obiettivo costante di un uso critico e consapevole della tecnologia, lontano tanto dall'entusiasmo acritico quanto dal rifiuto difensivo.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </FacePage>
+</Base>

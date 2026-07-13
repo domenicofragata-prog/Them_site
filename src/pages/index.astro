@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import AsciiMosaic from '../components/AsciiMosaic.astro';
+import FacesIndex from '../components/FacesIndex.astro';
+import { Image } from 'astro:assets';
+import domenico from '../assets/domenico.png';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+---
+<Base>
+  <Hero />
+
+  <section class="bio-preview">
+    <div class="wrap">
+      <div class="bio-grid">
+        <figure class="bio-portrait reveal">
+          <Image src={domenico} alt="Domenico Fragata" widths={[300, 500, 700]} sizes="(max-width:820px) 60vw, 30vw" />
+        </figure>
+        <div class="bio-statement reveal">
+          <p>{tr('about.1')}</p>
+          <p>{tr('about.2')}</p>
+          <p>{tr('about.3')}</p>
+          <a href={getRelativeLocaleUrl(lang, 'bio')} class="back-link" style="margin-top:1.6rem">{tr('bio.more')} &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FacesIndex />
+
+  <AsciiMosaic words={['THEM', 'VISIONI', 'SINTETICHE']}>
+    <a class="band-cta" href={getRelativeLocaleUrl(lang, 'blog')} aria-label={tr('blog.go')}>
+      <span class="tag2 mono">{tr('writing.kicker')}</span>
+      <span class="tag mono">{tr('blog.label')} <span class="arrow">&#8594;</span></span>
+    </a>
+  </AsciiMosaic>
+</Base>

@@ -1,0 +1,53 @@
+---
+import Base from '../../layouts/Base.astro';
+import FacePage from '../../components/FacePage.astro';
+import CodeTexture from '../../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import domenico from '../../assets/domenico.png';
+import work from '../../assets/fragata-work.png';
+import monitors from '../../assets/them-monitors.png';
+import { t, type Lang } from '../../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'en') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Bio">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.bio')} lead={tr('bio.lead')}>
+    <section class="bio">
+      <div class="wrap">
+
+        <div class="bio-row">
+          <figure class="bio-img is-portrait reveal">
+            <Image src={domenico} alt="Domenico Fragata" widths={[400, 768]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+          <div class="bio-text reveal">
+            <p>Domenico Fragata, a philosopher by training, artist, author and cultural communicator, builds his work around the frictions between language, technics and identity in the age of artificial intelligence, questioning what remains human when perception, memory and imagination pass through algorithmic apparatuses. His research does not separate theoretical reflection from practice: he writes, curates, teaches and produces works that, time and again, put to the test the same questions about authorship, the sacred, and the boundary between the natural and the simulated.</p>
+            <p>In the artistic field he adopts the pseudonym THEM, a project through which he explores distributed authorship and co-creation between human and machine, generating his own images in direct dialogue with artificial intelligence systems and weaving together linguistic codes, mythological references and synthetic images. The series <em>Gods of the Digital Age</em>, <em>Archetipi</em> and <em>Essence</em> turn deities and figures from classical myth and spiritual traditions into typographic mosaics, where language becomes the very material through which the icon takes form; the tension running through the whole project short-circuits myth and spirituality with technological creation, a friction that Fragata inhabits rather than resolves.</p>
+          </div>
+        </div>
+
+        <div class="bio-row reverse">
+          <div class="bio-text reveal">
+            <p>The written word holds the same weight as the image in his work. He has published two volumes dedicated to tarot and kabbalah, <em>Il libro di Ermete</em>, the book <em>Gopal</em> dedicated to Eastern culture, and <em>Visioni Sintetiche</em>, the column he curates for the magazine Artuu, a space in which he develops an ongoing dialogue with artificial intelligence systems and makes it a ground for critical inquiry. His writing moves through contemporary aesthetics, myth and pop culture with the same ease with which his works blend image, text and code, and finds in authors such as Flusser, Stiegler, Ascott and Anders the tools to think of technics as an integral part of our very humanity.</p>
+            <p>Completing the practice is the sonic dimension of THEM, in which mantras and ritual traditions meet electronic synthesis, a further facet of a research that treats artificial intelligence as an artist's material and makes it, at once, an object of thought and a means of expression.</p>
+          </div>
+          <figure class="bio-img reveal">
+            <Image src={monitors} alt="THEM, installation" widths={[500, 900]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+        </div>
+
+        <div class="bio-row">
+          <figure class="bio-img reveal">
+            <Image src={work} alt="Domenico Fragata at work" widths={[400, 768]} sizes="(max-width:820px) 100vw, 46vw" />
+          </figure>
+          <div class="bio-text reveal">
+            <p>THEM had its first significant development with the solo show <em>Gods of the Digital Age, the dilemma of choice in the age of AI</em>, hosted in 2024 at the Sa Manifattura in Cagliari; from there the work entered international programming, from Art Dubai Digital to Miami Art Week 2025, while keeping its bond with the experimental context in which it was born. Alongside the works, the project lives through talks, installations and multisensory performances, mobile devices with which Fragata shifts the exhibition from the plane of the object to that of collective ritual.</p>
+            <p>He directs Holy Club, a platform through which he designs and curates exhibitions, public programs and training courses for institutions, public administrations and companies. In his educational formats he holds together theory and operational tools, from the ethics of artificial intelligence to prompt design and applications for creativity and cultural heritage, with the constant aim of a critical and conscious use of technology, far from both uncritical enthusiasm and defensive rejection.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </FacePage>
+</Base>

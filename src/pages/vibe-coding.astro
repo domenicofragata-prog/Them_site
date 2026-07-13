@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import FacePage from '../components/FacePage.astro';
+import CodeTexture from '../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import { t, type Lang } from '../i18n/ui';
+import artificialBeauty from '../assets/vibe/artificial-beauty.png';
+import mosaic from '../assets/vibe/mosaic.png';
+import wavePortrait from '../assets/vibe/wave-portrait.png';
+import waveBronze from '../assets/vibe/wave-bronze.png';
+import asciiArt from '../assets/vibe/ascii-art.png';
+import wave2 from '../assets/vibe/wave-2.png';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+
+const gallery = [
+  { src: artificialBeauty, alt: 'Ritratto costruito con parole' },
+  { src: mosaic, alt: 'Mosaico tipografico' },
+  { src: wavePortrait, alt: 'Ritratto a onde sonore' },
+  { src: waveBronze, alt: 'Overlay generativo' },
+  { src: wave2, alt: 'Trama generativa' },
+  { src: asciiArt, alt: 'ASCII art' },
+];
+
+const modules = [
+  { name: 'ASCII Art', icon: '/\\', desc: 'Il cuore classico del progetto: converte qualsiasi immagine o testo in arte ASCII, con pieno controllo su densità, set di caratteri e colore. Funziona anche sui video, fotogramma per fotogramma.' },
+  { name: 'Text Mosaic', icon: 'Aa', desc: 'Ricostruisce un’immagine usando lettere e parole reali come fossero tessere di un mosaico, fondendo tipografia e ritratto.' },
+  { name: 'Emoji Mosaic', icon: ':)', desc: 'Ritratti e composizioni interamente costruiti con emoji, dove il colore e la forma nascono dalla scelta delle faccine e dei simboli.' },
+  { name: 'Barcode Portrait', icon: '|||', desc: 'Volti e immagini stilizzati come codici a barre, in un gioco tra leggibilità industriale e figura umana.' },
+  { name: 'Sound Wave Portrait', icon: '∿', desc: 'Ritratti generati a partire dalle onde sonore di un file audio: il suono diventa disegno.' },
+  { name: 'Music Mosaic', icon: '♪', desc: 'Spartiti musicali e texture fusi con le immagini, dove notazione e fotografia si intrecciano.' },
+  { name: 'Block Art', icon: '▚', desc: 'Pixel art costruita con celle ASCII colorate, a metà strada tra il retro-computing e l’arte astratta.' },
+  { name: 'Old School ASCII', icon: '>_', desc: 'Lo stile terminale e hacker degli albori, con banner tipografici e atmosfera da riga di comando.' },
+  { name: 'Flusser Tool', icon: '{ }', desc: 'Uno strumento sperimentale, ispirato al pensiero del filosofo Vilém Flusser: sono i metadati stessi della macchina a diventare l’immagine.' },
+  { name: 'Stipple Tool', icon: '∴', desc: 'Ritratti puntinisti, con un effetto quasi tridimensionale costruito accumulando migliaia di caratteri.' },
+  { name: 'Dither Tool', icon: '░', desc: 'Il dithering classico a 1 bit, punti e pattern, che riporta la grafica alle sue radici essenziali.' },
+  { name: 'Particle 3D', icon: '✦', desc: 'Animazioni particellari tridimensionali in tempo reale, dove l’arte ASCII, il puntinismo o i blocchi prendono vita e si muovono nello spazio.' },
+];
+---
+<Base title="THEM · Vibe coding">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.vibe')} animate={true}>
+    <section class="prose prose-wide"><div class="wrap">
+      <h2 aria-label="THEM Visual Tools"><span class="ascii-text" aria-hidden="true">THEM Visual Tools</span></h2>
+      <p class="vibe-sub">Uno studio di arte testuale nato dal dialogo con l’intelligenza artificiale</p>
+      <p>THEM Visual Tools è una suite creativa che trasforma immagini, video, audio e parole in arte fatta di caratteri. Non è un semplice filtro né un giocattolo da una funzione sola: è un vero e proprio laboratorio digitale, composto da dodici moduli indipendenti, ognuno con una propria estetica, una propria logica e un proprio modo di guardare il mondo e ridisegnarlo con lettere, simboli, blocchi e punti.</p>
+      <p>L’idea di fondo è semplice e antica quanto i primi terminali: tutto ciò che vediamo può essere ricostruito con il testo. Un volto, una fotografia, il ritmo di una canzone, persino i dati invisibili nascosti dentro un file possono diventare immagine. Da questa intuizione nasce una collezione di strumenti che spinge quel principio fino alle sue conseguenze più sorprendenti.</p>
+
+      <h2 aria-label="Cosa puoi fare"><span class="ascii-text" aria-hidden="true">Cosa puoi fare</span></h2>
+      <p>La suite raccoglie strumenti diversi ma coerenti tra loro, tenuti insieme da un’interfaccia unica in stile terminale, elegante e minimale.</p>
+      <div class="vibe-modules">
+        {modules.map((m) => (
+          <div class="vibe-mod">
+            <span class="vm-icon mono" aria-hidden="true">{m.icon}</span>
+            <div class="vm-text"><span class="vm-name">{m.name}</span><span class="vm-desc">{m.desc}</span></div>
+          </div>
+        ))}
+      </div>
+      <p class="vibe-more">A questo si aggiungono l’esportazione in immagine e in video, l’integrazione con modelli di intelligenza artificiale generativa per creare immagini e musica, e la possibilità di installare l’app e usarla anche offline.</p>
+
+      <div class="vibe-strip">
+        {gallery.map((g) => (
+          <Image src={g.src} alt={g.alt} widths={[400, 800]} sizes="(max-width:700px) 50vw, 33vw" />
+        ))}
+      </div>
+
+      <h2 aria-label="Il metodo: interamente costruito in vibe coding"><span class="ascii-text" aria-hidden="true">Il metodo: interamente costruito in vibe coding</span></h2>
+      <p>La cosa più particolare di questo progetto non è solo cosa fa, ma come è stato realizzato. L’intera suite è nata in vibe coding: un modo di sviluppare software radicalmente diverso da quello tradizionale.</p>
+      <p>Niente specifiche scritte a tavolino, niente diagrammi di architettura decisi in anticipo, niente documento tecnico da seguire riga per riga. Al posto di tutto questo c’è un dialogo continuo con l’intelligenza artificiale, condotto quasi a voce, come una conversazione. L’estetica e l’istinto guidano il codice, non il contrario.</p>
+      <p>È un processo più vicino al comporre musica o allo scolpire che allo scrivere software nel senso classico. Ogni modulo è emerso così: da una scintilla creativa trasformata in strumento funzionante attraverso decine di conversazioni, senza mai perdere di vista la sensazione, il vibe, che l’aveva fatto nascere. Il risultato è un’applicazione tecnicamente ricca che però conserva la leggerezza e la libertà di un progetto costruito seguendo il piacere di scoprire cosa succede se.</p>
+      <p class="vibe-manifesto">Questo lavoro è, in un certo senso, un piccolo manifesto: la dimostrazione che oggi la distanza tra un’idea creativa e la sua realizzazione può ridursi quasi a zero, e che programmare può diventare un gesto tanto intuitivo e artistico quanto disegnare o suonare.</p>
+    </div></section>
+  </FacePage>
+</Base>

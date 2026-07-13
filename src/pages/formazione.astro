@@ -1,0 +1,86 @@
+---
+import Base from '../layouts/Base.astro';
+import FacePage from '../components/FacePage.astro';
+import CodeTexture from '../components/CodeTexture.astro';
+import { Image } from 'astro:assets';
+import urano from '../assets/urano.jpg';
+import marte from '../assets/marte.jpg';
+import giove from '../assets/giove.jpg';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+---
+<Base title="THEM · Formazione">
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.formazione')} lead={tr('page.formazione.lead')} leadClass="lead-wide">
+    <section class="courses">
+      <div class="wrap">
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="Tecnoetica e filosofia della tecnica"><span class="ascii-text" aria-hidden="true">Tecnoetica e filosofia della tecnica</span></h2>
+            <span class="mono">Scuole · Aziende · PA</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">Oltre lo schermo. Tecnoetica e cultura digitale per aziende e pubbliche amministrazioni.</p>
+              <div class="course-body">
+                <p>Un percorso filosofico-formativo per navigare consapevolmente la trasformazione digitale, un viaggio da Prometeo all'intelligenza artificiale. La tecnologia non è uno strumento esterno, è parte costitutiva del modo in cui le organizzazioni, pubbliche e private, creano valore e servono le persone.</p>
+                <p>Il percorso si fonda su tre pilastri, la tecnoetica organizzativa, la pedagogia della tecnica e la coscienza critica professionale, e su una metodologia di filosofia pratica fatta di dialogo socratico, esperienze concrete sugli strumenti e riflessione professionale. I fondamenti attraversano i grandi pensatori della tecnica, da Anders a Stiegler, da Flusser ad Ascott.</p>
+                <p>L'obiettivo è preparare i lavoratori a usare la tecnologia nell'epoca algoritmica in modo consapevole e responsabile. Renderli capaci di giudizio autonomo dentro organizzazioni sempre più automatizzate. Formato modulare, da 4 a 16 ore, adattabile a PA e aziende private.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/oltre-lo-schermo.pdf" download>Scarica la presentazione &darr; <span class="ash-note">PDF · 7 MB</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={urano} alt="Urano" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="AI per le PA e le imprese"><span class="ascii-text" aria-hidden="true">AI per le PA e le imprese</span></h2>
+            <span class="mono">Scuole · Aziende · PA</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">Strumenti di intelligenza artificiale e prompt engineering, con focus sull'ecosistema Claude.</p>
+              <div class="course-body">
+                <p>Dalla tecnoetica ai workflow operativi, un programma che insegna a comprendere, utilizzare e governare l'intelligenza artificiale nel contesto aziendale e della pubblica amministrazione. La vera innovazione non sta nell'adottare l'AI per semplificare il lavoro, sta nel saperla governare con metodo, consapevolezza e responsabilità.</p>
+                <p>I moduli combinano teoria, pratica e consulenza su casi reali dell'organizzazione: etica e filosofia dell'AI, prompt engineering e LLM, hub documentali con NotebookLM e Gemini, ricerca verificabile con Perplexity, creazione di contenuti visivi, ottimizzazione dei flussi di lavoro. Al centro c'è Claude inteso come ambiente di lavoro completo, dalla conversazione agli agenti che operano su documenti, fogli e presentazioni.</p>
+                <p>Ogni partecipante esce con output spendibili, workflow personalizzati, un hub documentale funzionante, presentazioni pronte per la diffusione, buone pratiche di governance, verifica delle fonti, privacy e tracciabilità.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/strumenti-ai-prompt-engineering.pdf" download>Scarica la presentazione &darr; <span class="ash-note">PDF · 9 MB</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={giove} alt="Giove" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+        <article class="course reveal">
+          <div class="course-head">
+            <h2 aria-label="AI creativity tools"><span class="ascii-text" aria-hidden="true">AI creativity tools</span></h2>
+            <span class="mono">Corso pratico · 20 ore · 2026</span>
+          </div>
+          <div class="course-grid">
+            <div class="course-text">
+              <p class="course-sub">Un laboratorio per padroneggiare gli strumenti della creatività generativa: Midjourney, Nano Banana, Veo/Flow, Runway, Suno, Gamma.</p>
+              <div class="course-body">
+                <p>Gli strumenti generativi hanno raggiunto una maturità che li rende parte integrante del lavoro creativo: immagine, video, musica e comunicazione visiva oggi si progettano in dialogo con i modelli, non al posto loro. Il corso attraversa sei piattaforme di riferimento nelle versioni più recenti, con un approccio da bottega, dove il 70% del tempo si passa sugli strumenti, con account propri e progetti reali.</p>
+                <p>Sei moduli, dal fondamento al progetto: i fondamenti della macchina e l'arte del prompt, l'immagine con Midjourney e Nano Banana, il video con Veo dentro Flow e Runway, la musica con Suno, la comunicazione con Gamma. Un linguaggio, sei strumenti, dove il prompt è scrittura e la stessa sensibilità attraversa immagine, video e suono.</p>
+                <p>Il filo che attraversa le venti ore è un progetto personale, un brand, un'opera, una campagna, un racconto: ogni modulo vi aggiunge un livello e l'ultima ora lo ricompone in una micro campagna completa, visual, video, suono e pitch. Si esce con un portfolio e con i materiali generati, di cui i diritti restano propri.</p>
+              </div>
+              <a class="course-dl mono" href="/formazione/ai-creativity-tools.pdf" download>Scarica la presentazione &darr; <span class="ash-note">PDF · 0,6 MB</span></a>
+            </div>
+            <figure class="course-img">
+              <Image src={marte} alt="Marte" widths={[400, 768, 1100]} sizes="(max-width:820px) 100vw, 40vw" />
+            </figure>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </FacePage>
+</Base>
