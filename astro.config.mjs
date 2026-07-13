@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://themproject.tech',
+  site: 'https://themproject.ai',
   integrations: [mdx(), sitemap()],
   i18n: {
     defaultLocale: 'it',

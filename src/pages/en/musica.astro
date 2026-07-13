@@ -10,7 +10,7 @@ import { t, type Lang } from '../../i18n/ui';
 const lang = (Astro.currentLocale ?? 'en') as Lang;
 const tr = t(lang);
 ---
-<Base title="THEM · Music">
+<Base title="THEM · Music" description={tr('page.musica.lead')}>
   <CodeTexture word="THEM" />
   <FacePage title={tr('nav.musica')} animate={true}>
     <section class="music-projects">

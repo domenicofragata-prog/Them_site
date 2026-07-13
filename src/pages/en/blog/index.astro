@@ -20,7 +20,7 @@ const sections = order
   .map((cat) => ({ cat, items: posts.filter((p) => p.data.category === cat) }))
   .filter((s) => s.items.length > 0);
 ---
-<Base title="THEM · blog">
+<Base title="THEM · blog" description={tr('blog.lead')}>
   <CodeTexture word="THEM" />
   <FacePage title={tr('blog.title')} titleLines={[tr('writing.kicker'), 'blog']} animate={true} lead={tr('blog.lead')} leadClass="lead-wide">
     <section class="prose" style="max-width:none">

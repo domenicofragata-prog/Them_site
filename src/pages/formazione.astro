@@ -11,7 +11,7 @@ import { t, type Lang } from '../i18n/ui';
 const lang = (Astro.currentLocale ?? 'it') as Lang;
 const tr = t(lang);
 ---
-<Base title="THEM · Formazione">
+<Base title="THEM · Formazione" description={tr('page.formazione.lead')}>
   <CodeTexture word="THEM" />
   <FacePage title={tr('nav.formazione')} lead={tr('page.formazione.lead')} leadClass="lead-wide">
     <section class="courses">

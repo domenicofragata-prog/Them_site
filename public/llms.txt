@@ -1,0 +1,21 @@
+# THEM — Domenico Fragata
+
+> THEM is the artistic-philosophical project of Domenico Fragata, artist and philosopher working at the meeting point between sacred traditions and machine languages. The work treats code, like the mantra, as a form of operative word capable of generating what it names. THEM spans typographic mosaics and ASCII art, electronic music, essays on the philosophy of technology, teaching, and tools built through "vibe coding". Site is bilingual (Italian default, English under /en/).
+
+## About
+- Domenico Fragata is a philosopher, writer and cultural communicator. His art explores the creative power of language and the relationship between consciousness, nature and the sacred.
+- The signature medium is the "typographic mosaic" (mosaico tipografico): images and portraits built entirely from letters, mantras and characters.
+- Exhibitions include Gods of the Digital Age, Art Dubai 2025, and Miami Art Week.
+
+## Sections
+- [Bio](https://themproject.ai/bio): biography, background and practice of Domenico Fragata.
+- [Arte / Art](https://themproject.ai/arte): the artworks — series Essence, Archetipi, The Codes of Beauty, Algorithm Monks, Gods of the Digital Age. Typographic mosaics where the name of a deity becomes its image.
+- [Musica / Music](https://themproject.ai/musica): electronic ritual music projects, including Synthetic Vedas Vol. 1 and GODS (SADLO feat. THEM).
+- [Formazione / Training](https://themproject.ai/formazione): teaching artificial intelligence through culture and image — techno-ethics and philosophy of technology, AI creativity tools, AI for public administration and business.
+- [Divulgazione / Writing](https://themproject.ai/blog): essays and articles where the philosophy of technology meets symbolism and myth, from the column "Visioni Sintetiche".
+- [Vibe coding](https://themproject.ai/vibe-coding): interfaces and tools born from dialogue with the machine, including THEM Visual Tools — a suite that turns images, video, audio and words into character-based art.
+
+## Contact
+- Email: domenico.fragata@gmail.com
+- Instagram: https://www.instagram.com/them_artproject/
+- Website: https://themproject.ai

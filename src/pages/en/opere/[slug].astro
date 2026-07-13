@@ -21,8 +21,25 @@ const url = (p: string) => getRelativeLocaleUrl(lang, p);
 
 const title = lang === 'en' ? work.data.title_en : work.data.title_it;
 const meta = [title, work.data.series, String(work.data.year)].filter(Boolean).join(' · ');
+
+const site = Astro.site!;
+const abs = new URL(Astro.url.pathname, site).href;
+const desc = lang === 'en'
+  ? `${work.data.deity} — ${title}. ${work.data.series} series, ${work.data.year}. Typographic portrait by THEM (Domenico Fragata).`
+  : `${work.data.deity} — ${title}. Serie ${work.data.series}, ${work.data.year}. Ritratto tipografico di THEM (Domenico Fragata).`;
+const artworkLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VisualArtwork',
+  name: `${work.data.deity} — ${title}`,
+  artform: lang === 'en' ? 'Typographic mosaic' : 'Mosaico tipografico',
+  dateCreated: String(work.data.year),
+  isPartOf: work.data.series,
+  url: abs,
+  creator: { '@type': 'Person', '@id': `${site.origin}/#person`, name: 'Domenico Fragata' },
+  ...(work.data.cover ? { image: new URL(work.data.cover.src, site).href } : {}),
+};
 ---
-<Base title={`THEM · ${work.data.deity}`}>
+<Base title={`THEM · ${work.data.deity}`} description={desc} jsonld={artworkLd}>
   <CodeTexture word={work.data.deity} />
   <FacePage title={work.data.deity}>
     <section class="prose" style="max-width:none">

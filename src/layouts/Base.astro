@@ -8,14 +8,36 @@ import type { Lang } from '../i18n/ui';
 interface Props {
   title?: string;
   description?: string;
+  jsonld?: Record<string, unknown> | Record<string, unknown>[];
 }
 
-const { title = 'THEM', description = 'THEM — Domenico Fragata. Arte, suono, parola e codice come un\u2019unica ricerca.' } = Astro.props;
+const { title = 'THEM', description = 'THEM — Domenico Fragata. Arte, suono, parola e codice come un\u2019unica ricerca.', jsonld } = Astro.props;
 const lang = (Astro.currentLocale ?? 'it') as Lang;
 
-const site = Astro.site ?? new URL('https://themproject.tech');
+const site = Astro.site ?? new URL('https://themproject.ai');
 const path = Astro.url.pathname;
 const canonical = new URL(path, site);
+const origin = site.origin;
+
+// Grafo di entità del sito (aiuta motori di ricerca e AI a capire chi/cosa è THEM)
+const personDesc = lang === 'en'
+  ? 'Domenico Fragata is an artist and philosopher working at the meeting point between sacred traditions and machine languages, under the project THEM.'
+  : 'Domenico Fragata è un artista e filosofo che lavora sul punto di contatto tra le tradizioni sacre e i linguaggi delle macchine, con il progetto THEM.';
+
+const siteGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'THEM', inLanguage: lang, publisher: { '@id': `${origin}/#person` } },
+    {
+      '@type': 'Person', '@id': `${origin}/#person`, name: 'Domenico Fragata', alternateName: 'THEM',
+      url: `${origin}/`, jobTitle: lang === 'en' ? 'Artist, philosopher' : 'Artista, filosofo',
+      description: personDesc, image: `${origin}/og.jpg`,
+      sameAs: ['https://www.instagram.com/them_artproject/', 'https://www.artuu.it/author/domenico-fragata/'],
+    },
+    { '@type': 'Organization', '@id': `${origin}/#org`, name: 'THEM', url: `${origin}/`, logo: `${origin}/og.jpg`, founder: { '@id': `${origin}/#person` } },
+  ],
+};
+const extraJsonld = jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [];
 
 // Percorsi equivalenti nelle due lingue (IT senza prefisso, EN sotto /en/)
 const itPath = path.startsWith('/en') ? (path.replace(/^\/en/, '') || '/') : path;
@@ -53,6 +75,11 @@ const ogLocale = lang === 'en' ? 'en_US' : 'it_IT';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(siteGraph)} />
+    {extraJsonld.map((data) => (
+      <script type="application/ld+json" set:html={JSON.stringify(data)} />
+    ))}
   </head>
   <body>
     <Grain />

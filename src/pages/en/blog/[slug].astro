@@ -17,8 +17,22 @@ const lang = (Astro.currentLocale ?? 'en') as Lang;
 const tr = t(lang);
 const url = (p: string) => getRelativeLocaleUrl(lang, p);
 const fmt = new Intl.DateTimeFormat('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+
+const site = Astro.site!;
+const abs = new URL(Astro.url.pathname, site).href;
+const articleLd = {
+  '@context': 'https://schema.org',
+  '@type': post.data.external ? 'Article' : 'BlogPosting',
+  headline: post.data.title,
+  description: post.data.excerpt,
+  datePublished: post.data.date.toISOString(),
+  inLanguage: lang,
+  url: abs,
+  author: { '@type': 'Person', '@id': `${site.origin}/#person`, name: 'Domenico Fragata' },
+  publisher: { '@id': `${site.origin}/#org` },
+};
 ---
-<Base title={`THEM · ${post.data.title}`}>
+<Base title={`THEM · ${post.data.title}`} description={post.data.excerpt} jsonld={articleLd}>
   <CodeTexture word="THEM" />
   <FacePage title={post.data.title}>
     <section class="prose prose-wide">
