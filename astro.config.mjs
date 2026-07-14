@@ -8,6 +8,10 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://themproject.ai',
   integrations: [mdx(), sitemap()],
+  redirects: {
+    // Il blog esiste solo in italiano: la rotta EN rimanda al blog IT
+    '/en/blog': '/blog',
+  },
   i18n: {
     defaultLocale: 'it',
     locales: ['it', 'en'],
