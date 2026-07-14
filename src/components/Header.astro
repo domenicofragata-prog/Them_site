@@ -67,7 +67,7 @@ const items = [
     els.forEach((el, i) => setTimeout(() => scramble(el, 1500), 150 * i));
 
     els.forEach((el) => {
-      const trigger = (el.closest('a') as HTMLElement) || el;
+      const trigger = (el.closest('a, h1, h2, h3, h4') as HTMLElement) || el.parentElement || el;
       trigger.addEventListener('mouseenter', () => scramble(el, 900));
     });
 
