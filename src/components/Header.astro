@@ -18,14 +18,26 @@ const items = [
 ];
 ---
 <header class="site">
-  <a href={url('')} class="brand nav-hide-mobile" aria-label="THEM"><span class="ascii-text" aria-hidden="true">THEM</span></a>
+  <a href={url('')} class="brand" aria-label="THEM"><span class="ascii-text" aria-hidden="true">THEM</span></a>
   <nav class="top">
     {items.map((it) => (
       <a href={url(it.slug)} aria-label={it.label}><span class="ascii-text" aria-hidden="true">{it.label}</span></a>
     ))}
     <LangToggle />
   </nav>
+  <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="mobile-menu">
+    <span class="nav-toggle-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+  </button>
 </header>
+
+<div class="mobile-menu" id="mobile-menu">
+  <nav class="mobile-menu-nav" aria-label="Menu">
+    {items.map((it) => (
+      <a href={url(it.slug)} class="mm-link" aria-label={it.label}><span class="ascii-text" aria-hidden="true">{it.label}</span></a>
+    ))}
+  </nav>
+  <div class="mobile-menu-foot"><LangToggle /></div>
+</div>
 
 <script>
   const CHARS = '@#%&$80BMW{}<>/\\*=+8.,:;|~'.split('');
@@ -82,5 +94,21 @@ const items = [
       el.textContent = arr.join('');
       setTimeout(() => { el.textContent = el.dataset.text || target; }, 90);
     }, 1500);
+  }
+</script>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>('.nav-toggle');
+  const menu = document.getElementById('mobile-menu');
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.classList.toggle('open', open);
+      document.documentElement.classList.toggle('menu-open', open);
+      toggle.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    toggle.addEventListener('click', () => setOpen(!menu.classList.contains('open')));
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('open')) setOpen(false); });
   }
 </script>

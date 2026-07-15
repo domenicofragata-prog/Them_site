@@ -32,7 +32,25 @@ nav.top a:hover{opacity:1}
 .langtog{display:flex;gap:.35rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em}
 .langtog a{color:var(--bone);opacity:.4;padding:.1rem .15rem}
 .langtog a.on{opacity:1;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--bronze)}
-@media(max-width:760px){nav.top a:not(.nav-hide-mobile){display:none}}
+.nav-toggle{display:none;background:none;border:0;padding:.4rem;margin:-.4rem;cursor:pointer;color:var(--bone);z-index:51}
+.nav-toggle-bars{display:block;width:26px;height:16px;position:relative}
+.nav-toggle-bars span{position:absolute;left:0;height:2px;width:100%;background:currentColor;transition:transform .3s ease,opacity .2s ease}
+.nav-toggle-bars span:nth-child(1){top:0}
+.nav-toggle-bars span:nth-child(2){top:7px}
+.nav-toggle-bars span:nth-child(3){top:14px}
+.nav-toggle.is-open .nav-toggle-bars span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.is-open .nav-toggle-bars span:nth-child(2){opacity:0}
+.nav-toggle.is-open .nav-toggle-bars span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mobile-menu{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;justify-content:center;padding:6rem var(--pad) 3rem;background:rgba(6,6,6,.985);opacity:0;visibility:hidden;transition:opacity .3s ease,visibility .3s ease}
+.mobile-menu.open{opacity:1;visibility:visible}
+.mobile-menu-nav{display:flex;flex-direction:column;gap:.1rem}
+.mobile-menu .mm-link{font-family:var(--display);font-weight:600;font-size:clamp(1.9rem,9vw,2.8rem);letter-spacing:.01em;color:var(--bone);padding:.35rem 0;line-height:1.12}
+.mobile-menu .mm-link:hover{color:var(--bronze)}
+.mobile-menu-foot{margin-top:2.2rem}
+.mobile-menu-foot .langtog{font-size:.85rem}
+html.menu-open,html.menu-open body{overflow:hidden}
+@media(max-width:760px){nav.top{display:none}.nav-toggle{display:inline-flex}}
+@media(min-width:761px){.mobile-menu{display:none}}
 
 /* Hero */
 .hero{position:relative;height:100svh;min-height:600px;display:flex;align-items:flex-end;overflow:hidden}
