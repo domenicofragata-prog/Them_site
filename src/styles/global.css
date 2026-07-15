@@ -65,6 +65,7 @@ nav.top a:hover{opacity:1}
 .codeband.overlay canvas{mix-blend-mode:screen;opacity:.9}
 .codeband .tag{position:absolute;left:var(--pad);bottom:1.4rem;z-index:3}
 .codeband .tag2{position:absolute;right:var(--pad);top:1.4rem;z-index:3}
+@media(max-width:600px){.codeband:not(.overlay){height:clamp(300px,44vh,400px)!important}}
 .band-cta{position:absolute;inset:0;z-index:3;display:block;cursor:pointer}
 .band-cta .tag{transition:color .3s ease}
 .band-cta .arrow{display:inline-block;color:var(--bronze);transition:transform .3s ease}

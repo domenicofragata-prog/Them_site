@@ -13,14 +13,13 @@ const { words = ['THEM', 'ARTEMIDE'], height = 'clamp(440px,68vh,720px)', seamle
   const HI = '#C6AC80', INK = '#000000', DIM = '#3A332A';
   const DENSE = '@#%&$80BMW{}<>/\\*=+8'.split('');
   const SPARSE = '.,:;\'`-_~|/\\+'.split('');
-  const cell = 15;
 
   function initMosaic(canvas: HTMLCanvasElement){
     const ctx = canvas.getContext('2d')!;
     const words = (canvas.dataset.words || 'THEM').split('|');
     const fillFrac = parseFloat(canvas.dataset.fill || '0.84');
     const reduceM = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let wi = 0, dpr = 1, cols = 0, rows = 0, W = 0, H = 0, mask: number[] = [], chars: string[] = [], raf = 0, last = 0, acc = 0;
+    let wi = 0, dpr = 1, cols = 0, rows = 0, W = 0, H = 0, cell = 15, mask: number[] = [], chars: string[] = [], raf = 0, last = 0, acc = 0;
 
     const pick = (i: number) => { const s = mask[i] ? DENSE : SPARSE; return s[(Math.random()*s.length)|0]; };
     function buildMask(word: string){
@@ -38,17 +37,20 @@ const { words = ['THEM', 'ARTEMIDE'], height = 'clamp(440px,68vh,720px)', seamle
     function seed(){ chars = new Array(cols*rows); for(let k=0;k<cols*rows;k++) chars[k] = pick(k); }
     function resize(){
       dpr = Math.min(devicePixelRatio||1, 2); W = canvas.clientWidth; H = canvas.clientHeight;
+      cell = W < 600 ? 10 : 15; // griglia pi\u00f9 fine su mobile
       canvas.width = W*dpr; canvas.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
       cols = Math.ceil(W/cell); rows = Math.ceil(H/cell); buildMask(words[wi]); seed();
     }
     function draw(){
       ctx.fillStyle = INK; ctx.fillRect(0,0,W,H);
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      const fDense = `700 ${Math.round(cell*0.95)}px "Space Mono", monospace`;
+      const fSparse = `400 ${Math.round(cell*0.8)}px "Space Mono", monospace`;
       for(let y=0;y<rows;y++) for(let x=0;x<cols;x++){
         const i = y*cols+x;
-        if(mask[i]){ ctx.font = '700 14px "Space Mono", monospace';
+        if(mask[i]){ ctx.font = fDense;
           ctx.fillStyle = ((x*7+y*3)%13===0) ? HI : ART[(x*3+y*5)%ART.length]; ctx.globalAlpha = .94; }
-        else { ctx.font = '400 12px "Space Mono", monospace'; ctx.fillStyle = DIM; ctx.globalAlpha = .18; }
+        else { ctx.font = fSparse; ctx.fillStyle = DIM; ctx.globalAlpha = .18; }
         ctx.fillText(chars[i], x*cell+cell/2, y*cell+cell/2);
       }
       ctx.globalAlpha = 1;
