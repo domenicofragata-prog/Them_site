@@ -79,6 +79,7 @@ nav.top a:hover{opacity:1}
 .reveal.in{opacity:1;transform:none}
 .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;padding-top:clamp(4rem,9vh,7rem);margin-bottom:2.6rem}
 .sec-head h2{font-family:var(--display);font-weight:600;font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:.02em}
+@media(max-width:600px){.sec-head{flex-direction:column;align-items:flex-start;gap:.5rem}}
 
 /* FacesIndex */
 .faces{display:flex;flex-direction:column}
