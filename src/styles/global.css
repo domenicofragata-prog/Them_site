@@ -28,7 +28,7 @@ header.site.nav-hidden{transform:translateY(-100%)}
 nav.top{display:flex;gap:1.7rem;align-items:center}
 nav.top a{font-family:var(--mono);font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;color:var(--bone);opacity:.78;transition:opacity .25s}
 nav.top a:hover{opacity:1}
-.ascii-text{display:inline-block;white-space:pre;font-variant-ligatures:none}
+.ascii-text{display:inline-block;white-space:pre-wrap;overflow-wrap:break-word;font-variant-ligatures:none}
 .langtog{display:flex;gap:.35rem;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em}
 .langtog a{color:var(--bone);opacity:.4;padding:.1rem .15rem}
 .langtog a.on{opacity:1;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--bronze)}
