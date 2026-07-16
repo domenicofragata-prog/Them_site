@@ -30,11 +30,20 @@ const siteGraph = {
     { '@type': 'WebSite', '@id': `${origin}/#website`, url: `${origin}/`, name: 'THEM', inLanguage: lang, publisher: { '@id': `${origin}/#person` } },
     {
       '@type': 'Person', '@id': `${origin}/#person`, name: 'Domenico Fragata', alternateName: 'THEM',
-      url: `${origin}/`, jobTitle: lang === 'en' ? 'Artist, philosopher' : 'Artista, filosofo',
-      description: personDesc, image: `${origin}/og.jpg`,
-      sameAs: ['https://www.instagram.com/them_artproject/', 'https://www.artuu.it/author/domenico-fragata/'],
+      url: `${origin}/`, mainEntityOfPage: `${origin}/bio`,
+      jobTitle: lang === 'en' ? 'Artist, philosopher' : 'Artista, filosofo',
+      description: personDesc, image: `${origin}/og.jpg`, nationality: 'IT',
+      knowsAbout: lang === 'en'
+        ? ['Digital art', 'Generative art', 'Artificial intelligence', 'Philosophy of technology', 'ASCII art', 'Typographic mosaics']
+        : ['Arte digitale', 'Arte generativa', 'Intelligenza artificiale', 'Filosofia della tecnica', 'ASCII art', 'Mosaici tipografici'],
+      worksFor: { '@type': 'Organization', name: 'Holy Club' },
+      sameAs: [
+        'https://www.instagram.com/them_artproject/',
+        'https://www.artuu.it/author/domenico-fragata/',
+        'https://soundcloud.com/them-802089407',
+      ],
     },
-    { '@type': 'Organization', '@id': `${origin}/#org`, name: 'THEM', url: `${origin}/`, logo: `${origin}/og.jpg`, founder: { '@id': `${origin}/#person` } },
+    { '@type': 'Organization', '@id': `${origin}/#org`, name: 'THEM', alternateName: 'THEM Art Project', url: `${origin}/`, logo: `${origin}/og.jpg`, founder: { '@id': `${origin}/#person` }, sameAs: ['https://www.instagram.com/them_artproject/'] },
   ],
 };
 const extraJsonld = jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [];

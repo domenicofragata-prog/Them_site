@@ -10,8 +10,20 @@ import { t, type Lang } from '../i18n/ui';
 
 const lang = (Astro.currentLocale ?? 'it') as Lang;
 const tr = t(lang);
+
+const site = Astro.site ?? new URL('https://themproject.ai');
+const bioDesc = 'Domenico Fragata è un filosofo e artista (progetto THEM) che lavora sul punto di contatto tra tradizioni sacre e linguaggi delle macchine: mosaici tipografici, arte generativa e ricerca sull\u2019intelligenza artificiale.';
+const profileJsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  '@id': new URL('/bio', site).href + '#profilepage',
+  url: new URL('/bio', site).href,
+  name: 'Domenico Fragata \u2014 Bio',
+  inLanguage: 'it',
+  mainEntity: { '@id': `${site.origin}/#person` },
+};
 ---
-<Base title="THEM · Bio" description={tr('about.1')}>
+<Base title="Domenico Fragata \u2014 Bio · THEM" description={bioDesc} jsonld={profileJsonld}>
   <CodeTexture word="THEM" />
   <FacePage title={tr('nav.bio')} lead={tr('bio.lead')}>
     <section class="bio">
