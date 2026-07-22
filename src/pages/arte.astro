@@ -7,7 +7,7 @@ import { t, type Lang } from '../i18n/ui';
 const lang = (Astro.currentLocale ?? 'it') as Lang;
 const tr = t(lang);
 ---
-<Base title="THEM · Arte" description={tr('page.arte.lead')}>
+<Base title="Arte sacra contemporanea — THEM · Domenico Fragata" description={tr('page.arte.lead')}>
   <FacePage title={tr('nav.arte')} lead={tr('page.arte.lead')} leadClass="lead-wide">
     <WorksGrid />
   </FacePage>
