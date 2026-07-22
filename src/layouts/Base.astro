@@ -21,8 +21,8 @@ const origin = site.origin;
 
 // Grafo di entità del sito (aiuta motori di ricerca e AI a capire chi/cosa è THEM)
 const personDesc = lang === 'en'
-  ? 'Domenico Fragata is an artist and philosopher working at the meeting point between sacred traditions and machine languages, under the project THEM.'
-  : 'Domenico Fragata è un artista e filosofo che lavora sul punto di contatto tra le tradizioni sacre e i linguaggi delle macchine, con il progetto THEM.';
+  ? 'Domenico Fragata is an artist and philosopher working in contemporary sacred art, at the meeting point between sacred traditions and machine languages, under the project THEM.'
+  : 'Domenico Fragata è un artista e filosofo di arte sacra contemporanea, che lavora sul punto di contatto tra le tradizioni sacre e i linguaggi delle macchine, con il progetto THEM.';
 
 const siteGraph = {
   '@context': 'https://schema.org',
@@ -34,8 +34,8 @@ const siteGraph = {
       jobTitle: lang === 'en' ? 'Artist, philosopher' : 'Artista, filosofo',
       description: personDesc, image: `${origin}/og.jpg`, nationality: 'IT',
       knowsAbout: lang === 'en'
-        ? ['Digital art', 'Generative art', 'Artificial intelligence', 'Philosophy of technology', 'ASCII art', 'Typographic mosaics']
-        : ['Arte digitale', 'Arte generativa', 'Intelligenza artificiale', 'Filosofia della tecnica', 'ASCII art', 'Mosaici tipografici'],
+        ? ['Contemporary sacred art', 'Digital art', 'Generative art', 'Artificial intelligence', 'Philosophy of technology', 'ASCII art', 'Typographic mosaics']
+        : ['Arte sacra contemporanea', 'Arte digitale', 'Arte generativa', 'Intelligenza artificiale', 'Filosofia della tecnica', 'ASCII art', 'Mosaici tipografici'],
       worksFor: { '@type': 'Organization', name: 'Holy Club' },
       sameAs: [
         'https://www.instagram.com/them_artproject/',
