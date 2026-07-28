@@ -39,11 +39,12 @@ const siteGraph = {
       worksFor: { '@type': 'Organization', name: 'Holy Club' },
       sameAs: [
         'https://www.instagram.com/them_artproject/',
+        'https://www.youtube.com/@THEMartProject',
         'https://www.artuu.it/author/domenico-fragata/',
         'https://soundcloud.com/them-802089407',
       ],
     },
-    { '@type': 'Organization', '@id': `${origin}/#org`, name: 'THEM', alternateName: 'THEM Art Project', url: `${origin}/`, logo: `${origin}/og.jpg`, founder: { '@id': `${origin}/#person` }, sameAs: ['https://www.instagram.com/them_artproject/'] },
+    { '@type': 'Organization', '@id': `${origin}/#org`, name: 'THEM', alternateName: 'THEM Art Project', url: `${origin}/`, logo: `${origin}/og.jpg`, founder: { '@id': `${origin}/#person` }, sameAs: ['https://www.instagram.com/them_artproject/', 'https://www.youtube.com/@THEMartProject'] },
   ],
 };
 const extraJsonld = jsonld ? (Array.isArray(jsonld) ? jsonld : [jsonld]) : [];
