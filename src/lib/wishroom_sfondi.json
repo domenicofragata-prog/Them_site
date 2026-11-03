@@ -1,22 +1,62 @@
 [
- "/wish-room/sfondi/01.jpg",
- "/wish-room/sfondi/02.jpg",
- "/wish-room/sfondi/03.jpg",
- "/wish-room/sfondi/04.jpg",
- "/wish-room/sfondi/05.jpg",
- "/wish-room/sfondi/06.jpg",
- "/wish-room/sfondi/07.jpg",
- "/wish-room/sfondi/08.jpg",
- "/wish-room/sfondi/09.jpg",
- "/wish-room/sfondi/10.jpg",
- "/wish-room/sfondi/11.jpg",
- "/wish-room/sfondi/12.jpg",
- "/wish-room/sfondi/13.jpg",
- "/wish-room/sfondi/14.jpg",
- "/wish-room/sfondi/15.jpg",
- "/wish-room/sfondi/16.jpg",
- "/wish-room/sfondi/17.jpg",
- "/wish-room/sfondi/18.jpg",
- "/wish-room/sfondi/19.jpg",
- "/wish-room/sfondi/20.jpg"
+ {
+  "url": "/wish-room/sfondi/01.jpg",
+  "piccola": "/wish-room/sfondi/01-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/02.jpg",
+  "piccola": "/wish-room/sfondi/02-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/03.jpg",
+  "piccola": "/wish-room/sfondi/03-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/04.jpg",
+  "piccola": "/wish-room/sfondi/04-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/05.jpg",
+  "piccola": "/wish-room/sfondi/05-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/06.jpg",
+  "piccola": "/wish-room/sfondi/06-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/07.jpg",
+  "piccola": "/wish-room/sfondi/07-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/08.jpg",
+  "piccola": "/wish-room/sfondi/08-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/09.jpg",
+  "piccola": "/wish-room/sfondi/09-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/10.jpg",
+  "piccola": "/wish-room/sfondi/10-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/11.jpg",
+  "piccola": "/wish-room/sfondi/11-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/12.jpg",
+  "piccola": "/wish-room/sfondi/12-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/13.jpg",
+  "piccola": "/wish-room/sfondi/13-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/14.jpg",
+  "piccola": "/wish-room/sfondi/14-t.jpg"
+ },
+ {
+  "url": "/wish-room/sfondi/15.jpg",
+  "piccola": "/wish-room/sfondi/15-t.jpg"
+ }
 ]

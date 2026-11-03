@@ -17,9 +17,13 @@ html, body { margin: 0; min-height: 100%; background: var(--notte); color: var(-
 body { font: 400 clamp(18px, 2.5vh, 26px)/1.45 var(--testo); display: grid; place-items: center; min-height: 100vh; padding: 4vh 5vw; position: relative; overflow-x: hidden; }
 
 /* il fondo: un'opera che respira, poi la polvere di lettere */
-#sfondo { position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; opacity: 0; filter: grayscale(.25) contrast(1.05); z-index: 0; pointer-events: none;
+/* il fondo: un'opera intera, rovesciata in luce sulla notte, che sfuma ai bordi e respira */
+#sfondo { position: fixed; top: 0; bottom: 0; right: 3vw; margin: auto 0; width: auto; height: auto; max-height: 100vh; max-width: 62vw; opacity: 0; z-index: 0; pointer-events: none;
+  filter: invert(1) hue-rotate(180deg) saturate(1.15);
+  -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 100%); mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 35%, transparent 100%);
   transition: opacity 6s ease; animation: deriva 90s ease-in-out infinite alternate; }
-#sfondo.vista { opacity: .13; }
+#sfondo.vista { opacity: .42; }
+@media (max-width: 760px) { #sfondo { left: 0; right: 0; margin: auto; max-width: 100vw; } #sfondo.vista { opacity: .3; } }
 @keyframes deriva { from { transform: translate(-1.5%, -1%) scale(1); } to { transform: translate(1.5%, 1.5%) scale(1.06); } }
 #polvere { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 .vignetta { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(12, 13, 16, .75) 100%); }
@@ -184,7 +188,7 @@ async function sfondo() {
     const r = await (await fetch(API + "/sfondo")).json();
     const img = $("#sfondo");
     img.onload = () => img.classList.add("vista");
-    if (r.url || r.file) img.src = r.url || file(r.file, 1600);
+    if (r.url || r.file) img.src = (innerWidth < 760 && r.piccola) || r.url || file(r.file, 1600);  // sul sito: la versione leggera per i telefoni
   } catch (e) {}
 }
 

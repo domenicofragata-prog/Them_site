@@ -71,8 +71,8 @@ export const GET: APIRoute = async ({ params, url, request, clientAddress }) => 
       return json({ lettere: (await redis('GET', P + 'polvere')) || '' }, 200, 'public, s-maxage=60');
     }
     if (via === 'sfondo') {
-      const elenco = sfondi as string[];
-      return json({ url: elenco.length ? elenco[Math.floor(Math.random() * elenco.length)] : null });
+      const elenco = sfondi as { url: string; piccola: string }[];
+      return json(elenco.length ? elenco[Math.floor(Math.random() * elenco.length)] : { url: null });
     }
     return json({ errore: 'via sconosciuta' }, 404);
   } catch (e) {
