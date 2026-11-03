@@ -14,6 +14,7 @@
   "dependencies": {
     "@astrojs/mdx": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/vercel": "^10.0.8",
     "@fontsource/cinzel": "^5.2.8",
     "@fontsource/space-mono": "^5.2.9",
     "@fontsource/spectral": "^5.2.8",

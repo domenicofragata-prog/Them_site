@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wish Room</title>
+<meta property="og:title" content="Wish Room · THEM">
+<meta property="og:description" content="Write a wish, a dream, a poem. It becomes an image made of your own letters, printed and dropped into the room.">
+<style>
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond[wght].ttf") format("truetype"); font-weight: 300 700; font-style: normal; }
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond-Italic[wght].ttf") format("truetype"); font-weight: 300 700; font-style: italic; }
+:root { --notte: #0c0d10; --panna: #efe9dc; --panna-tenue: #b7b0a2; --grigio: #76716a; --filo: rgba(239, 233, 220, .14); --cielo: #8eb3d6;
+  --testo: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--notte); color: var(--panna); }
+body { font: 400 clamp(18px, 2.3vh, 24px)/1.5 var(--testo); position: relative; overflow-x: hidden; }
+#sfondo { position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; opacity: 0; filter: grayscale(.25); z-index: 0; pointer-events: none;
+  transition: opacity 6s ease; animation: deriva 90s ease-in-out infinite alternate; }
+#sfondo.vista { opacity: .13; }
+@keyframes deriva { from { transform: translate(-1.5%, -1%) scale(1); } to { transform: translate(1.5%, 1.5%) scale(1.06); } }
+.vignetta { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, transparent 40%, rgba(12, 13, 16, .8) 100%); }
+main { position: relative; z-index: 1; width: min(720px, 100% - 10vw); margin: 0 auto; padding: 12vh 0 10vh; display: flex; flex-direction: column; gap: 4vh; animation: entra 1.4s ease; }
+@keyframes entra { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
+.marca { font: 500 clamp(12px, 1.7vh, 16px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .32em; color: var(--grigio); }
+.marca b { color: var(--panna-tenue); font-weight: 500; }
+h1 { margin: 0; font: italic 300 clamp(44px, 9vh, 92px)/1.02 var(--testo); letter-spacing: -.01em; }
+p { margin: 0; }
+.motto { font: italic 400 clamp(22px, 3.2vh, 32px)/1.35 var(--testo); color: var(--panna); }
+.concetto { color: var(--panna-tenue); display: flex; flex-direction: column; gap: 1.6vh; max-width: 60ch; }
+.evento { border-top: 1px solid var(--filo); border-bottom: 1px solid var(--filo); padding: 2.4vh 0; display: flex; flex-direction: column; gap: .4vh; font-variant: small-caps; letter-spacing: .18em; font-weight: 500; color: var(--panna-tenue); }
+.evento:empty { display: none; }
+a.scrivi { display: inline-block; align-self: flex-start; color: var(--panna); border: 1px solid var(--panna-tenue); padding: 1.6vh 3.4vw; text-decoration: none;
+  font: 500 clamp(14px, 1.9vh, 18px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .28em; transition: background .5s, color .5s; }
+a.scrivi:hover { background: var(--panna); color: var(--notte); }
+.galleria { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+.galleria:empty { display: none; }
+.galleria img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #fff; opacity: 0; animation: affiora 1.6s ease forwards; }
+@keyframes affiora { to { opacity: .92; } }
+.eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
+footer { font: 500 clamp(11px, 1.5vh, 14px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .3em; color: var(--grigio); margin-top: 4vh; }
+</style>
+</head>
+<body>
+<img id="sfondo" alt="">
+<div class="vignetta"></div>
+<main>
+  <div class="marca"><b>Wish Room</b> · them</div>
+  <h1>Wish Room</h1>
+  <p class="motto">Your wishes shape your world.</p>
+  <div class="concetto">
+    <p>A room, and a machine that listens. Write a wish, a dream, a poem. The machine turns your words into an image, then rebuilds that image out of your own letters, prints it on a sheet and lets it fall into the room.</p>
+    <p>The sheets gather on the floor, one over the other. Enter the room and find yours: you will know it by your words.</p>
+    <p>You can write from here, wherever you are. Your wish will be waiting in the room on Saturday night.</p>
+  </div>
+  <div class="evento" id="evento"></div>
+  <a class="scrivi" href="/wish-room/write">Write your wish</a>
+  <div id="blocco-galleria" style="display:none">
+    <div class="eti" style="margin-bottom:1.4vh">wishes already in the room</div>
+    <div class="galleria" id="galleria"></div>
+  </div>
+  <footer>Wish Room · THEM</footer>
+</main>
+<script>window.WR_API = "/api/wish-room";</script>
+<script>
+const $ = s => document.querySelector(s);
+const API = window.WR_API || "";
+function file(p, w) { return "/file?p=" + encodeURIComponent(p) + (w ? "&w=" + w : ""); }
+async function carica() {
+  let imp = {};
+  try { imp = await (await fetch(API + "/impostazioni")).json(); } catch (e) {}
+  const ev = imp.evento || {};
+  $("#evento").innerHTML = ["quando", "orario", "dove"].map(k => ev[k] ? `<span>${ev[k].replace(/</g, "&lt;")}</span>` : "").join("");
+  try {
+    const r = await (await fetch(API + "/sfondo")).json();
+    const img = $("#sfondo"); img.onload = () => img.classList.add("vista"); if (r.url || r.file) img.src = r.url || file(r.file, 1600);
+  } catch (e) {}
+  if (imp.galleria) {
+    try {
+      const g = await (await fetch(API + "/galleria")).json();
+      if (g.length) {
+        $("#galleria").innerHTML = g.map((o, i) => `<img src="${o.src}&w=320" alt="" style="animation-delay:${i * .12}s">`).join("");
+        $("#blocco-galleria").style.display = "";
+      }
+    } catch (e) {}
+  }
+}
+carica();
+</script>
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Wish Room</title>
+<style>
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond[wght].ttf") format("truetype"); font-weight: 300 700; font-style: normal; }
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond-Italic[wght].ttf") format("truetype"); font-weight: 300 700; font-style: italic; }
+:root {
+  --notte: #0c0d10; --vetro: rgba(255, 255, 255, .035); --panna: #efe9dc; --panna-tenue: #b7b0a2; --grigio: #76716a; --filo: rgba(239, 233, 220, .14);
+  --blu: #1D2B4F; --cielo: #8eb3d6; --rubrica: #c9634e; --carta: #fbfaf7; --firma: #5A6475;
+  --testo: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--notte); color: var(--panna); }
+body { font: 400 clamp(18px, 2.5vh, 26px)/1.45 var(--testo); display: grid; place-items: center; min-height: 100vh; padding: 4vh 5vw; position: relative; overflow-x: hidden; }
+
+/* il fondo: un'opera che respira, poi la polvere di lettere */
+#sfondo { position: fixed; inset: -6%; width: 112%; height: 112%; object-fit: cover; opacity: 0; filter: grayscale(.25) contrast(1.05); z-index: 0; pointer-events: none;
+  transition: opacity 6s ease; animation: deriva 90s ease-in-out infinite alternate; }
+#sfondo.vista { opacity: .13; }
+@keyframes deriva { from { transform: translate(-1.5%, -1%) scale(1); } to { transform: translate(1.5%, 1.5%) scale(1.06); } }
+#polvere { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.vignetta { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 40%, rgba(12, 13, 16, .75) 100%); }
+
+.scena { position: relative; z-index: 1; width: min(780px, 100%); display: none; flex-direction: column; gap: 3.2vh; animation: entra 1.2s ease; }
+.scena.vista { display: flex; }
+.scena.larga { width: min(1280px, 100%); }
+@keyframes entra { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
+.marca { font: 500 clamp(12px, 1.7vh, 16px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .32em; color: var(--grigio); }
+.marca b { color: var(--panna-tenue); font-weight: 500; }
+h1 { margin: 0; font: italic 300 clamp(38px, 7.5vh, 72px)/1.08 var(--testo); color: var(--panna); letter-spacing: -.005em; }
+p { margin: 0; }
+.tenue-testo { color: var(--panna-tenue); font-size: .92em; }
+.eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
+
+textarea { width: 100%; min-height: 26vh; background: var(--vetro); color: var(--panna); border: 0; border-bottom: 1px solid var(--filo); border-radius: 0;
+  padding: 2.4vh 0 2vh; font: 400 clamp(24px, 3.6vh, 36px)/1.4 var(--testo); outline: none; resize: none; caret-color: var(--cielo); transition: border-color .8s; }
+textarea::placeholder { color: var(--grigio); font-style: italic; }
+textarea:focus { border-bottom-color: var(--cielo); }
+.sotto { display: flex; justify-content: space-between; align-items: baseline; gap: 2vw; }
+.conta { font: 400 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); letter-spacing: .12em; color: var(--grigio); }
+.conta.oltre { color: var(--rubrica); }
+button { background: transparent; color: var(--panna); border: 1px solid var(--panna-tenue); border-radius: 0; padding: 1.4vh 3vw;
+  font: 500 clamp(13px, 1.8vh, 17px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .28em; cursor: pointer; transition: background .5s, color .5s, border-color .5s; }
+button:hover { background: var(--panna); color: var(--notte); }
+button:disabled { color: var(--grigio); border-color: var(--filo); background: transparent; cursor: default; }
+button.tenue { border-color: var(--filo); color: var(--grigio); }
+button.tenue:hover { background: transparent; color: var(--panna-tenue); border-color: var(--panna-tenue); }
+
+/* il processo: a sinistra il palco, a destra le parole */
+.processo { display: grid; grid-template-columns: minmax(0, 42%) minmax(0, 1fr); gap: 4vw; align-items: stretch; }
+.palco { position: relative; aspect-ratio: 9 / 16; max-height: 82vh; width: 100%; margin: 0 auto; overflow: hidden; background: #0e1016; box-shadow: 0 3vh 8vh rgba(0, 0, 0, .55); }
+.palco .respiro { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 62%, rgba(142, 179, 214, .2), transparent 62%); animation: respira 6s ease-in-out infinite; }
+@keyframes respira { 0%, 100% { opacity: .3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.14); } }
+.palco .strato { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 2.4s ease; }
+.palco .strato.vista { opacity: 1; }
+.palco canvas.strato { object-fit: fill; transition: none; opacity: 1; display: none; }
+.palco canvas.strato.vista { display: block; }
+.parole { display: flex; flex-direction: column; gap: 3vh; min-width: 0; justify-content: center; }
+.citazione { font: 400 clamp(22px, 3.4vh, 36px)/1.4 var(--testo); color: var(--panna); white-space: pre-line; }
+.lettura { display: none; flex-direction: column; gap: 1vh; }
+.lettura.vista { display: flex; }
+.prompt { font: italic 400 clamp(18px, 2.7vh, 28px)/1.4 var(--testo); color: var(--panna-tenue); min-height: 1.4em; }
+.passi { display: flex; flex-direction: column; gap: 1vh; border-top: 1px solid var(--filo); padding-top: 2.4vh; }
+.passo { display: flex; align-items: baseline; gap: 1.2vw; font: 400 clamp(15px, 2.1vh, 21px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .14em; color: var(--grigio); transition: color .8s; }
+.passo::before { content: ""; width: .42em; height: .42em; border-radius: 50%; background: var(--filo); flex: none; align-self: center; transition: background .8s; }
+.passo.corso { color: var(--panna); } .passo.corso::before { background: var(--cielo); animation: respiro 1.8s ease-in-out infinite; }
+.passo.fatto { color: var(--panna-tenue); } .passo.fatto::before { background: var(--panna-tenue); }
+@keyframes respiro { 0%, 100% { opacity: 1; } 50% { opacity: .2; } }
+.attesa { font: italic 400 clamp(14px, 1.9vh, 18px)/1.5 var(--testo); color: var(--grigio); min-height: 1.5em; }
+.cursore::after { content: ""; display: inline-block; width: 1px; height: 1em; background: var(--cielo); margin-left: .12em; vertical-align: -.12em; animation: respiro 1s steps(1) infinite; }
+
+/* la scena finale: il foglio A4 che si posa */
+.fine { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: 4vw; align-items: center; }
+.foglio { aspect-ratio: 210 / 297; max-height: 84vh; width: 100%; margin: 0 auto; background: #fff; position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 5% 8% 8%; box-shadow: 0 3vh 9vh rgba(0, 0, 0, .6);
+  animation: posa 1.8s cubic-bezier(.2, .7, .2, 1) both; }
+@keyframes posa { from { opacity: 0; transform: translateY(-4vh) rotate(-.6deg) scale(.97); } to { opacity: 1; transform: none; } }
+.foglio img { width: 57.1%; aspect-ratio: 9 / 16; object-fit: cover; display: block; opacity: 0; animation: affiora 1.8s ease .6s forwards; }
+@keyframes affiora { to { opacity: 1; } }
+.foglio .suo { margin-top: 3.5%; font: 500 clamp(7px, 1.25vh, 12px)/1.38 var(--testo); color: var(--blu); text-align: center; max-width: 100%; white-space: pre-line; opacity: 0; animation: affiora 1.4s ease 1.6s forwards; }
+.foglio .firma { position: absolute; left: 0; right: 0; bottom: 4%; text-align: center; font: 500 clamp(6px, .95vh, 9px)/1 var(--testo); letter-spacing: .32em; text-transform: uppercase; color: var(--firma); opacity: 0; animation: affiora 1.4s ease 2.4s forwards; }
+.esito { font: italic 300 clamp(28px, 4.6vh, 50px)/1.2 var(--testo); }
+.barra { height: 1px; background: var(--filo); overflow: hidden; }
+.barra i { display: block; height: 100%; background: var(--panna-tenue); width: 100%; transform-origin: left; }
+.ferma { color: var(--rubrica); }
+@media (max-width: 760px) {
+  .processo, .fine { grid-template-columns: 1fr; }
+  .palco { max-height: 48vh; } .foglio { max-height: 60vh; } body { padding: 3vh 5vw; }
+  #attendi.dorme .palco { display: none; }  /* la stanza dorme: sul telefono resta in vista la frase, non il palco vuoto */
+}
+</style>
+</head>
+<body>
+<img id="sfondo" alt="">
+<canvas id="polvere"></canvas>
+<div class="vignetta"></div>
+
+<section class="scena vista" id="scrivi">
+  <div class="marca"><b>Wish Room</b> · them</div>
+  <h1>Write a wish, a dream, a poem.</h1>
+  <p class="tenue-testo">Your wishes shape your world. Enter the room and find yours.</p>
+  <textarea id="testo" placeholder="…" maxlength="2000" autofocus></textarea>
+  <div class="sotto">
+    <span class="conta" id="conta"></span>
+    <button id="affida">Entrust it to the room</button>
+  </div>
+  <p class="tenue-testo" id="avviso" style="min-height:1.5em"></p>
+</section>
+
+<section class="scena larga" id="attendi">
+  <div class="marca"><b>Wish Room</b> · them</div>
+  <div class="processo">
+    <div class="palco" id="palco">
+      <div class="respiro"></div>
+      <img class="strato" id="palco-immagine" alt="">
+      <canvas class="strato" id="palco-punti"></canvas>
+      <canvas class="strato" id="palco-lettere"></canvas>
+    </div>
+    <div class="parole">
+      <div class="citazione" id="citazione"></div>
+      <div class="lettura" id="lettura">
+        <span class="eti">the machine reads it as</span>
+        <div class="prompt" id="prompt"></div>
+      </div>
+      <div class="passi">
+        <div class="passo" data-passo="coda">waiting its turn</div>
+        <div class="passo" data-passo="traduzione">the machine reads your words</div>
+        <div class="passo" data-passo="immagine">it imagines</div>
+        <div class="passo" data-passo="lettere">it rebuilds the image with your letters</div>
+        <div class="passo" data-passo="stampa">it prints the sheet</div>
+      </div>
+      <p class="attesa" id="attesa"></p>
+      <div><button class="tenue" id="lascia">Let it fall on its own</button></div>
+    </div>
+  </div>
+</section>
+
+<section class="scena larga" id="ecco">
+  <div class="marca"><b>Wish Room</b> · them</div>
+  <div class="fine">
+    <div class="foglio" id="foglio">
+      <img id="foglio-img" alt="">
+      <div class="suo" id="foglio-testo"></div>
+      <div class="firma">Wish Room · THEM</div>
+    </div>
+    <div class="parole">
+      <p class="esito">Enter the room and find your wish.</p>
+      <p class="tenue-testo">You will know it by your words.</p>
+      <div class="barra"><i id="barra"></i></div>
+    </div>
+  </div>
+</section>
+
+<section class="scena" id="no">
+  <div class="marca"><b>Wish Room</b> · them</div>
+  <p class="esito ferma" id="no-testo"></p>
+  <div><button id="riprova">Write other words</button></div>
+</section>
+
+<script>window.WR_API = "/api/wish-room";</script>
+<script>
+const $ = s => document.querySelector(s);
+const PARAMETRI = new URLSearchParams(location.search);
+const INGRESSO = PARAMETRI.get("ingresso") || PARAMETRI.get("entrance");
+const API = window.WR_API || "";  // sul sito themproject.ai: "/api/wish-room"; nella stanza, il server del Mac
+const SITO = Boolean(API);
+let IMP = { limite_caratteri: 600, secondi_mostra: 25 }, SONDA = null, RITORNO = null, INATTIVO = null, CORSA = null;
+
+function scena(id) { document.querySelectorAll(".scena").forEach(s => s.classList.toggle("vista", s.id === id)); }
+function conta() {
+  const n = $("#testo").value.trim().length;
+  $("#conta").textContent = n + " / " + IMP.limite_caratteri;
+  $("#conta").classList.toggle("oltre", n > IMP.limite_caratteri);
+  $("#affida").disabled = n === 0 || n > IMP.limite_caratteri;
+}
+function file(p, w) { return "/file?p=" + encodeURIComponent(p) + (w ? "&w=" + w : ""); }
+
+// ---------------------------------------------------------------- il fondo: un'opera che respira
+async function sfondo() {
+  try {
+    const r = await (await fetch(API + "/sfondo")).json();
+    const img = $("#sfondo");
+    img.onload = () => img.classList.add("vista");
+    if (r.url || r.file) img.src = r.url || file(r.file, 1600);
+  } catch (e) {}
+}
+
+// ---------------------------------------------------------------- la polvere di lettere
+const POLVERE = { c: null, ctx: null, grani: [], riserva: "", ultimo: 0 };
+function polvereInizia() {
+  const c = $("#polvere"); POLVERE.c = c; POLVERE.ctx = c.getContext("2d");
+  const misura = () => { c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio; POLVERE.ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); };
+  misura(); addEventListener("resize", misura);
+  const quanti = Math.round(innerWidth * innerHeight / 3600);
+  for (let i = 0; i < quanti; i++) POLVERE.grani.push(grano(true));
+  requestAnimationFrame(polvereDisegna);
+}
+function letteraDiRiserva() {
+  const r = POLVERE.riserva.replace(/\s+/g, "");
+  return r ? r[Math.floor(Math.random() * r.length)] : "·";
+}
+function grano(sparso, x, y, lettera) {
+  const a = Math.random() * Math.PI * 2, v = .06 + Math.random() * .12;
+  return { x: x ?? Math.random() * innerWidth, y: y ?? (sparso ? Math.random() * innerHeight : innerHeight + 10),
+           vx: Math.cos(a) * v, vy: -Math.abs(Math.sin(a)) * v - .04, f: Math.random() * Math.PI * 2,
+           dim: 9 + Math.random() * 7, op: .05 + Math.random() * .22, l: lettera || letteraDiRiserva(), nato: performance.now(), vivo: !lettera };
+}
+function polvereDisegna(t) {
+  const { ctx, grani } = POLVERE, dt = Math.min(40, t - (POLVERE.ultimo || t)); POLVERE.ultimo = t;
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  ctx.textBaseline = "middle"; ctx.textAlign = "center";
+  for (let i = grani.length - 1; i >= 0; i--) {
+    const g = grani[i];
+    g.f += dt * .0006;
+    g.x += (g.vx + Math.sin(g.f) * .05) * dt; g.y += (g.vy + Math.cos(g.f * .7) * .03) * dt;
+    if (g.y < -20) { g.y = innerHeight + 10; g.x = Math.random() * innerWidth; g.l = letteraDiRiserva(); }
+    if (g.x < -20) g.x = innerWidth + 10; if (g.x > innerWidth + 20) g.x = -10;
+    const eta = (t - g.nato) / 1000;
+    let op = g.op * Math.min(1, eta / 3);
+    if (!g.vivo) {  // una lettera appena scritta: più chiara, poi si confonde nella polvere
+      op = Math.max(g.op, .6 * Math.exp(-eta / 6)) * Math.min(1, eta / .4);
+      if (eta > 40) { grani.splice(i, 1); continue; }
+    }
+    ctx.globalAlpha = op;
+    ctx.fillStyle = "#8eb3d6";
+    ctx.font = `400 ${g.dim}px Cormorant, Georgia, serif`;
+    ctx.fillText(g.l, g.x, g.y);
+  }
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(polvereDisegna);
+}
+function polvereRiserva(testi) { POLVERE.riserva = (testi || []).join(" ").slice(-4000) || "wish room"; }
+async function riservaDaiDesideri() {
+  try {
+    const c = await (await fetch(API + "/polvere")).json();
+    polvereRiserva(c.lettere ? [c.lettere] : []);
+  } catch (e) { polvereRiserva(["wish room"]); }
+}
+// ogni lettera scritta nasce nella polvere, vicino al campo
+let ULTIMO_TESTO = "";
+function lettereScritte() {
+  const ora = $("#testo").value, box = $("#testo").getBoundingClientRect();
+  if (ora.length > ULTIMO_TESTO.length) {
+    const nuove = ora.slice(ULTIMO_TESTO.length).replace(/\s+/g, "");
+    for (const l of nuove.slice(0, 6)) {
+      const x = box.left + box.width * (.1 + Math.random() * .8), y = box.top + box.height * (.3 + Math.random() * .6);
+      POLVERE.grani.push(grano(false, x, y, l));
+    }
+  }
+  ULTIMO_TESTO = ora;
+}
+
+async function carica() {
+  try { IMP = await (await fetch(API + "/impostazioni")).json(); } catch (e) {}
+  conta();
+  polvereInizia(); riservaDaiDesideri(); sfondo();
+  setInterval(riservaDaiDesideri, 120000);
+  const w = PARAMETRI.get("w");
+  if (SITO && /^[a-f0-9]{24}$/.test(w || "")) riprendi(w);
+}
+
+async function riprendi(id) {  // chi torna al suo link ritrova il desiderio dove è arrivato
+  let v;
+  try { v = await (await fetch(API + "/stato?id=" + id)).json(); } catch (e) { return; }
+  if (!v || v.errore) { history.replaceState(null, "", location.pathname); return; }
+  nuovaCorsa(v.testo);
+  scena("attendi");
+  sonda(id);
+  ritmo(id, 1500);
+}
+
+$("#testo").addEventListener("input", () => { conta(); inattivita(); lettereScritte(); });
+$("#affida").addEventListener("click", affida);
+$("#lascia").addEventListener("click", torna);
+$("#riprova").addEventListener("click", torna);
+$("#testo").addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) affida(); });
+
+function inattivita() {  // a kiosk left half-written clears itself after three minutes
+  if (!INGRESSO) return;
+  clearTimeout(INATTIVO);
+  INATTIVO = setTimeout(() => { if ($("#scrivi").classList.contains("vista")) { $("#testo").value = ""; ULTIMO_TESTO = ""; conta(); } }, 180000);
+}
+
+// ---------------------------------------------------------------- la scrittura lettera per lettera
+function scrivi(el, testo, cps, poi) {
+  let i = 0; el.textContent = ""; el.classList.add("cursore");
+  const passo = () => {
+    if (!el.isConnected || el.dataset.testo !== testo) return;
+    i += Math.max(1, Math.round(cps / 30));
+    el.textContent = testo.slice(0, i);
+    if (i < testo.length) setTimeout(passo, 1000 / 30); else { el.classList.remove("cursore"); if (poi) poi(); }
+  };
+  el.dataset.testo = testo; passo();
+}
+
+// ---------------------------------------------------------------- la corsa: che cosa è già stato mostrato
+function nuovaCorsa(testo) {
+  CORSA = { testo, prompt: false, immagine: false, lettere: false, fine: false };
+  $("#lettura").classList.remove("vista"); $("#prompt").textContent = "";
+  $("#palco-immagine").classList.remove("vista"); $("#palco-immagine").removeAttribute("src");
+  for (const id of ["#palco-punti", "#palco-lettere"]) { const c = $(id); c.classList.remove("vista"); c.getContext("2d").clearRect(0, 0, c.width, c.height); }
+  document.querySelectorAll("#attendi .passo").forEach(p => p.className = "passo");
+  $("#attendi .passo[data-passo=coda]").classList.add("corso");
+  scrivi($("#citazione"), testo, 40);
+}
+
+async function affida() {
+  const testo = $("#testo").value.trim();
+  if (!testo || testo.length > IMP.limite_caratteri) return;
+  $("#affida").disabled = true;
+  let r;
+  try {
+    r = await (await fetch(API + "/affida", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ testo, ingresso: INGRESSO }) })).json();
+  } catch (e) { r = { errore: "rete" }; }
+  if (r.errore) {
+    $("#avviso").textContent = r.errore === "tetto" ? "The room has received all the wishes it can hold today. Come back tomorrow."
+      : r.errore === "limite" ? "You have entrusted many wishes this hour: come back a little later."
+      : "The room is not answering. Please try again in a moment.";
+    $("#affida").disabled = false;
+    return;
+  }
+  $("#avviso").textContent = "";
+  nuovaCorsa(testo);
+  attesa(r);
+  scena("attendi");
+  if (SITO) history.replaceState(null, "", "?w=" + r.id);  // la pagina diventa il link personale del desiderio
+  ritmo(r.id, SITO ? 1500 : 1000);
+}
+
+function attesa(v) {
+  const coda = !v.stato || v.stato === "in coda";
+  $("#attendi").classList.toggle("dorme", coda && v.sveglia === false);
+  $("#attesa").textContent = coda && v.sveglia === false
+    ? "The room is asleep right now. Your wish is safe: it will be composed when the room wakes. Keep this page, and come back to it."
+    : coda && v.posizione ? v.posizione + " ahead of you" : "";
+}
+
+// prima della serata, chi scrive da lontano troverà il suo desiderio nella stanza quella sera
+function primaDellaSerata() {
+  const inizio = (IMP.evento || {}).inizio;
+  return SITO && inizio && Date.now() < new Date(inizio).getTime();
+}
+
+function segna(stato, diario, opera) {
+  const righe = (diario || []).map(r => r.slice(9));
+  const fatto = new Set();
+  let corso = "coda";
+  if (stato !== "in coda") { fatto.add("coda"); corso = "traduzione"; }
+  if (opera && opera.immagine_descritta) { fatto.add("traduzione"); corso = "immagine"; }
+  const f = Object.assign({}, opera && opera.file, opera && opera.url);
+  if (f.immagine) { fatto.add("immagine"); corso = "lettere"; }
+  if (f.lettere) { fatto.add("lettere"); corso = "stampa"; }
+  if (righe.some(r => /^(foglio|stampa)/.test(r))) { fatto.add("stampa"); corso = null; }
+  if (["compiuta", "stampata"].includes(stato)) { ["coda", "traduzione", "immagine", "lettere", "stampa"].forEach(p => fatto.add(p)); corso = null; }
+  document.querySelectorAll("#attendi .passo").forEach(p => {
+    p.className = "passo" + (fatto.has(p.dataset.passo) ? " fatto" : p.dataset.passo === corso ? " corso" : "");
+  });
+}
+
+// un'immagine che il server sta ancora scrivendo dà 404: si riprova dopo un secondo
+function caricaImmagine(url, poi) {
+  const img = new Image();
+  img.onerror = () => setTimeout(() => { img.src = url + "&t=" + Date.now(); }, 1000);
+  img.onload = () => poi(img);
+  img.src = url + "&t=" + Date.now();
+}
+
+// sul palco, un'immagine si addensa a frammenti in ordine casuale, prima radi poi fitti
+function addensa(idCanvas, sorgente, cella, durata, poi) {
+  const palco = $("#palco"), c = $(idCanvas);
+  const w = palco.clientWidth, h = palco.clientHeight;
+  c.width = w; c.height = h; c.classList.add("vista");
+  const ctx = c.getContext("2d");
+  const fuori = document.createElement("canvas"); fuori.width = w; fuori.height = h;
+  const fctx = fuori.getContext("2d");
+  const scala = Math.max(w / sorgente.width, h / sorgente.height);
+  const sw = sorgente.width * scala, sh = sorgente.height * scala;
+  fctx.drawImage(sorgente, (w - sw) / 2, (h - sh) / 2, sw, sh);
+  const colonne = Math.ceil(w / cella), righe = Math.ceil(h / cella), totale = colonne * righe;
+  const t0 = performance.now();
+  let posate = 0;
+  const ordine = Array.from({ length: totale }, (_, i) => i);
+  for (let i = totale - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ordine[i], ordine[j]] = [ordine[j], ordine[i]]; }
+  const corsa = CORSA;
+  function passo(ora) {
+    if (CORSA !== corsa) return;
+    const quota = Math.min(1, (ora - t0) / durata);
+    const fino = Math.floor(totale * quota * quota);
+    for (; posate < fino; posate++) {
+      const k = ordine[posate], x = (k % colonne) * cella, y = Math.floor(k / colonne) * cella;
+      ctx.drawImage(fuori, x, y, cella, cella, x, y, cella, cella);
+    }
+    if (quota < 1) requestAnimationFrame(passo); else { ctx.drawImage(fuori, 0, 0); if (poi) poi(); }
+  }
+  requestAnimationFrame(passo);
+}
+
+function mostraProcesso(v) {
+  const o = v.opera; if (!o || !CORSA) return;
+  if (o.immagine_descritta && !CORSA.prompt) {
+    CORSA.prompt = true;
+    // le parole vanno al generatore così come sono: la lettura si mostra solo se è davvero diversa
+    const uguali = o.immagine_descritta.replace(/\s+/g, " ").trim().toLowerCase() === CORSA.testo.replace(/\s+/g, " ").trim().replace(/\.$/, "").toLowerCase();
+    if (!uguali) { $("#lettura").classList.add("vista"); scrivi($("#prompt"), o.immagine_descritta, 28); }
+  }
+  const u = o.url || {}, fl = o.file || {};
+  if ((u.immagine || fl.immagine) && !CORSA.immagine) {
+    CORSA.immagine = true;
+    // l'immagine si addensa a punti di 3 px in 3,5 s, poi resta intera
+    caricaImmagine(u.immagine || file(fl.immagine, 1100), img => {
+      addensa("#palco-punti", img, 3, 3500, () => { $("#palco-immagine").src = img.src; $("#palco-immagine").classList.add("vista"); });
+    });
+  }
+  if ((u.lettere || fl.lettere) && !CORSA.lettere) {
+    CORSA.lettere = true;
+    // le lettere si posano sull'immagine a frammenti di 5 px in 5 s, finché resta solo lo stipple
+    caricaImmagine(u.lettere || file(fl.lettere, 1100), img => addensa("#palco-lettere", img, 5, 5000));
+  }
+}
+
+// quanto spesso si chiede lo stato: sul sito ogni domanda costa, e se la stanza dorme si chiede di rado
+let PASSO_SONDA = 0;
+function ritmo(id, ms) {
+  if (SONDA && PASSO_SONDA === ms) return;
+  if (SONDA) clearInterval(SONDA);
+  PASSO_SONDA = ms;
+  SONDA = setInterval(() => sonda(id), ms);
+}
+
+async function sonda(id) {
+  let v;
+  try { v = await (await fetch(API + "/stato?id=" + id)).json(); } catch (e) { return; }
+  if (!v || v.errore) return;
+  segna(v.stato, v.diario, v.opera);
+  mostraProcesso(v);
+  if (SITO && SONDA) ritmo(id, v.sveglia === false && v.stato === "in coda" ? 15000 : 1500);
+  attesa(v);
+  if (["compiuta", "stampata"].includes(v.stato)) {
+    clearInterval(SONDA); SONDA = null;
+    const o = v.opera || {}, f = Object.assign({}, o.file || {}, v.file || {});
+    const img = f.lettere || f.mosaico || f.immagine, u = o.url || {};
+    const ritardo = CORSA && CORSA.lettere ? 6000 : 400;  // la scena finale aspetta che le lettere si siano posate
+    setTimeout(() => {
+      if (!CORSA) return;
+      CORSA.fine = true;
+      $("#foglio").style.animation = "none"; void $("#foglio").offsetWidth; $("#foglio").style.animation = "";
+      $("#foglio-img").src = u.lettere || u.immagine || (img ? file(img, 900) : "");
+      $("#foglio-testo").textContent = v.testo;
+      if (primaDellaSerata()) {
+        $("#ecco .esito").textContent = "Your wish will be waiting in the room on Saturday night.";
+        $("#ecco .esito + .tenue-testo").textContent = "You will know it by your words.";
+      }
+      scena("ecco");
+      const b = $("#barra"); b.style.transition = "none"; b.style.transform = "scaleX(1)";
+      requestAnimationFrame(() => { b.style.transition = "transform " + IMP.secondi_mostra + "s linear"; b.style.transform = "scaleX(0)"; });
+      RITORNO = setTimeout(torna, IMP.secondi_mostra * 1000);
+      riservaDaiDesideri();
+    }, ritardo);
+  } else if (["scartata", "errore"].includes(v.stato)) {
+    clearInterval(SONDA); SONDA = null;
+    $("#no-testo").textContent = v.stato === "scartata" && v.causa === "moderazione" ? "These words cannot enter the room."
+      : v.stato === "scartata" && v.causa === "immagine" ? "The room could not find an image for your words. Please try once more."
+      : v.stato === "scartata" ? "These words cannot enter the room as they are: " + (v.motivo || "") + "."
+      : "The room could not compose your sheet. Please try again.";
+    scena("no");
+    RITORNO = setTimeout(torna, 20000);
+  }
+}
+
+function torna() {
+  clearTimeout(RITORNO); if (SONDA) { clearInterval(SONDA); SONDA = null; }
+  CORSA = null;
+  if (SITO && PARAMETRI.get("w")) history.replaceState(null, "", location.pathname);
+  $("#testo").value = ""; ULTIMO_TESTO = ""; conta(); $("#avviso").textContent = "";
+  scena("scrivi"); $("#testo").focus();
+  sfondo();  // un'altra opera dietro, per il prossimo
+}
+
+carica();
+</script>
+</body>
+</html>
