@@ -432,15 +432,11 @@ async function affida() {
     return;
   }
   $("#avviso").textContent = "";
+  if (SITO) { ricorda(r.id); return allaBacheca(r.id); }  // sul sito si va subito alla bacheca: lì il desiderio nasce, e la tessera riapre il processo
   nuovaCorsa(testo);
   attesa(r);
   scena("attendi");
-  if (SITO) {
-    ID_SITO = r.id; ricorda(r.id);
-    if (r.sveglia === false) return allaBacheca(r.id);  // la stanza dorme: il desiderio aspetta nella bacheca
-    history.replaceState(null, "", "?w=" + r.id);  // la pagina diventa il link personale del desiderio
-  }
-  ritmo(r.id, SITO ? 1500 : 1000);
+  ritmo(r.id, 1000);
 }
 
 function attesa(v) {
