@@ -142,6 +142,8 @@ export const POST: APIRoute = async ({ params, request, clientAddress }) => {
         if (!IMMAGINI.has(k) || typeof b64 !== 'string') continue;
         comandi.push(['SET', `${P}img:${id}:${k}`, b64, 'EX', k === 'galleria' ? GIORNI_GALLERIA : GIORNI_PALCO]);
         immagini.add(k);
+        // l'indirizzo cambia con l'immagine: le immagini restano un anno nella cache di Vercel
+        voce.versioni = { ...(voce.versioni || {}), [k]: Date.now() };
       }
       const nuovo = r.voce || {};
       for (const campo of ['stato', 'posizione', 'diario', 'motivo', 'causa']) if (campo in nuovo) voce[campo] = nuovo[campo];
@@ -149,7 +151,7 @@ export const POST: APIRoute = async ({ params, request, clientAddress }) => {
       voce.immagini = [...immagini];
       const opera: any = { ...(voce.opera || {}), ...(nuovo.opera || {}) };
       opera.url = {};
-      for (const k of voce.immagini) if (k !== 'galleria') opera.url[k] = `/api/wish-room/img?id=${id}&k=${k}`;
+      for (const k of voce.immagini) if (k !== 'galleria') opera.url[k] = `/api/wish-room/img?id=${id}&k=${k}&v=${(voce.versioni || {})[k] || 0}`;
       voce.opera = opera;
       comandi.push(['SET', P + 'v:' + id, JSON.stringify(voce), 'EX', GIORNI_VOCE]);
       await tubo(comandi);
