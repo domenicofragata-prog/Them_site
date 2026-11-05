@@ -20,9 +20,9 @@ export function getStaticPaths() {
 
 const { lingua, pagina } = Astro.props;
 const DESCRIZIONE = {
-  en: 'Write a wish, a dream, a poem. It becomes an image made of your own letters, printed and dropped into the room.',
-  it: 'Scrivi un desiderio, un sogno, una poesia. Diventa un’immagine fatta delle tue stesse lettere, stampata e lasciata cadere nella stanza.',
-  fr: 'Écrivez un vœu, un rêve, un poème. Il devient une image faite de vos propres lettres, imprimée et déposée dans la salle.',
+  en: 'Write a wish, a dream, a poem. It becomes an image made of your own words, printed and dropped into the room.',
+  it: 'Scrivi un desiderio, un sogno, una poesia. Diventa un’immagine fatta delle tue stesse parole, stampata e lasciata cadere nella stanza.',
+  fr: 'Écrivez un vœu, un rêve, un poème. Il devient une image faite de vos propres mots, imprimée et déposée dans la salle.',
 };
 const finale = pagina === 'scrivi' ? '/write' : '';
 const INDIRIZZI = { en: '/wish-room', it: '/wish-room/italiano', fr: '/wish-room/francais' };
