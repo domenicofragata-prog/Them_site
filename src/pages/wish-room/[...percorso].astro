@@ -1,0 +1,38 @@
+---
+// Wish Room in tre lingue, inglese come predefinita: /wish-room, /wish-room/italiano, /wish-room/francais, più /write.
+// Mai «/it» nell'indirizzo: per l'i18n di Astro è il prefisso vietato della lingua predefinita e risponde 404.
+// Le pagine vivono in meaning-machine/wish-box (wishroom_sito.html, wishroom.html) e arrivano qui con
+// porta_al_sito.py: qui si cambia solo la lingua della pagina. I testi stanno nelle pagine stesse.
+import sito from '../../wishroom/sito.html?raw';
+import scrivi from '../../wishroom/scrivi.html?raw';
+
+export function getStaticPaths() {
+  const SEGMENTI = { en: null, it: 'italiano', fr: 'francais' };
+  const vie = [];
+  for (const lingua of ['en', 'it', 'fr']) {
+    for (const pagina of ['sito', 'scrivi']) {
+      const parti = [SEGMENTI[lingua], pagina === 'scrivi' ? 'write' : null].filter(Boolean);
+      vie.push({ params: { percorso: parti.join('/') || undefined }, props: { lingua, pagina } });
+    }
+  }
+  return vie;
+}
+
+const { lingua, pagina } = Astro.props;
+const DESCRIZIONE = {
+  en: 'Write a wish, a dream, a poem. It becomes an image made of your own letters, printed and dropped into the room.',
+  it: 'Scrivi un desiderio, un sogno, una poesia. Diventa un’immagine fatta delle tue stesse lettere, stampata e lasciata cadere nella stanza.',
+  fr: 'Écrivez un vœu, un rêve, un poème. Il devient une image faite de vos propres lettres, imprimée et déposée dans la salle.',
+};
+const finale = pagina === 'scrivi' ? '/write' : '';
+const INDIRIZZI = { en: '/wish-room', it: '/wish-room/italiano', fr: '/wish-room/francais' };
+const alternative = ['en', 'it', 'fr']
+  .map((l) => `<link rel="alternate" hreflang="${l}" href="https://themproject.ai${INDIRIZZI[l]}${finale}">`)
+  .join('\n');
+let html = (pagina === 'sito' ? sito : scrivi)
+  .replace('<html lang="en">', `<html lang="${lingua}">`)
+  .replace('window.WR_LINGUA = "en"', `window.WR_LINGUA = "${lingua}"`)
+  .replace('</head>', `${alternative}\n</head>`);
+if (pagina === 'sito') html = html.replace(/<meta property="og:description" content="[^"]*">/, `<meta property="og:description" content="${DESCRIZIONE[lingua]}">`);
+---
+<Fragment set:html={html} />

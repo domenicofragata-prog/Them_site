@@ -41,52 +41,177 @@ a.scrivi:hover { background: var(--panna); color: var(--notte); }
 .galleria img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #fff; opacity: 0; animation: affiora 1.6s ease forwards; }
 @keyframes affiora { to { opacity: .92; } }
 .eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
+/* la bacheca: i desideri di questo browser per primi, più grandi */
+#bacheca { scroll-margin-top: 72px; }
+.mio { grid-column: span 2; grid-row: span 2; position: relative; display: block; aspect-ratio: 9 / 16; background: #fff; overflow: hidden; color: var(--panna); text-decoration: none;
+  outline: 1px solid var(--cielo); outline-offset: 3px; animation: entra 1.6s ease; }
+.galleria .mio img { position: absolute; inset: 0; width: 100%; height: 100%; aspect-ratio: auto; opacity: 1; animation: none; }
+.mio .eti-mio { position: absolute; left: 0; right: 0; bottom: 0; padding: 2.4em .9em .7em; background: linear-gradient(to top, rgba(12, 13, 16, .82), transparent);
+  font: 500 clamp(11px, 1.5vh, 14px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .16em; color: var(--panna); }
+.mio.vuoto { background: #0e1016; aspect-ratio: 9 / 16; display: flex; flex-direction: column; justify-content: center; gap: 1em; padding: 1em; }
+.mio.vuoto .suo { margin: 0; font: italic 400 clamp(14px, 1.9vh, 18px)/1.4 var(--testo); color: var(--panna-tenue); position: relative; }
+.mio .respiro { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 62%, rgba(142, 179, 214, .22), transparent 62%); animation: respira 6s ease-in-out infinite; }
+@keyframes respira { 0%, 100% { opacity: .3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.14); } }
+.mio.spento { outline-color: var(--filo); }
+/* sul sito: le frecce e le lingue */
+.frecce { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 5; align-items: center; justify-content: space-between; gap: 3vw; padding: 14px clamp(16px, 3vw, 36px);
+  font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--panna-tenue);
+  background: linear-gradient(to bottom, rgba(12, 13, 16, .97) 70%, transparent); pointer-events: none; }
+html.sito .frecce { display: flex; }
+.frecce a { color: inherit; text-decoration: none; pointer-events: auto; display: inline-flex; align-items: center; gap: .8em; padding: 6px 0; transition: color .5s; }
+.frecce a:hover { color: var(--panna); }
+.frecce svg { width: 34px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1; flex: none; }
+.lingue { display: flex; gap: 1em; pointer-events: auto; letter-spacing: .14em; }
+.lingue a { padding: 6px 2px; color: var(--grigio); }
+.lingue a.qui { color: var(--panna); }
+@media (max-width: 760px) { .frecce .nome { display: none; } }
 footer { font: 500 clamp(11px, 1.5vh, 14px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .3em; color: var(--grigio); margin-top: 4vh; }
 </style>
 </head>
 <body>
 <img id="sfondo" alt="">
 <div class="vignetta"></div>
+<nav class="frecce">
+  <a id="indietro" href="#"><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M33 5H1m5-4L1 5l5 4"/></svg><span class="nome">THEM</span></a>
+  <div class="lingue" id="lingue"></div>
+  <a id="avanti" href="#"><span class="nome" data-t="scrivi">Write your wish</span><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M1 5h32m-5-4l5 4-5 4"/></svg></a>
+</nav>
 <main>
   <div class="marca"><b>Wish Room</b> · them</div>
   <h1>Wish Room</h1>
-  <p class="motto">Your wishes shape your world.</p>
+  <p class="motto" data-t="motto">Your wishes shape your world.</p>
   <div class="concetto">
-    <p>A room, and a machine that listens. Write a wish, a dream, a poem. The machine turns your words into an image, then rebuilds that image out of your own letters, prints it on a sheet and lets it fall into the room.</p>
-    <p>The sheets gather on the floor, one over the other. Enter the room and find yours: you will know it by your words.</p>
-    <p>You can write from here, wherever you are. Your wish will be waiting in the room on Saturday night.</p>
+    <p data-t="c1">A room, and a machine that listens. Write a wish, a dream, a poem. The machine turns your words into an image, then rebuilds that image out of your own letters, prints it on a sheet and lets it fall into the room.</p>
+    <p data-t="c2">The sheets gather on the floor, one over the other. Enter the room and find yours: you will know it by your words.</p>
+    <p data-t="c3">You can write from here, wherever you are. Your wish will be waiting in the room on Saturday night.</p>
   </div>
   <div class="evento" id="evento"></div>
-  <a class="scrivi" href="/wish-room/write">Write your wish</a>
-  <div id="blocco-galleria" style="display:none">
-    <div class="eti" style="margin-bottom:1.4vh">wishes already in the room</div>
+  <a class="scrivi" href="/" data-t="scrivi">Write your wish</a>
+  <div id="bacheca" style="display:none">
+    <div class="eti" style="margin-bottom:1.4vh" data-t="gia">wishes already in the room</div>
     <div class="galleria" id="galleria"></div>
   </div>
   <footer>Wish Room · THEM</footer>
 </main>
-<script>window.WR_API = "/api/wish-room";</script>
+<script>window.WR_API = "/api/wish-room"; window.WR_LINGUA = "en";</script>
 <script>
 const $ = s => document.querySelector(s);
 const API = window.WR_API || "";
+const SITO = Boolean(API);
+const LINGUA = window.WR_LINGUA || "en";  // sul sito: inglese su /wish-room, le altre su /wish-room/italiano e /wish-room/francais
+const VIE = { en: "/wish-room", it: "/wish-room/italiano", fr: "/wish-room/francais" };  // mai «/it»: per Astro è il prefisso vietato della lingua predefinita, risponde 404
+const BASE = VIE[LINGUA] || VIE.en;
+const TESTI = {
+  en: { mio: "your wish", compone: "the machine is composing it", dorme: "the room is asleep, your wish is safe", non_entrato: "The room could not compose this wish. Write it again, in other words." },
+  it: {
+    motto: "I tuoi desideri danno forma al tuo mondo.",
+    c1: "Una stanza e una macchina che ascolta. Scrivi un desiderio, un sogno, una poesia. La macchina trasforma le tue parole in un'immagine, poi ricompone quell'immagine con le tue stesse lettere, la stampa su un foglio e la lascia cadere nella stanza.",
+    c2: "I fogli si raccolgono a terra, uno sull'altro. Entra nella stanza e trova il tuo: lo riconoscerai dalle tue parole.",
+    c3: "Puoi scrivere da qui, ovunque tu sia. Il tuo desiderio aspetterà nella stanza sabato sera.",
+    scrivi: "Scrivi il tuo desiderio", gia: "i desideri già nella stanza",
+    mio: "il tuo desiderio", compone: "la macchina lo sta componendo", dorme: "la stanza dorme, il tuo desiderio è al sicuro",
+    non_entrato: "La stanza non è riuscita a comporre questo desiderio. Riscrivilo con altre parole."
+  },
+  fr: {
+    motto: "Vos vœux façonnent votre monde.",
+    c1: "Une salle, et une machine qui écoute. Écrivez un vœu, un rêve, un poème. La machine change vos mots en image, puis recompose cette image avec vos propres lettres, l'imprime sur une feuille et la laisse tomber dans la salle.",
+    c2: "Les feuilles s'amassent au sol, l'une sur l'autre. Entrez dans la salle et trouvez la vôtre\u00a0: vous la reconnaîtrez à vos mots.",
+    c3: "Vous pouvez écrire d'ici, où que vous soyez. Votre vœu vous attendra dans la salle samedi soir.",
+    scrivi: "Écrivez votre vœu", gia: "les vœux déjà dans la salle",
+    mio: "votre vœu", compone: "la machine le compose", dorme: "la salle dort, votre vœu est en sûreté",
+    non_entrato: "La salle n'a pas pu composer ce vœu. Réécrivez-le avec d'autres mots."
+  }
+};
+function t(k) { return (TESTI[LINGUA] || {})[k] || TESTI.en[k] || k; }
+if (LINGUA !== "en") document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+function esc(x) { return String(x).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;"); }
+
+if (SITO) {
+  document.documentElement.classList.add("sito");
+  $("#indietro").href = LINGUA === "it" ? "/vibe-coding" : "/en/vibe-coding";
+  $("#avanti").href = BASE + "/write";
+  document.querySelector("a.scrivi").href = BASE + "/write";
+  $("#lingue").innerHTML = ["en", "it", "fr"].map(l => `<a href="${VIE[l]}"${l === LINGUA ? ' class="qui"' : ""} lang="${l}">${l.toUpperCase()}</a>`).join("");
+}
 function file(p, w) { return "/file?p=" + encodeURIComponent(p) + (w ? "&w=" + w : ""); }
+
+// ---------------------------------------------------------------- la bacheca
+const FINITI = ["compiuta", "stampata"], PERSI = ["scartata", "errore"];
+const PARAMETRI = new URLSearchParams(location.search);
+const NUOVO = /^[a-f0-9]{24}$/.test(PARAMETRI.get("mio") || "") ? PARAMETRI.get("mio") : null;
+let MIEI = [], STATI = {}, PUBBLICHE = [], DISEGNATA = null, SCESO = false, TIMER = null;
+
+function leggiMiei() { try { return JSON.parse(localStorage.getItem("wr_miei") || "[]"); } catch (e) { return []; } }
+function scriviMiei(ids) { try { localStorage.setItem("wr_miei", JSON.stringify(ids)); } catch (e) {} }
+
+function tessera(v) {
+  const u = (v.opera || {}).url || {}, img = u.lettere || u.immagine, link = `${BASE}/write?w=${v.id}`;
+  if (FINITI.includes(v.stato) && img) return `<a class="mio" href="${link}"><img src="${img}" alt=""><span class="eti-mio">${t("mio")}</span></a>`;
+  if (PERSI.includes(v.stato)) return `<div class="mio vuoto spento"><p class="suo">${t("non_entrato")}</p></div>`;
+  const dorme = v.stato === "in coda" && v.sveglia === false;
+  return `<a class="mio vuoto" href="${link}"><div class="respiro"></div>${img ? `<img src="${img}" alt="">` : `<p class="suo">${esc(v.testo.slice(0, 110))}${v.testo.length > 110 ? "…" : ""}</p>`}<span class="eti-mio">${t(dorme ? "dorme" : "compone")}</span></a>`;
+}
+
+function disegna() {
+  const propri = MIEI.map(id => STATI[id]).filter(Boolean);
+  const html = propri.map(tessera).join("") +
+    PUBBLICHE.filter(o => !MIEI.includes(o.id)).map((o, i) => `<img src="${o.src}&w=320" alt="" style="animation-delay:${i * .12}s">`).join("");
+  if (!html) return;
+  if (html !== DISEGNATA) { $("#galleria").innerHTML = html; DISEGNATA = html; }
+  $("#bacheca").style.display = "";
+  if (!SCESO && (NUOVO || location.hash === "#bacheca")) {  // chi torna dal modulo arriva dritto al suo lavoro
+    SCESO = true;
+    requestAnimationFrame(() => $("#bacheca").scrollIntoView({ behavior: "smooth", block: "start" }));
+  }
+}
+
+async function chiediStati(ids) {
+  await Promise.all(ids.map(async id => {
+    try {
+      const r = await fetch(API + "/stato?id=" + id);
+      if (r.status === 404) { MIEI = MIEI.filter(x => x !== id); return; }  // scaduto: non c'è più
+      if (r.ok) STATI[id] = await r.json();
+    } catch (e) {}
+  }));
+}
+
+async function seguiMiei() {  // finché un desiderio nasce, la sua tessera si aggiorna da sola
+  clearTimeout(TIMER);
+  const vivi = MIEI.filter(id => STATI[id] && !FINITI.includes(STATI[id].stato) && !PERSI.includes(STATI[id].stato));
+  if (!vivi.length) return;
+  await chiediStati(vivi);
+  disegna();
+  const dorme = vivi.every(id => STATI[id] && STATI[id].sveglia === false);
+  TIMER = setTimeout(seguiMiei, dorme ? 20000 : 4000);
+}
+
+async function bacheca(imp) {
+  if (SITO) {
+    MIEI = leggiMiei();
+    if (NUOVO) MIEI = [NUOVO, ...MIEI.filter(x => x !== NUOVO)].slice(0, 8);
+    await chiediStati(MIEI);
+    // chi non è entrato si legge una volta e poi si dimentica; nella memoria restano quelli vivi e compiuti
+    scriviMiei(MIEI.filter(id => !(STATI[id] && PERSI.includes(STATI[id].stato))));
+    if (NUOVO) history.replaceState(null, "", location.pathname + "#bacheca");
+    disegna();
+    TIMER = setTimeout(seguiMiei, 4000);
+  }
+  if (imp.galleria) {
+    try { PUBBLICHE = await (await fetch(API + "/galleria")).json(); } catch (e) {}
+    disegna();
+  }
+}
+
 async function carica() {
   let imp = {};
   try { imp = await (await fetch(API + "/impostazioni")).json(); } catch (e) {}
-  const ev = imp.evento || {};
-  $("#evento").innerHTML = ["quando", "orario", "dove"].map(k => ev[k] ? `<span>${ev[k].replace(/</g, "&lt;")}</span>` : "").join("");
+  const ev = Object.assign({}, imp.evento, (imp.evento || {})[LINGUA]);
+  $("#evento").innerHTML = ["quando", "orario", "dove"].map(k => ev[k] ? `<span>${esc(ev[k])}</span>` : "").join("");
   try {
     const r = await (await fetch(API + "/sfondo")).json();
     const img = $("#sfondo"); img.onload = () => img.classList.add("vista"); if (r.url || r.file) img.src = (innerWidth < 760 && r.piccola) || r.url || file(r.file, 1600);  // sul sito: la versione leggera per i telefoni
   } catch (e) {}
-  if (imp.galleria) {
-    try {
-      const g = await (await fetch(API + "/galleria")).json();
-      if (g.length) {
-        $("#galleria").innerHTML = g.map((o, i) => `<img src="${o.src}&w=320" alt="" style="animation-delay:${i * .12}s">`).join("");
-        $("#blocco-galleria").style.display = "";
-      }
-    } catch (e) {}
-  }
+  bacheca(imp);
 }
 carica();
 </script>

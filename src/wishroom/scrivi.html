@@ -90,7 +90,20 @@ button.tenue:hover { background: transparent; color: var(--panna-tenue); border-
 .barra { height: 1px; background: var(--filo); overflow: hidden; }
 .barra i { display: block; height: 100%; background: var(--panna-tenue); width: 100%; transform-origin: left; }
 .ferma { color: var(--rubrica); }
+/* sul sito: le frecce e le lingue, nella stanza non ci sono */
+.frecce { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 5; align-items: center; justify-content: space-between; gap: 3vw; padding: 14px clamp(16px, 3vw, 36px);
+  font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--panna-tenue);
+  background: linear-gradient(to bottom, rgba(12, 13, 16, .97) 70%, transparent); pointer-events: none; }
+html.sito .frecce { display: flex; }
+html.sito body { padding-top: 72px; }
+.frecce a { color: inherit; text-decoration: none; pointer-events: auto; display: inline-flex; align-items: center; gap: .8em; padding: 6px 0; transition: color .5s; }
+.frecce a:hover { color: var(--panna); }
+.frecce svg { width: 34px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1; flex: none; }
+.lingue { display: flex; gap: 1em; pointer-events: auto; letter-spacing: .14em; }
+.lingue a { padding: 6px 2px; color: var(--grigio); }
+.lingue a.qui { color: var(--panna); }
 @media (max-width: 760px) {
+  .frecce .nome { display: none; }
   .processo, .fine { grid-template-columns: 1fr; }
   .palco { max-height: 48vh; } .foglio { max-height: 60vh; } body { padding: 3vh 5vw; }
   #attendi.dorme .palco { display: none; }  /* la stanza dorme: sul telefono resta in vista la frase, non il palco vuoto */
@@ -102,14 +115,20 @@ button.tenue:hover { background: transparent; color: var(--panna-tenue); border-
 <canvas id="polvere"></canvas>
 <div class="vignetta"></div>
 
+<nav class="frecce">
+  <a id="indietro" href="#"><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M33 5H1m5-4L1 5l5 4"/></svg><span class="nome" data-t="f_stanza">The room</span></a>
+  <div class="lingue" id="lingue"></div>
+  <a id="avanti" href="#"><span class="nome" data-t="f_desideri">The wishes</span><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M1 5h32m-5-4l5 4-5 4"/></svg></a>
+</nav>
+
 <section class="scena vista" id="scrivi">
   <div class="marca"><b>Wish Room</b> · them</div>
-  <h1>Write a wish, a dream, a poem.</h1>
-  <p class="tenue-testo">Your wishes shape your world. Enter the room and find yours.</p>
+  <h1 data-t="titolo">Write a wish, a dream, a poem.</h1>
+  <p class="tenue-testo" data-t="sotto">Your wishes shape your world. Enter the room and find yours.</p>
   <textarea id="testo" placeholder="…" maxlength="2000" autofocus></textarea>
   <div class="sotto">
     <span class="conta" id="conta"></span>
-    <button id="affida">Entrust it to the room</button>
+    <button id="affida" data-t="affida">Entrust it to the room</button>
   </div>
   <p class="tenue-testo" id="avviso" style="min-height:1.5em"></p>
 </section>
@@ -126,18 +145,18 @@ button.tenue:hover { background: transparent; color: var(--panna-tenue); border-
     <div class="parole">
       <div class="citazione" id="citazione"></div>
       <div class="lettura" id="lettura">
-        <span class="eti">the machine reads it as</span>
+        <span class="eti" data-t="legge">the machine reads it as</span>
         <div class="prompt" id="prompt"></div>
       </div>
       <div class="passi">
-        <div class="passo" data-passo="coda">waiting its turn</div>
-        <div class="passo" data-passo="traduzione">the machine reads your words</div>
-        <div class="passo" data-passo="immagine">it imagines</div>
-        <div class="passo" data-passo="lettere">it rebuilds the image with your letters</div>
-        <div class="passo" data-passo="stampa">it prints the sheet</div>
+        <div class="passo" data-passo="coda" data-t="p_coda">waiting its turn</div>
+        <div class="passo" data-passo="traduzione" data-t="p_traduzione">the machine reads your words</div>
+        <div class="passo" data-passo="immagine" data-t="p_immagine">it imagines</div>
+        <div class="passo" data-passo="lettere" data-t="p_lettere">it rebuilds the image with your letters</div>
+        <div class="passo" data-passo="stampa" data-t="p_stampa">it prints the sheet</div>
       </div>
       <p class="attesa" id="attesa"></p>
-      <div><button class="tenue" id="lascia">Let it fall on its own</button></div>
+      <div><button class="tenue" id="lascia" data-t="lascia">Let it fall on its own</button></div>
     </div>
   </div>
 </section>
@@ -151,8 +170,8 @@ button.tenue:hover { background: transparent; color: var(--panna-tenue); border-
       <div class="firma">Wish Room · THEM</div>
     </div>
     <div class="parole">
-      <p class="esito">Enter the room and find your wish.</p>
-      <p class="tenue-testo">You will know it by your words.</p>
+      <p class="esito" data-t="esito">Enter the room and find your wish.</p>
+      <p class="tenue-testo" data-t="riconosci">You will know it by your words.</p>
       <div class="barra"><i id="barra"></i></div>
     </div>
   </div>
@@ -161,16 +180,103 @@ button.tenue:hover { background: transparent; color: var(--panna-tenue); border-
 <section class="scena" id="no">
   <div class="marca"><b>Wish Room</b> · them</div>
   <p class="esito ferma" id="no-testo"></p>
-  <div><button id="riprova">Write other words</button></div>
+  <div><button id="riprova" data-t="riprova">Write other words</button></div>
 </section>
 
-<script>window.WR_API = "/api/wish-room";</script>
+<script>window.WR_API = "/api/wish-room"; window.WR_LINGUA = "en";</script>
 <script>
 const $ = s => document.querySelector(s);
 const PARAMETRI = new URLSearchParams(location.search);
 const INGRESSO = PARAMETRI.get("ingresso") || PARAMETRI.get("entrance");
 const API = window.WR_API || "";  // sul sito themproject.ai: "/api/wish-room"; nella stanza, il server del Mac
 const SITO = Boolean(API);
+const LINGUA = window.WR_LINGUA || "en";  // sul sito: inglese su /wish-room, le altre su /wish-room/italiano e /wish-room/francais
+const VIE = { en: "/wish-room", it: "/wish-room/italiano", fr: "/wish-room/francais" };  // mai «/it»: per Astro è il prefisso vietato della lingua predefinita, risponde 404
+const BASE = VIE[LINGUA] || VIE.en;
+const TESTI = {
+  en: {
+    tetto: "The room has received all the wishes it can hold today. Come back tomorrow.",
+    limite: "You have entrusted many wishes this hour: come back a little later.",
+    rete: "The room is not answering. Please try again in a moment.",
+    davanti: "{n} ahead of you",
+    dorme: "The room is asleep right now. Your wish is safe: it will be composed when the room wakes. Keep this page, and come back to it.",
+    sabato: "Your wish will be waiting in the room on Saturday night.",
+    riconosci: "You will know it by your words.",
+    no_moderazione: "These words cannot enter the room.",
+    no_immagine: "The room could not find an image for your words. Please try once more.",
+    no_testo: "These words cannot enter the room as they are",
+    no_errore: "The room could not compose your wish. Please try again."
+  },
+  it: {
+    titolo: "Scrivi un desiderio, un sogno, una poesia.",
+    sotto: "I tuoi desideri danno forma al tuo mondo. Entra nella stanza e trova il tuo.",
+    affida: "Affidalo alla stanza",
+    legge: "la macchina lo legge così",
+    p_coda: "attende il suo turno", p_traduzione: "la macchina legge le tue parole", p_immagine: "immagina",
+    p_lettere: "ricompone l'immagine con le tue lettere", p_stampa: "stampa il foglio",
+    lascia: "Lascialo cadere da solo",
+    esito: "Entra nella stanza e trova il tuo desiderio.",
+    riprova: "Scrivi altre parole",
+    f_stanza: "La stanza", f_desideri: "I desideri",
+    tetto: "La stanza ha ricevuto tutti i desideri che può accogliere oggi. Torna domani.",
+    limite: "Hai affidato molti desideri in quest'ora: torna fra poco.",
+    rete: "La stanza non risponde. Riprova fra un momento.",
+    davanti: "{n} prima di te",
+    dorme: "In questo momento la stanza dorme. Il tuo desiderio è al sicuro: sarà composto quando la stanza si sveglia. Conserva questa pagina e tornaci.",
+    sabato: "Il tuo desiderio aspetterà nella stanza sabato sera.",
+    riconosci: "Lo riconoscerai dalle tue parole.",
+    no_moderazione: "Queste parole non possono entrare nella stanza.",
+    no_immagine: "La stanza non ha trovato un'immagine per le tue parole. Riprova ancora una volta.",
+    no_testo: "Queste parole non possono entrare nella stanza così come sono.",
+    no_errore: "La stanza non è riuscita a comporre il tuo desiderio. Riprova."
+  },
+  fr: {
+    titolo: "Écrivez un vœu, un rêve, un poème.",
+    sotto: "Vos vœux façonnent votre monde. Entrez dans la salle et trouvez le vôtre.",
+    affida: "Confiez-le à la salle",
+    legge: "la machine le lit ainsi",
+    p_coda: "il attend son tour", p_traduzione: "la machine lit vos mots", p_immagine: "elle imagine",
+    p_lettere: "elle recompose l'image avec vos lettres", p_stampa: "elle imprime la feuille",
+    lascia: "Laissez-le tomber seul",
+    esito: "Entrez dans la salle et trouvez votre vœu.",
+    riprova: "Écrivez d'autres mots",
+    f_stanza: "La salle", f_desideri: "Les vœux",
+    tetto: "La salle a reçu tous les vœux qu'elle peut accueillir aujourd'hui. Revenez demain.",
+    limite: "Vous avez confié beaucoup de vœux cette heure-ci : revenez un peu plus tard.",
+    rete: "La salle ne répond pas. Réessayez dans un instant.",
+    davanti: "{n} avant vous",
+    dorme: "La salle dort en ce moment. Votre vœu est en sûreté : il sera composé à son réveil. Gardez cette page et revenez-y.",
+    sabato: "Votre vœu vous attendra dans la salle samedi soir.",
+    riconosci: "Vous le reconnaîtrez à vos mots.",
+    no_moderazione: "Ces mots ne peuvent pas entrer dans la salle.",
+    no_immagine: "La salle n'a pas trouvé d'image pour vos mots. Essayez encore une fois.",
+    no_testo: "Ces mots ne peuvent pas entrer dans la salle tels quels.",
+    no_errore: "La salle n'a pas pu composer votre vœu. Réessayez."
+  }
+};
+function t(k) { return (TESTI[LINGUA] || {})[k] || TESTI.en[k] || k; }
+
+// i desideri di questo browser: la bacheca li mostra per primi
+function ricorda(id) {
+  try {
+    const m = JSON.parse(localStorage.getItem("wr_miei") || "[]").filter(x => x !== id);
+    localStorage.setItem("wr_miei", JSON.stringify([id, ...m].slice(0, 8)));
+  } catch (e) {}
+}
+function dimentica(id) {
+  try { localStorage.setItem("wr_miei", JSON.stringify(JSON.parse(localStorage.getItem("wr_miei") || "[]").filter(x => x !== id))); } catch (e) {}
+}
+let ID_SITO = null;
+function allaBacheca(id) { location.href = BASE + "?mio=" + id + "#bacheca"; }
+
+if (SITO) {
+  document.documentElement.classList.add("sito");
+  $("#indietro").href = BASE;
+  $("#avanti").href = BASE + "#bacheca";
+  $("#lingue").innerHTML = ["en", "it", "fr"].map(l => `<a href="${VIE[l]}/write${location.search}"${l === LINGUA ? ' class="qui"' : ""} lang="${l}">${l.toUpperCase()}</a>`).join("");
+}
+if (LINGUA !== "en") document.querySelectorAll("[data-t]").forEach(el => { el.textContent = t(el.dataset.t); });
+$("#testo").setAttribute("aria-label", $("h1").textContent);
 let IMP = { limite_caratteri: 600, secondi_mostra: 25 }, SONDA = null, RITORNO = null, INATTIVO = null, CORSA = null;
 
 function scena(id) { document.querySelectorAll(".scena").forEach(s => s.classList.toggle("vista", s.id === id)); }
@@ -270,6 +376,7 @@ async function riprendi(id) {  // chi torna al suo link ritrova il desiderio dov
   let v;
   try { v = await (await fetch(API + "/stato?id=" + id)).json(); } catch (e) { return; }
   if (!v || v.errore) { history.replaceState(null, "", location.pathname); return; }
+  ID_SITO = id;
   nuovaCorsa(v.testo);
   scena("attendi");
   sonda(id);
@@ -278,7 +385,7 @@ async function riprendi(id) {  // chi torna al suo link ritrova il desiderio dov
 
 $("#testo").addEventListener("input", () => { conta(); inattivita(); lettereScritte(); });
 $("#affida").addEventListener("click", affida);
-$("#lascia").addEventListener("click", torna);
+$("#lascia").addEventListener("click", () => { if (SITO && ID_SITO) allaBacheca(ID_SITO); else torna(); });
 $("#riprova").addEventListener("click", torna);
 $("#testo").addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) affida(); });
 
@@ -320,9 +427,7 @@ async function affida() {
     r = await (await fetch(API + "/affida", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ testo, ingresso: INGRESSO }) })).json();
   } catch (e) { r = { errore: "rete" }; }
   if (r.errore) {
-    $("#avviso").textContent = r.errore === "tetto" ? "The room has received all the wishes it can hold today. Come back tomorrow."
-      : r.errore === "limite" ? "You have entrusted many wishes this hour: come back a little later."
-      : "The room is not answering. Please try again in a moment.";
+    $("#avviso").textContent = t(r.errore === "tetto" ? "tetto" : r.errore === "limite" ? "limite" : "rete");
     $("#affida").disabled = false;
     return;
   }
@@ -330,7 +435,11 @@ async function affida() {
   nuovaCorsa(testo);
   attesa(r);
   scena("attendi");
-  if (SITO) history.replaceState(null, "", "?w=" + r.id);  // la pagina diventa il link personale del desiderio
+  if (SITO) {
+    ID_SITO = r.id; ricorda(r.id);
+    if (r.sveglia === false) return allaBacheca(r.id);  // la stanza dorme: il desiderio aspetta nella bacheca
+    history.replaceState(null, "", "?w=" + r.id);  // la pagina diventa il link personale del desiderio
+  }
   ritmo(r.id, SITO ? 1500 : 1000);
 }
 
@@ -338,8 +447,8 @@ function attesa(v) {
   const coda = !v.stato || v.stato === "in coda";
   $("#attendi").classList.toggle("dorme", coda && v.sveglia === false);
   $("#attesa").textContent = coda && v.sveglia === false
-    ? "The room is asleep right now. Your wish is safe: it will be composed when the room wakes. Keep this page, and come back to it."
-    : coda && v.posizione ? v.posizione + " ahead of you" : "";
+    ? t("dorme")
+    : coda && v.posizione ? t("davanti").replace("{n}", v.posizione) : "";
 }
 
 // prima della serata, chi scrive da lontano troverà il suo desiderio nella stanza quella sera
@@ -454,21 +563,24 @@ async function sonda(id) {
       $("#foglio-img").src = u.lettere || u.immagine || (img ? file(img, 900) : "");
       $("#foglio-testo").textContent = v.testo;
       if (primaDellaSerata()) {
-        $("#ecco .esito").textContent = "Your wish will be waiting in the room on Saturday night.";
-        $("#ecco .esito + .tenue-testo").textContent = "You will know it by your words.";
+        $("#ecco .esito").textContent = t("sabato");
+        $("#ecco .esito + .tenue-testo").textContent = t("riconosci");
       }
       scena("ecco");
       const b = $("#barra"); b.style.transition = "none"; b.style.transform = "scaleX(1)";
-      requestAnimationFrame(() => { b.style.transition = "transform " + IMP.secondi_mostra + "s linear"; b.style.transform = "scaleX(0)"; });
-      RITORNO = setTimeout(torna, IMP.secondi_mostra * 1000);
+      // sul sito il foglio resta qualche secondo, poi si torna alla bacheca, dove il desiderio è già il primo
+      const mostra = SITO ? Math.min(IMP.secondi_mostra, 9) : IMP.secondi_mostra;
+      requestAnimationFrame(() => { b.style.transition = "transform " + mostra + "s linear"; b.style.transform = "scaleX(0)"; });
+      RITORNO = setTimeout(SITO ? () => allaBacheca(id) : torna, mostra * 1000);
       riservaDaiDesideri();
     }, ritardo);
   } else if (["scartata", "errore"].includes(v.stato)) {
     clearInterval(SONDA); SONDA = null;
-    $("#no-testo").textContent = v.stato === "scartata" && v.causa === "moderazione" ? "These words cannot enter the room."
-      : v.stato === "scartata" && v.causa === "immagine" ? "The room could not find an image for your words. Please try once more."
-      : v.stato === "scartata" ? "These words cannot enter the room as they are: " + (v.motivo || "") + "."
-      : "The room could not compose your sheet. Please try again.";
+    if (SITO) dimentica(id);
+    $("#no-testo").textContent = v.stato === "scartata" && v.causa === "moderazione" ? t("no_moderazione")
+      : v.stato === "scartata" && v.causa === "immagine" ? t("no_immagine")
+      : v.stato === "scartata" ? (LINGUA === "en" ? t("no_testo") + ": " + (v.motivo || "") + "." : t("no_testo"))
+      : t("no_errore");
     scena("no");
     RITORNO = setTimeout(torna, 20000);
   }
