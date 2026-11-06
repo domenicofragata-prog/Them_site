@@ -164,7 +164,7 @@ export const POST: APIRoute = async ({ params, request, clientAddress }) => {
         if (IDIMG.test(id) && typeof b64 === 'string') comandi.push(['SET', `${P}img:${id}:galleria`, b64, 'EX', GIORNI_GALLERIA]);
       }
       if (Array.isArray(r.galleria)) {
-        const g = r.galleria.filter((o: any) => o && IDIMG.test(o.id)).slice(0, 200).map((o: any) => ({ id: o.id, quando: String(o.quando || '') }));
+        const g = r.galleria.filter((o: any) => o && IDIMG.test(o.id)).slice(0, 1000).map((o: any) => ({ id: o.id, quando: String(o.quando || '') }));
         comandi.push(['SET', P + 'galleria', JSON.stringify(g)]);
       }
       if (typeof r.polvere === 'string') comandi.push(['SET', P + 'polvere', r.polvere.slice(0, 4000)]);

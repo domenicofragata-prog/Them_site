@@ -140,6 +140,7 @@ const FINITI = ["compiuta", "stampata"], PERSI = ["scartata", "errore"];
 const PARAMETRI = new URLSearchParams(location.search);
 const NUOVO = /^[a-f0-9]{24}$/.test(PARAMETRI.get("mio") || "") ? PARAMETRI.get("mio") : null;
 let MIEI = [], STATI = {}, PUBBLICHE = [], DISEGNATA = null, SCESO = false, TIMER = null;
+const VISTE = new Set();  // le opere già sulla bacheca non affiorano una seconda volta
 
 function leggiMiei() { try { return JSON.parse(localStorage.getItem("wr_miei") || "[]"); } catch (e) { return []; } }
 function scriviMiei(ids) { try { localStorage.setItem("wr_miei", JSON.stringify(ids)); } catch (e) {} }
@@ -154,10 +155,18 @@ function tessera(v) {
 
 function disegna() {
   const propri = MIEI.map(id => STATI[id]).filter(Boolean);
-  const html = propri.map(tessera).join("") +
-    PUBBLICHE.filter(o => !MIEI.includes(o.id)).map((o, i) => `<img src="${o.src}&w=320" alt="" style="animation-delay:${i * .12}s">`).join("");
-  if (!html) return;
-  if (html !== DISEGNATA) { $("#galleria").innerHTML = html; DISEGNATA = html; }
+  const miei = propri.map(tessera).join(""), altre = PUBBLICHE.filter(o => !MIEI.includes(o.id));
+  const chiave = miei + altre.map(o => o.id).join();
+  if (!chiave) return;
+  if (chiave !== DISEGNATA) {
+    let nuove = 0;
+    $("#galleria").innerHTML = miei + altre.map(o => {
+      const stile = VISTE.has(o.id) ? "opacity:1;animation:none" : `animation-delay:${Math.min(nuove++, 24) * .12}s`;
+      VISTE.add(o.id);
+      return `<img src="${o.src}&w=320" alt="" loading="lazy" style="${stile}">`;
+    }).join("");
+    DISEGNATA = chiave;
+  }
   $("#bacheca").style.display = "";
   if (!SCESO && (NUOVO || location.hash === "#bacheca")) {  // chi torna dal modulo arriva dritto al suo lavoro
     SCESO = true;
@@ -185,6 +194,13 @@ async function seguiMiei() {  // finché un desiderio nasce, la sua tessera si a
   TIMER = setTimeout(seguiMiei, dorme ? 20000 : 4000);
 }
 
+async function chiediGalleria() {  // tutte le opere, non solo le ultime
+  try {
+    const r = await fetch(API + "/galleria?tutte=1");
+    if (r.ok) { PUBBLICHE = await r.json(); disegna(); }
+  } catch (e) {}
+}
+
 async function bacheca(imp) {
   if (SITO) {
     MIEI = leggiMiei();
@@ -197,8 +213,9 @@ async function bacheca(imp) {
     TIMER = setTimeout(seguiMiei, 4000);
   }
   if (imp.galleria) {
-    try { PUBBLICHE = await (await fetch(API + "/galleria")).json(); } catch (e) {}
-    disegna();
+    await chiediGalleria();
+    setInterval(() => { if (!document.hidden) chiediGalleria(); }, 30000);  // le opere nuove entrano da sole
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) chiediGalleria(); });
   }
 }
 
