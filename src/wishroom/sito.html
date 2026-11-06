@@ -38,6 +38,8 @@ a.scrivi { display: inline-block; align-self: flex-start; color: var(--panna); b
 a.scrivi:hover { background: var(--panna); color: var(--notte); }
 .galleria { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
 .galleria:empty { display: none; }
+.galleria > img { cursor: zoom-in; }
+.galleria > img:focus-visible { outline: 1px solid var(--cielo); outline-offset: 3px; }
 .galleria img { width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: #fff; opacity: 0; animation: affiora 1.6s ease forwards; }
 @keyframes affiora { to { opacity: .92; } }
 .eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
@@ -53,6 +55,16 @@ a.scrivi:hover { background: var(--panna); color: var(--notte); }
 .mio .respiro { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 62%, rgba(142, 179, 214, .22), transparent 62%); animation: respira 6s ease-in-out infinite; }
 @keyframes respira { 0%, 100% { opacity: .3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.14); } }
 .mio.spento { outline-color: var(--filo); }
+/* la lente: un'opera in grande, sulla notte */
+#lente { position: fixed; inset: 0; z-index: 20; display: none; align-items: center; justify-content: center; background: rgba(12, 13, 16, .96); touch-action: pan-y pinch-zoom; }
+#lente.aperta { display: flex; animation: entra .4s ease; }
+#lente img { width: min(100vw, calc(96vh * 9 / 16)); width: min(100vw, calc(96dvh * 9 / 16)); aspect-ratio: 9 / 16; object-fit: contain; background: #fff; }
+#lente button { position: absolute; border: 0; background: none; color: var(--panna-tenue); font: 300 clamp(26px, 4vh, 38px)/1 var(--testo); padding: 18px; cursor: pointer; }
+#lente button:hover, #lente button:focus-visible { color: var(--panna); outline: none; }
+#lente .chiudi { top: 6px; right: 8px; }
+#lente .prima { left: 8px; top: 50%; transform: translateY(-50%); }
+#lente .dopo { right: 8px; top: 50%; transform: translateY(-50%); }
+@media (max-width: 760px) { #lente .prima, #lente .dopo { top: auto; bottom: 8px; transform: none; } }
 /* sul sito: le frecce e le lingue */
 .frecce { display: none; position: fixed; top: 0; left: 0; right: 0; z-index: 5; align-items: center; justify-content: space-between; gap: 3vw; padding: 14px clamp(16px, 3vw, 36px);
   font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--panna-tenue);
@@ -93,6 +105,12 @@ footer { font: 500 clamp(11px, 1.5vh, 14px)/1.4 var(--testo); font-variant: smal
   </div>
   <footer>Wish Room · THEM</footer>
 </main>
+<div id="lente" role="dialog" aria-modal="true" aria-label="Wish Room">
+  <img alt="">
+  <button class="chiudi" aria-label="Close">×</button>
+  <button class="prima" aria-label="Previous">‹</button>
+  <button class="dopo" aria-label="Next">›</button>
+</div>
 <script>window.WR_API = "/api/wish-room"; window.WR_LINGUA = "en";</script>
 <script>
 const $ = s => document.querySelector(s);
@@ -163,7 +181,7 @@ function disegna() {
     $("#galleria").innerHTML = miei + altre.map(o => {
       const stile = VISTE.has(o.id) ? "opacity:1;animation:none" : `animation-delay:${Math.min(nuove++, 24) * .12}s`;
       VISTE.add(o.id);
-      return `<img src="${o.src}&w=320" alt="" loading="lazy" style="${stile}">`;
+      return `<img src="${o.src}&w=320" data-id="${o.id}" tabindex="0" role="button" aria-label="Open" alt="" loading="lazy" style="${stile}">`;
     }).join("");
     DISEGNATA = chiave;
   }
@@ -173,6 +191,57 @@ function disegna() {
     requestAnimationFrame(() => $("#bacheca").scrollIntoView({ behavior: "smooth", block: "start" }));
   }
 }
+
+// la lente: si apre subito la miniatura, poi la versione grande la sostituisce appena arriva
+const LENTE = $("#lente"), FOTO = LENTE.querySelector("img");
+let APERTA = null, GUARDATA = null, TOCCO = null;
+const grande = o => o.src.includes("k=galleria") ? o.src.replace("k=galleria", "k=grande") : `${o.src}&w=1400`;
+const opereInLente = () => PUBBLICHE.filter(o => !MIEI.includes(o.id));
+
+function mostra(o) {
+  APERTA = o;
+  FOTO.src = `${o.src}&w=320`;
+  const alta = new Image();
+  alta.onload = () => { if (APERTA === o) FOTO.src = alta.src; };
+  alta.src = grande(o);
+}
+function apri(id) {
+  const o = opereInLente().find(x => x.id === id);
+  if (!o) return;
+  GUARDATA = document.activeElement;
+  mostra(o);
+  LENTE.classList.add("aperta");
+  document.body.style.overflow = "hidden";
+  LENTE.querySelector(".chiudi").focus();
+}
+function chiudi() {
+  LENTE.classList.remove("aperta");
+  document.body.style.overflow = "";
+  APERTA = null; FOTO.removeAttribute("src");
+  if (GUARDATA) GUARDATA.focus({ preventScroll: true });
+}
+function sposta(passo) {
+  const elenco = opereInLente(), i = elenco.findIndex(o => o.id === APERTA?.id);
+  if (i >= 0 && elenco.length > 1) mostra(elenco[(i + passo + elenco.length) % elenco.length]);
+}
+$("#galleria").addEventListener("click", e => { if (e.target.dataset.id) apri(e.target.dataset.id); });
+$("#galleria").addEventListener("keydown", e => { if (e.key === "Enter" && e.target.dataset.id) apri(e.target.dataset.id); });
+LENTE.querySelector(".chiudi").onclick = chiudi;
+LENTE.querySelector(".prima").onclick = () => sposta(-1);
+LENTE.querySelector(".dopo").onclick = () => sposta(1);
+LENTE.addEventListener("click", e => { if (e.target === LENTE) chiudi(); });
+LENTE.addEventListener("touchstart", e => { TOCCO = e.touches.length === 1 ? e.touches[0].clientX : null; }, { passive: true });
+LENTE.addEventListener("touchend", e => {
+  if (TOCCO === null) return;
+  const d = e.changedTouches[0].clientX - TOCCO;
+  if (Math.abs(d) > 60) sposta(d < 0 ? 1 : -1);
+});
+addEventListener("keydown", e => {
+  if (!APERTA) return;
+  if (e.key === "Escape") chiudi();
+  if (e.key === "ArrowLeft") sposta(-1);
+  if (e.key === "ArrowRight") sposta(1);
+});
 
 async function chiediStati(ids) {
   await Promise.all(ids.map(async id => {

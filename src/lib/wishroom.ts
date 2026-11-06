@@ -69,7 +69,7 @@ export function nuovoId() {
 }
 
 export const ID = /^[a-f0-9]{24}$/;
-export const IMMAGINI = new Set(['immagine', 'lettere', 'galleria']);
+export const IMMAGINI = new Set(['immagine', 'lettere', 'galleria', 'grande']);
 
 // il giorno della stanza è quello di Roma, come la spesa che il Mac conta
 export function oggiARoma() {
