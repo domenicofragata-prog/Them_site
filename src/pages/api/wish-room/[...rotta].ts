@@ -77,7 +77,9 @@ export const GET: APIRoute = async ({ params, url, request, clientAddress }) => 
     return json({ errore: 'via sconosciuta' }, 404);
   } catch (e) {
     console.error(e);
-    return json({ errore: 'rete' }, 502);
+    // il motivo in chiaro solo se viene da Redis (quota, spazio): aiuta a capire da fuori che cosa manca
+    const m = String((e as any)?.message || e);
+    return json({ errore: 'rete', motivo: m.startsWith('redis:') ? m.slice(0, 160) : undefined }, 502);
   }
 };
 
@@ -177,6 +179,8 @@ export const POST: APIRoute = async ({ params, request, clientAddress }) => {
     return json({ errore: 'via sconosciuta' }, 404);
   } catch (e) {
     console.error(e);
-    return json({ errore: 'rete' }, 502);
+    // il motivo in chiaro solo se viene da Redis (quota, spazio): aiuta a capire da fuori che cosa manca
+    const m = String((e as any)?.message || e);
+    return json({ errore: 'rete', motivo: m.startsWith('redis:') ? m.slice(0, 160) : undefined }, 502);
   }
 };
