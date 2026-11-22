@@ -38,7 +38,7 @@ const T = {
       'Poco prima di ogni passaggio una voce dice il nome, e la figura nuova nasce in risposta schiarendosi piano. La musica viene dalla parola: ogni tratto è una nota d’arpa, la stanza della lettera ne dà la durata, la vocale con cui la lettera si pronuncia ne dà l’altezza, la svolta della figura sceglie la tonica.',
       'È un lavoro ispirato alla tradizione della cabala, costruito in vibe coding nel dialogo con la macchina. Il tracciato a misura e svolta è un’invenzione di questo lavoro.',
     ],
-    crediti: 'Arpa dalla raccolta FluidR3 GM',
+    crediti: ['Arpa: FluidR3 GM di Frank Wen, CC BY 3.0', 'Voce generata con elevenlabs.io'],
   },
   en: {
     titolo: 'Kabbalistic Meditations',
@@ -54,7 +54,7 @@ const T = {
       'Just before each passage a voice says the name, and the new figure is born in answer, slowly brightening. The music comes from the word: every stroke is a harp note, the chamber of the letter gives its length, the vowel the letter is spoken with gives its pitch, the turn of the figure chooses the tonic.',
       'It is a work inspired by the tradition of Kabbalah, built in vibe coding through a dialogue with the machine. Drawing by measure and turn is an invention of this work.',
     ],
-    crediti: 'Harp from the FluidR3 GM collection',
+    crediti: ['Harp: FluidR3 GM by Frank Wen, CC BY 3.0', 'Voice generated with elevenlabs.io'],
   },
 }[lingua];
 const pagina = { lingua, sefirot: SEFIROT.map((s) => ({ ebraico: s.ebraico, nome: s.nome, senso: s[lingua] })), accendi: T.accendi, spegni: T.spegni, figura: T.figura, di: T.di, svolta: T.svolta };
@@ -171,7 +171,7 @@ footer span + span { letter-spacing: .18em; }
   <div class="concetto">
     {T.testo.map((p) => <p>{p}</p>)}
   </div>
-  <footer><span>{T.titolo} · THEM</span><span>{T.crediti}</span></footer>
+  <footer><span>{T.titolo} · THEM</span>{T.crediti.map((c) => <span>{c}</span>)}</footer>
 </main>
 <script is:inline src="/meditazioni/middah.js"></script>
 <script is:inline src="/meditazioni/polvere.js"></script>
