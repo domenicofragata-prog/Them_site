@@ -1,0 +1,195 @@
+---
+// Meditazioni cabalistiche: una pagina a sé, come la Wish Room, in italiano e in inglese.
+// Il pezzo è public/meditazioni/polvere.js, portato da meaning-machine/esperimenti-middah, tavola 22;
+// public/meditazioni/middah.js è il motore, copia fedele, non si modifica qui.
+// Nei testi niente parentesi, ogni parola ebraica ha accanto traslitterazione e traduzione.
+import '@fontsource/frank-ruhl-libre/hebrew-400.css';
+
+interface Props { lingua: 'it' | 'en' }
+const { lingua } = Astro.props;
+const VIE = { it: '/meditazioni-cabalistiche', en: '/en/kabbalistic-meditations' };
+
+const SEFIROT = [
+  { ebraico: 'כתר', nome: 'Keter', it: 'corona', en: 'crown' },
+  { ebraico: 'חכמה', nome: 'Chokhmah', it: 'sapienza', en: 'wisdom' },
+  { ebraico: 'בינה', nome: 'Binah', it: 'intelligenza', en: 'understanding' },
+  { ebraico: 'חסד', nome: 'Chesed', it: 'grazia', en: 'loving-kindness' },
+  { ebraico: 'גבורה', nome: 'Gevurah', it: 'forza', en: 'strength' },
+  { ebraico: 'תפארת', nome: 'Tiferet', it: 'bellezza', en: 'beauty' },
+  { ebraico: 'נצח', nome: 'Netzach', it: 'vittoria', en: 'victory' },
+  { ebraico: 'הוד', nome: 'Hod', it: 'splendore', en: 'splendour' },
+  { ebraico: 'יסוד', nome: 'Yesod', it: 'fondamento', en: 'foundation' },
+  { ebraico: 'מלכות', nome: 'Malkhut', it: 'regno', en: 'kingdom' },
+  { ebraico: 'דעת', nome: 'Da’at', it: 'conoscenza', en: 'knowledge' },
+];
+
+const T = {
+  it: {
+    titolo: 'Meditazioni cabalistiche',
+    descrizione: 'Undici parole ebraiche, i nomi delle sefirot, diventano figure di polvere di lettere che si trasformano una nell’altra, con una voce e un’arpa.',
+    motto: 'Undici nomi, e per ogni nome la famiglia intera delle sue figure.',
+    indietro: 'Vibe coding',
+    accendi: 'Accendi il suono', spegni: 'Spegni il suono',
+    figura: 'figura', di: 'di', svolta: 'svolta', tocco: 'un tocco sulla figura chiama la sorella',
+    senza: 'Questo browser non riesce a disegnare il pezzo. Serve un browser recente con WebGL 2.',
+    testo: [
+      'Le sefirot sono dieci, e con Da’at undici. Qui il nome di ognuna diventa una linea. Ogni lettera è un tratto, lungo quanto la sua stanza: le ventidue lettere sono distribuite in nove stanze, e il numero della stanza, da uno a nove, è la lunghezza. Dopo ogni tratto la linea svolta di un angolo che resta sempre uguale. La parola si ripete tante volte quante ne chiede la sua misura, finché la linea torna al punto da cui era partita e la figura si chiude.',
+      'La stessa parola, con la stessa misura, si chiude per molti angoli diversi. Le figure che ne nascono sono sorelle, da dieci a quarantacinque secondo il nome, e insieme fanno la famiglia della sefirah. La pagina la percorre tutta, una figura alla volta. La polvere di lettere resta raccolta lungo la linea per una decina di secondi, poi si allarga in nebbia e migra verso la sorella, senza che lo schermo torni al buio. Dopo l’ultima figura viene di nuovo la prima.',
+      'Poco prima di ogni passaggio una voce dice il nome, e la figura nuova nasce in risposta schiarendosi piano. La musica viene dalla parola: ogni tratto è una nota d’arpa, la stanza della lettera ne dà la durata, la vocale con cui la lettera si pronuncia ne dà l’altezza, la svolta della figura sceglie la tonica.',
+      'È un lavoro ispirato alla tradizione della cabala, costruito in vibe coding nel dialogo con la macchina. Il tracciato a misura e svolta è un’invenzione di questo lavoro.',
+    ],
+    crediti: 'Arpa dalla raccolta FluidR3 GM',
+  },
+  en: {
+    titolo: 'Kabbalistic Meditations',
+    descrizione: 'Eleven Hebrew words, the names of the sefirot, become figures of letter dust that turn into one another, with a voice and a harp.',
+    motto: 'Eleven names, and for each name the whole family of its figures.',
+    indietro: 'Vibe coding',
+    accendi: 'Turn the sound on', spegni: 'Turn the sound off',
+    figura: 'figure', di: 'of', svolta: 'turn', tocco: 'a touch on the figure calls its sister',
+    senza: 'This browser cannot draw the piece. It needs a recent browser with WebGL 2.',
+    testo: [
+      'The sefirot are ten, and with Da’at eleven. Here the name of each becomes a line. Every letter is a stroke, as long as its chamber: the twenty-two letters are laid out in nine chambers, and the number of the chamber, from one to nine, is the length. After every stroke the line turns by an angle that never changes. The word is repeated as many times as its measure asks, until the line comes back to where it started and the figure closes.',
+      'The same word, with the same measure, closes at many different angles. The figures born this way are sisters, from ten to forty-five depending on the name, and together they make the family of the sefirah. The page walks through all of it, one figure at a time. The letter dust stays gathered along the line for some ten seconds, then spreads into mist and migrates towards the sister, and the screen never goes dark. After the last figure the first one returns.',
+      'Just before each passage a voice says the name, and the new figure is born in answer, slowly brightening. The music comes from the word: every stroke is a harp note, the chamber of the letter gives its length, the vowel the letter is spoken with gives its pitch, the turn of the figure chooses the tonic.',
+      'It is a work inspired by the tradition of Kabbalah, built in vibe coding through a dialogue with the machine. Drawing by measure and turn is an invention of this work.',
+    ],
+    crediti: 'Harp from the FluidR3 GM collection',
+  },
+}[lingua];
+const pagina = { lingua, sefirot: SEFIROT.map((s) => ({ ebraico: s.ebraico, nome: s.nome, senso: s[lingua] })), accendi: T.accendi, spegni: T.spegni, figura: T.figura, di: T.di, svolta: T.svolta };
+---
+<!doctype html>
+<html lang={lingua}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{T.titolo} · THEM</title>
+<meta name="description" content={T.descrizione}>
+<meta property="og:title" content={`${T.titolo} · THEM`}>
+<meta property="og:description" content={T.descrizione}>
+<link rel="canonical" href={`https://themproject.ai${VIE[lingua]}`}>
+<link rel="alternate" hreflang="it" href={`https://themproject.ai${VIE.it}`}>
+<link rel="alternate" hreflang="en" href={`https://themproject.ai${VIE.en}`}>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style is:global>
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond[wght].ttf") format("truetype"); font-weight: 300 700; font-style: normal; font-display: swap; }
+@font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond-Italic[wght].ttf") format("truetype"); font-weight: 300 700; font-style: italic; font-display: swap; }
+:root { --notte: #000; --panna: #efe9dc; --panna-tenue: #b7b0a2; --grigio: #76716a; --filo: rgba(239, 233, 220, .14); --cielo: #7fa2dc; --ghiaccio: #ecf2fc;
+  --testo: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif; --ebraico: "Frank Ruhl Libre", "Cormorant", serif; }
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--notte); color: var(--panna); }
+body { font: 400 clamp(18px, 2.3vh, 24px)/1.5 var(--testo); overflow-x: hidden; }
+p { margin: 0; }
+.frecce { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 3vw; padding: 14px clamp(16px, 3vw, 36px);
+  font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--panna-tenue);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, .97) 70%, transparent); pointer-events: none; }
+.frecce a, .frecce button { color: inherit; text-decoration: none; pointer-events: auto; display: inline-flex; align-items: center; gap: .8em; padding: 6px 0; transition: color .5s; }
+.frecce a:hover { color: var(--panna); }
+.frecce svg { width: 34px; height: 10px; stroke: currentColor; fill: none; stroke-width: 1; flex: none; }
+.lingue { display: flex; gap: 1em; pointer-events: auto; letter-spacing: .14em; }
+.lingue a { padding: 6px 2px; color: var(--grigio); }
+.lingue a.qui { color: var(--panna); }
+main { width: min(1320px, 100% - 8vw); margin: 0 auto; padding: 76px 0 10vh; animation: entra 1.4s ease; }
+@keyframes entra { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
+/* il pezzo: a sinistra i nomi, a destra la figura */
+.opera { display: grid; grid-template-columns: minmax(250px, 330px) minmax(0, 1fr); gap: clamp(24px, 4vw, 64px); align-items: center; min-height: calc(100vh - 76px); min-height: calc(100svh - 76px); }
+.colonna { display: flex; flex-direction: column; gap: 2.6vh; min-width: 0; }
+.marca { font: 500 clamp(12px, 1.7vh, 16px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .32em; color: var(--grigio); }
+.marca b { color: var(--panna-tenue); font-weight: 500; }
+h1 { margin: 0; font: italic 300 clamp(38px, 6.4vh, 66px)/1.02 var(--testo); letter-spacing: -.01em; }
+.motto { font: italic 400 clamp(18px, 2.5vh, 24px)/1.35 var(--testo); color: var(--panna-tenue); }
+.nomi { list-style: none; margin: 0; padding: 1.6vh 0; border-top: 1px solid var(--filo); border-bottom: 1px solid var(--filo); display: flex; flex-direction: column; }
+.nomi button { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: 3.4em 1fr; align-items: baseline; column-gap: .9em; padding: .32vh 0; color: var(--grigio); transition: color .6s; }
+.nomi button:hover, .nomi button:focus-visible { color: var(--panna-tenue); }
+.nomi button[aria-pressed="true"] { color: var(--panna); }
+.nomi .eb { font: 400 clamp(17px, 2.5vh, 23px)/1.3 var(--ebraico); text-align: right; color: var(--cielo); opacity: .55; transition: opacity .6s, color .6s; }
+.nomi button[aria-pressed="true"] .eb { opacity: 1; color: var(--ghiaccio); }
+.nomi .tr { font: 500 clamp(13px, 1.8vh, 16px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .18em; }
+.nomi .tr i { font: italic 400 clamp(14px, 1.9vh, 17px)/1.3 var(--testo); font-variant: normal; letter-spacing: 0; color: var(--grigio); }
+button.suono { align-self: flex-start; background: transparent; color: var(--panna); border: 1px solid var(--panna-tenue); border-radius: 0; padding: 1.4vh 2.2em; cursor: pointer;
+  font: 500 clamp(13px, 1.8vh, 17px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .28em; transition: background .5s, color .5s, border-color .5s; }
+button.suono:hover { background: var(--panna); color: var(--notte); }
+button.suono.acceso { border-color: var(--filo); color: var(--panna-tenue); }
+button.suono.acceso:hover { background: transparent; color: var(--panna); border-color: var(--panna-tenue); }
+.scena { display: flex; flex-direction: column; align-items: center; gap: 1.4vh; min-width: 0; }
+#tela { display: block; width: min(100%, calc(100vh - 215px)); width: min(100%, calc(100svh - 215px)); aspect-ratio: 1; cursor: pointer; touch-action: manipulation; }
+.dida { text-align: center; display: flex; flex-direction: column; gap: .3vh; min-height: 4.2em; }
+.dida .nome { font: 400 clamp(17px, 2.3vh, 22px)/1.3 var(--testo); color: var(--panna); }
+.dida .nome bdi { font-family: var(--ebraico); color: var(--ghiaccio); margin-right: .5em; font-size: 1.1em; }
+.dida .nome i { color: var(--panna-tenue); }
+.eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
+.senza { display: none; color: var(--panna-tenue); font-style: italic; text-align: center; max-width: 30ch; }
+.scena.ferma #tela, .scena.ferma .dida { display: none; } .scena.ferma .senza { display: block; }
+.concetto { color: var(--panna-tenue); display: flex; flex-direction: column; gap: 1.6vh; max-width: 62ch; margin: 8vh auto 0; }
+footer { max-width: 62ch; margin: 7vh auto 0; display: flex; flex-direction: column; gap: .6vh; font: 500 clamp(11px, 1.5vh, 14px)/1.5 var(--testo); font-variant: small-caps; letter-spacing: .3em; color: var(--grigio); }
+footer span + span { letter-spacing: .18em; }
+@media (max-width: 860px) {
+  .frecce .nome { display: none; }
+  main { width: min(100% - 10vw, 640px); }
+  .opera { grid-template-columns: 1fr; gap: 3vh; min-height: 0; }
+  .colonna, .scena { display: contents; }
+  .marca { order: 1; } h1 { order: 2; } .motto { order: 3; } #tela { order: 4; width: 100%; margin: 0 auto; } .dida { order: 5; } .senza { order: 5; } button.suono { order: 6; align-self: center; } .nomi { order: 7; }
+  .opera { display: flex; flex-direction: column; }
+  .nomi { flex-direction: row; flex-wrap: wrap; gap: .2vh 1.6em; justify-content: center; }
+  .nomi li { flex: none; } .nomi button { display: inline-flex; width: auto; gap: .5em; } .nomi .sen { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { main { animation: none; } }
+</style>
+</head>
+<body>
+<nav class="frecce">
+  <a href={lingua === 'it' ? '/vibe-coding' : '/en/vibe-coding'}><svg viewBox="0 0 34 10" aria-hidden="true"><path d="M33 5H1m5-4L1 5l5 4"/></svg><span class="nome">{T.indietro}</span></a>
+  <div class="lingue">
+    <a href={VIE.it} class={lingua === 'it' ? 'qui' : ''} lang="it">IT</a>
+    <a href={VIE.en} class={lingua === 'en' ? 'qui' : ''} lang="en">EN</a>
+  </div>
+</nav>
+<main>
+  <section class="opera">
+    <div class="colonna">
+      <div class="marca"><b>THEM</b> · vibe coding</div>
+      <h1>{T.titolo}</h1>
+      <p class="motto">{T.motto}</p>
+      <ul class="nomi" id="nomi">
+        {SEFIROT.map((s, i) => (
+          <li><button type="button" data-n={i} aria-pressed={i === 0 ? 'true' : 'false'}><bdi class="eb" lang="he">{s.ebraico}</bdi><span class="tr">{s.nome}<span class="sen">, <i>{s[lingua]}</i></span></span></button></li>
+        ))}
+      </ul>
+      <button type="button" class="suono" id="suono">{T.accendi}</button>
+    </div>
+    <div class="scena" id="scena">
+      <canvas id="tela" role="img" aria-label={T.titolo}></canvas>
+      <div class="dida">
+        <p class="nome" id="nome"><bdi lang="he">{SEFIROT[0].ebraico}</bdi>{SEFIROT[0].nome}, <i>{SEFIROT[0][lingua]}</i></p>
+        <p class="eti" id="quale">&nbsp;</p>
+        <p class="eti" style="opacity:.7">{T.tocco}</p>
+      </div>
+      <p class="senza">{T.senza}</p>
+    </div>
+  </section>
+  <div class="concetto">
+    {T.testo.map((p) => <p>{p}</p>)}
+  </div>
+  <footer><span>{T.titolo} · THEM</span><span>{T.crediti}</span></footer>
+</main>
+<script is:inline src="/meditazioni/middah.js"></script>
+<script is:inline src="/meditazioni/polvere.js"></script>
+<script is:inline define:vars={{ pagina }}>
+const $ = s => document.querySelector(s);
+const numero = (n, d) => { const s = n.toFixed(d).replace(/\.?0+$/, ""); return pagina.lingua === "it" ? s.replace(".", ",") : s; };
+function avviso(st) {
+  const s = pagina.sefirot[st.sefirah];
+  $("#nome").innerHTML = `<bdi lang="he">${s.ebraico}</bdi>${s.nome}, <i>${s.senso}</i>`;
+  $("#quale").textContent = `${pagina.figura} ${st.figura} ${pagina.di} ${st.figure} · ${pagina.svolta} ${numero(st.svolta, 1)}°`;
+  document.querySelectorAll("#nomi button").forEach((b, i) => b.setAttribute("aria-pressed", i === st.sefirah ? "true" : "false"));
+  const b = $("#suono"); b.textContent = st.suono ? pagina.spegni : pagina.accendi; b.classList.toggle("acceso", st.suono);
+}
+const chiesta = Math.max(0, Math.min(10, parseInt(new URLSearchParams(location.search).get("n") || "0", 10) || 0));
+Polvere.avvia($("#tela"), { sefirah: chiesta, avviso }).then(va => { if (!va) $("#scena").classList.add("ferma"); });
+$("#nomi").addEventListener("click", e => { const b = e.target.closest("button"); if (b) Polvere.parola(+b.dataset.n); });
+$("#tela").addEventListener("click", () => Polvere.sorella());
+$("#suono").addEventListener("click", () => Polvere.suono());
+</script>
+</body>
+</html>
