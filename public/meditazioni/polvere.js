@@ -5,7 +5,7 @@
    - posizioni e luce di ogni granello si calcolano nella scheda grafica, a ogni quadro passano solo sei numeri;
    - l'alone non sfoca la tela intera: la polvere si disegna su una tela nascosta, si rimpicciolisce e si sfoca
      in piccolo, a un quarto e a un ottavo del lato, poi si somma;
-   - la tela segue lo schermo fino a un tetto, il giro si ferma quando la pagina non è in vista;
+   - la tela segue lo schermo fino a un tetto; fuori vista non si disegna, e a suono spento il giro si ferma;
    - il suono si scarica e parte solo dopo un tocco.
    Espone window.Polvere. Ha bisogno di window.Middah. */
 (function () {
@@ -76,7 +76,7 @@
   /** Accende o spegne il suono. Va chiamata da un tocco. */
   function suono() {
     // conta ciò che è stato chiesto, non lo stato: appena creato il contesto non risulta ancora in moto
-    if (AC) { voluto = !voluto; voluto ? AC.resume() : AC.suspend(); setTimeout(() => avviso(stato()), 150); return; }
+    if (AC) { voluto = !voluto; voluto ? AC.resume() : AC.suspend(); regola(); setTimeout(() => avviso(stato()), 150); return; }
     AC = new (window.AudioContext || window.webkitAudioContext)(); voluto = true;
     USCITA = AC.createGain(); USCITA.gain.value = 0.9; USCITA.connect(AC.destination);
     const eco = AC.createConvolver(), n = AC.sampleRate * 5, imp = AC.createBuffer(2, n, AC.sampleRate);
@@ -85,7 +85,7 @@
     caricaArpa().then(caricaNomi).then(() => { if (ora - t0 < tieni - 5) dici(quale); });
     // il bordone: tonica, quinta e ottava
     for (const [rapporto, vol] of [[1, 0.04], [1.5, 0.018], [2, 0.014]]) { const o = AC.createOscillator(), g = AC.createGain(); o.type = "sine"; o.frequency.value = tonica(FA) * rapporto; g.gain.value = vol; o.connect(g); g.connect(USCITA); o.start(); BORD.push([o, rapporto, g, vol]); }
-    setTimeout(() => avviso(stato()), 150);
+    regola(); setTimeout(() => avviso(stato()), 150);
   }
   /** Il nome detto: mai due a meno di sei secondi, tutti allo stesso livello. */
   function dici(i) {
@@ -247,7 +247,7 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
     musica(t, e);
     // quanta luce: cresce mentre la figura nuova si forma, è piena quando è nata, poi si posa piano
     const nascita = 1 + LUCE_NASCITA * (e >= 0 ? e * e : Math.exp(-(t - t0) / 3.5));
-    disegna(t, e < 0 ? 0 : dolce(e), nascita);
+    if (inVista) disegna(t, e < 0 ? 0 : dolce(e), nascita); // fuori vista il tempo e la musica vanno avanti, il disegno no
   }
 
   /** Sceglie la sefirah. La polvere in vista migra verso la prima figura della famiglia nuova, senza nero. */
@@ -285,7 +285,8 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
     if (stato().inViaggio !== vecchio) { vecchio = stato().inViaggio; avviso(stato()); }
   }
   function regola() {
-    const deve = inVista && !document.hidden && !!gl;
+    // con il suono acceso il pezzo continua anche quando la pagina scorre e la tela esce di vista; si ferma solo a scheda nascosta
+    const deve = !document.hidden && !!gl && (inVista || (!!AC && voluto));
     if (deve && !gira) { gira = true; ultimo = 0; requestAnimationFrame(giro); if (AC && voluto) AC.resume(); }
     else if (!deve && gira) { gira = false; if (AC) AC.suspend(); }
   }
