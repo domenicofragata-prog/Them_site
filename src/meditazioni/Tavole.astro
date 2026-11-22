@@ -1,59 +1,75 @@
 ---
-// Le tavole preparatorie delle Meditazioni cabalistiche: le ventiquattro prove da cui nasce il pezzo, in ordine.
-// Le tavole sono le pagine vive di meaning-machine/esperimenti-middah, copiate in public/meditazioni/tavole
-// con i soli percorsi cambiati; qui c'è l'indice, con una miniatura e due righe per tavola. Si aprono una alla volta.
+// Le tavole preparatorie delle Meditazioni cabalistiche: come nasce una figura e perché si chiude.
+// In alto il metodo, con una figura che si traccia dal vivo, public/meditazioni/nascita.js; sotto, nove tavole
+// scelte da Dome fra quelle di meaning-machine/esperimenti-middah, copiate in public/meditazioni/tavole con i soli
+// percorsi cambiati. Si aprono una alla volta.
 // Nei testi niente parentesi, ogni parola ebraica ha accanto traslitterazione e traduzione.
+import '@fontsource/frank-ruhl-libre/hebrew-400.css';
+import '@fontsource/space-mono/latin-400.css';
+
 interface Props { lingua: 'it' | 'en' }
 const { lingua } = Astro.props;
 const VIE = { it: '/meditazioni-cabalistiche/tavole', en: '/en/kabbalistic-meditations/plates' };
 const OPERA = { it: '/meditazioni-cabalistiche', en: '/en/kabbalistic-meditations' };
 
+const NOMI = ['Keter', 'Chokhmah', 'Binah', 'Chesed', 'Gevurah', 'Tiferet', 'Netzach', 'Hod', 'Yesod', 'Malkhut', 'Da’at'];
+const EBRAICO = ['כתר', 'חכמה', 'בינה', 'חסד', 'גבורה', 'תפארת', 'נצח', 'הוד', 'יסוד', 'מלכות', 'דעת'];
+const SENSI = { it: ['corona', 'sapienza', 'intelligenza', 'grazia', 'forza', 'bellezza', 'vittoria', 'splendore', 'fondamento', 'regno', 'conoscenza'],
+  en: ['crown', 'wisdom', 'understanding', 'loving-kindness', 'strength', 'beauty', 'victory', 'splendour', 'foundation', 'kingdom', 'knowledge'] };
+// le nove stanze di Aiq Bekar: la lettera numero n dell'alfabeto sta nella stanza n mod 9
+const ALFABETO = [...'אבגדהוזחטיכלמנסעפצקרשת'];
+const STANZE = Array.from({ length: 9 }, (_, s) => ALFABETO.filter((_, i) => i % 9 === s));
+
 const TAVOLE = [
-  { n: '01', file: 'tavola_01_griglia', it: ['La griglia di lettere', 'La linea della Middah resa su una griglia: ogni cella porta la lettera del tratto che la attraversa. Otto varianti ferme.'], en: ['The grid of letters', 'The line of the Middah laid on a grid: each cell carries the letter of the stroke that crosses it. Eight still variants.'] },
-  { n: '02', file: 'tavola_02_animata', it: ['Lettere in movimento', 'Le lettere sovrapposte a luce sommata, tracciate nel tempo, su tre fondi.'], en: ['Letters in motion', 'Letters laid over one another in added light, drawn through time, on three grounds.'] },
-  { n: '03', file: 'tavola_03_nero', it: ['Il nero', 'Il pezzo solo sul nero, a tutto schermo. Da qui il fondo resta questo.'], en: ['Black', 'The piece alone on black, full screen. From here on the ground stays this one.'] },
-  { n: '04', file: 'tavola_04_vecchio_computer', it: ['Vecchio computer', 'Fosforo azzurro, scia lunga, righe del tubo e vetro appena bombato.'], en: ['Old computer', 'Blue phosphor, a long trail, scan lines and slightly curved glass.'] },
-  { n: '05', file: 'tavola_05_alfanumerico', it: ['Lettere e numeri', 'Le lettere mescolate ai numeri delle stanze, in quattro modi.'], en: ['Letters and numbers', 'Letters mixed with the numbers of the chambers, in four ways.'] },
-  { n: '06', file: 'tavola_06_ferme', it: ['Le undici tavole ferme', 'Le undici figure a linea appena chiusa, una per sefirah.'], en: ['The eleven still plates', 'The eleven figures with the line just closed, one for each sefirah.'] },
-  { n: '07', file: 'tavola_07_albero', it: ['L’Albero', 'Le undici figure nei posti dell’Albero, tracciate insieme alla stessa andatura.'], en: ['The Tree', 'The eleven figures in their places on the Tree, drawn together at the same pace.'] },
-  { n: '08', file: 'tavola_08_sentieri', it: ['I sentieri', 'L’Albero con i ventidue sentieri, ognuno scritto con la sua lettera e percorso da una luce.'], en: ['The paths', 'The Tree with its twenty-two paths, each written with its letter and crossed by a light.'] },
-  { n: '09', file: 'tavola_09_olografica', it: ['La figura in profondità', 'Ogni lettera ha una distanza e la figura oscilla. Tre modi di dare profondità, strada poi lasciata.'], en: ['The figure in depth', 'Each letter has a distance and the figure sways. Three ways of giving depth, a road later left.'] },
-  { n: '10', file: 'tavola_10_albero_di_pale', it: ['Undici pale', 'L’Albero come undici pale a strati, ognuna con un suo tempo.'], en: ['Eleven blades', 'The Tree as eleven layered blades, each with a time of its own.'] },
-  { n: '11', file: 'tavola_11_famiglia', it: ['La famiglia', 'Tutte le figure che una parola chiude con la sua misura, ferme, una accanto all’altra. Qui nasce l’idea della famiglia.'], en: ['The family', 'All the figures a word closes with its measure, still, side by side. Here the idea of the family is born.'] },
-  { n: '12', file: 'tavola_12_pala_famiglia', it: ['La pala e la famiglia', 'Una pala traccia una figura, la tiene e passa alla sorella.'], en: ['The blade and the family', 'A blade draws a figure, holds it and moves on to its sister.'] },
-  { n: '13', file: 'tavola_13_famiglia_in_piano', it: ['La famiglia in piano', 'La famiglia torna in piano, sul nero, una figura dopo l’altra.'], en: ['The family, flat', 'The family returns to the plane, on black, one figure after another.'] },
-  { n: '14', file: 'tavola_14_famiglia_nuda', it: ['La famiglia nuda', 'Solo lettere sulla griglia. La sorella si scrive mentre la figura di prima si disfa. È la versione tecnica del pezzo.'], en: ['The bare family', 'Only letters on the grid. The sister is written while the earlier figure comes undone. It is the technical version of the piece.'] },
-  { n: '15', file: 'tavola_15_meditativa', it: ['Tre proposte meditative', 'Polvere, respiro, memoria: tre modi lenti di attraversare la stessa famiglia.'], en: ['Three meditative proposals', 'Dust, breath, memory: three slow ways of going through the same family.'] },
-  { n: '16', file: 'tavola_16_polvere', it: ['Polvere', '4000 granelli di lettere, un nucleo chiaro e un alone lieve, che migrano da una figura alla sorella.'], en: ['Dust', '4000 grains of letters, a bright core and a faint halo, migrating from one figure to its sister.'] },
-  { n: '17', file: 'tavola_17_polvere_e_musica', it: ['Polvere e musica', 'La prima musica: ogni tratto è una nota, la stanza della lettera dà grado e durata.'], en: ['Dust and music', 'The first music: each stroke is a note, the chamber of the letter gives degree and length.'] },
-  { n: '18', file: 'tavola_18_polvere_e_vocali', it: ['Polvere e vocali', 'L’altezza della nota passa alla vocale con cui la lettera si pronuncia.'], en: ['Dust and vowels', 'The pitch of the note passes to the vowel the letter is spoken with.'] },
-  { n: '19', file: 'tavola_19_la_voce_che_canta', it: ['La voce che canta', 'Una voce sintetica prova a cantare le vocali. Strada lasciata.'], en: ['The singing voice', 'A synthetic voice tries to sing the vowels. A road left.'] },
-  { n: '20', file: 'tavola_20_la_voce_vera', it: ['La voce vera', 'Un timbro umano intonato nota per nota. Strada lasciata.'], en: ['The real voice', 'A human timbre tuned note by note. A road left.'] },
-  { n: '21', file: 'tavola_21_il_nome_detto', it: ['Il nome detto', 'Una voce dice il nome della sefirah a ogni trasformazione, e la figura nuova nasce in risposta.'], en: ['The spoken name', 'A voice says the name of the sefirah at each transformation, and the new figure is born in answer.'] },
-  { n: '22', file: 'tavola_22_strumenti_veri', it: ['Strumenti veri', 'Le note sui semitoni, suonate da strumenti registrati. L’arpa è quella della pagina.'], en: ['Real instruments', 'The notes on semitones, played by recorded instruments. The harp is the one on the page.'] },
-  { n: '23', file: 'tavola_23_undici_famiglie', it: ['Le undici famiglie', 'Sette figure per ognuna delle undici famiglie, a colpo d’occhio.'], en: ['The eleven families', 'Seven figures for each of the eleven families, at a glance.'] },
-  { n: '24', file: 'tavola_24_le_22_lettere', it: ['Le 22 lettere', 'I nomi delle lettere come ornamenti, con svolta a 72 gradi, e le parole della Tanakh che disegnano lo stesso ornamento.'], en: ['The 22 letters', 'The names of the letters as ornaments, with a turn of 72 degrees, and the words of the Tanakh that draw the same ornament.'] },
+  { n: '01', file: 'tavola_01_griglia', it: ['La griglia di lettere', 'La linea posata su una griglia: ogni cella porta la lettera del tratto che la attraversa. La figura comincia a essere scritta con il suo stesso nome.'], en: ['The grid of letters', 'The line laid on a grid: each cell carries the letter of the stroke that crosses it. The figure begins to be written with its own name.'] },
+  { n: '02', file: 'tavola_02_animata', it: ['Lettere in movimento', 'Dove la linea passa più volte le lettere si sommano e la luce cresce. La figura si scrive nel tempo, un tratto dopo l’altro.'], en: ['Letters in motion', 'Where the line passes more than once the letters add up and the light grows. The figure is written through time, one stroke after another.'] },
+  { n: '03', file: 'tavola_03_nero', it: ['Il nero', 'La stessa scrittura sola sul nero, a tutto schermo.'], en: ['Black', 'The same writing alone on black, full screen.'] },
+  { n: '04', file: 'tavola_04_vecchio_computer', it: ['Vecchio computer', 'Fosforo azzurro, scia lunga, righe del tubo: la figura come su un terminale.'], en: ['Old computer', 'Blue phosphor, a long trail, scan lines: the figure as on a terminal.'] },
+  { n: '05', file: 'tavola_05_alfanumerico', it: ['Lettere e numeri', 'Accanto alle lettere i numeri delle loro stanze, cioè le lunghezze dei tratti: la misura scritta dentro la figura.'], en: ['Letters and numbers', 'Beside the letters the numbers of their chambers, that is the lengths of the strokes: the measure written inside the figure.'] },
+  { n: '06', file: 'tavola_06_ferme', it: ['Le undici figure', 'Gli undici nomi a linea appena chiusa, uno accanto all’altro.'], en: ['The eleven figures', 'The eleven names with the line just closed, side by side.'] },
+  { n: '11', file: 'tavola_11_famiglia', it: ['La famiglia', 'Tutte le figure che un nome chiude con la sua misura, al variare dei giri. Qui nasce l’idea della famiglia.'], en: ['The family', 'All the figures a name closes with its measure, as the turns vary. Here the idea of the family is born.'] },
+  { n: '23', file: 'tavola_23_undici_famiglie', it: ['Le undici famiglie', 'Sette figure per ogni famiglia, a colpo d’occhio: stelle e rosoni per i nomi con pochi tratti, anelli fitti per quelli con molti.'], en: ['The eleven families', 'Seven figures for each family, at a glance: stars and rosettes for the names with few strokes, dense rings for those with many.'] },
+  { n: '24', file: 'tavola_24_le_22_lettere', it: ['Le 22 lettere', 'Il metodo applicato ai nomi delle lettere, con svolta a 72 gradi: ogni nome si chiude in cinque ripetizioni. Sotto ogni ornamento, le parole della Tanakh che disegnano lo stesso.'], en: ['The 22 letters', 'The method applied to the names of the letters, with a turn of 72 degrees: each name closes in five repetitions. Under each ornament, the words of the Tanakh that draw the same one.'] },
 ];
 
 const T = {
   it: {
     titolo: 'Tavole preparatorie', opera: 'Meditazioni cabalistiche',
-    descrizione: 'Le ventiquattro tavole da cui nascono le Meditazioni cabalistiche, dalla prima griglia di lettere alla polvere con voce e arpa.',
-    motto: 'Ventiquattro tavole, in ordine: dalla prima griglia di lettere alla polvere.',
-    testo: 'Ogni tavola è una pagina viva, la stessa su cui il pezzo è stato provato, con i suoi comandi di lavoro. Si aprono una alla volta. Dalla 17 alla 22 hanno il suono, che si accende al primo tocco. Le tavole con la polvere, dalla 16 alla 22, sono più pesanti della pagina finale.',
-    apri: 'Apri la tavola', chiudi: 'Chiudi', prima: 'Tavola precedente', dopo: 'Tavola seguente', tavola: 'tavola',
-    crediti: ['Strumenti: FluidR3 GM di Frank Wen, CC BY 3.0', 'Voci generate con elevenlabs.io'],
+    descrizione: 'Come nasce una figura delle Meditazioni cabalistiche e perché si chiude: le stanze, il tratto, la svolta, la misura, la famiglia, e le tavole di lavoro.',
+    motto: 'Come nasce una figura, e perché si chiude.',
+    blocchi: [
+      ['Il tratto.', 'Ogni lettera diventa un tratto, lungo quanto il numero della sua stanza. כתר Keter, corona, ha tre lettere: כ kaf sta nella stanza 2, ת tav nella 4, ר resh nella 2. La parola è una spezzata di tre tratti lunghi 2, 4 e 2.'],
+      ['La svolta.', 'Dopo ogni tratto la linea svolta di un angolo, sempre lo stesso e sempre dalla stessa parte. La forma della spezzata viene tutta da qui: le lunghezze le dà la parola, l’angolo è uno solo.'],
+      ['La chiusura.', 'Finita la parola, la linea la riscrive da capo senza staccarsi. Ogni ripetizione è la stessa spezzata, girata rispetto alla precedente della somma delle sue svolte. Quando le ripetizioni hanno preso tutte le direzioni in parti uguali, a raggiera, i loro spostamenti si annullano: la linea è tornata al punto di partenza e la figura è chiusa.'],
+      ['La misura.', 'La misura è il numero delle ripetizioni: 13 per Keter. Scelta la misura, la svolta non è libera. Deve valere un numero intero di giri diviso per il numero dei tratti, che per Keter sono 13 per 3, cioè 39. Con 6 giri la svolta è 360 per 6 diviso 39, poco più di 55 gradi.'],
+      ['La famiglia.', 'Il numero dei giri può cambiare, purché non abbia divisori in comune con la misura: altrimenti la figura si chiuderebbe prima. Ogni numero ammesso dà una svolta e una figura. Con pochi giri la svolta è dolce e la figura è larga e vuota, con molti la svolta è stretta e la linea si incrocia in stelle e trame fitte. Tolte le speculari, Keter ne ha 18: il cursore sotto la figura le scorre tutte.'],
+      ['Perché le famiglie non si somigliano.', 'Conta il numero dei tratti. I nomi che ne hanno pochi, come Keter con 39 o הוד Hod, splendore, con 45, danno stelle, rosoni e girandole. Quelli che ne hanno molti, come בינה Binah, intelligenza, con 200, danno anelli e dischi fitti. Le misure dei nomi sono una scelta dell’opera.'],
+    ],
+    stanze: ['Le stanze.', 'Le ventidue lettere ebraiche stanno in nove stanze. È la tavola di Aiq Bekar, che prende il nome dalle prime due: א alef, י yod, ק qof, poi ב bet, כ kaf, ר resh. Il numero della stanza, da 1 a 9, è la misura della lettera.'],
+    tavole: ['Le tavole.', 'Trovata la linea, restava da darle una materia. Queste sono le tavole di lavoro, pagine vive con i loro comandi: la linea diventa scrittura, poi famiglia, e alla fine il metodo torna sulle lettere stesse. Si aprono una alla volta.'],
+    giri: 'giri', ritraccia: 'Traccia da capo', misura: 'misura', figura: 'figura', di: 'di', svolta: 'svolta', tratto: 'tratto', ripetizione: 'ripetizione', chiusa: 'chiusa', tratti: 'tratti', lunghezza: 'lunghezza',
+    apri: 'Apri la tavola', chiudi: 'Chiudi', prima: 'Tavola precedente', dopo: 'Tavola seguente', tavola: 'tavola', stanza: 'stanza',
   },
   en: {
     titolo: 'Preparatory plates', opera: 'Kabbalistic Meditations',
-    descrizione: 'The twenty-four plates from which the Kabbalistic Meditations are born, from the first grid of letters to the dust with voice and harp.',
-    motto: 'Twenty-four plates, in order: from the first grid of letters to the dust.',
-    testo: 'Each plate is a live page, the very one the piece was tried on, with its working controls, which are in Italian. They open one at a time. Plates 17 to 22 have sound, which starts at the first touch. The plates with the dust, 16 to 22, are heavier than the final page.',
-    apri: 'Open the plate', chiudi: 'Close', prima: 'Previous plate', dopo: 'Next plate', tavola: 'plate',
-    crediti: ['Instruments: FluidR3 GM by Frank Wen, CC BY 3.0', 'Voices generated with elevenlabs.io'],
+    descrizione: 'How a figure of the Kabbalistic Meditations is born and why it closes: the chambers, the stroke, the turn, the measure, the family, and the working plates.',
+    motto: 'How a figure is born, and why it closes.',
+    blocchi: [
+      ['The stroke.', 'Each letter becomes a stroke, as long as the number of its chamber. כתר Keter, crown, has three letters: כ kaf is in chamber 2, ת tav in 4, ר resh in 2. The word is a broken line of three strokes, 2, 4 and 2 long.'],
+      ['The turn.', 'After each stroke the line turns by an angle, always the same and always to the same side. The whole shape comes from this: the lengths are given by the word, the angle is a single one.'],
+      ['The closing.', 'When the word is done, the line writes it again without lifting. Each repetition is the same broken line, rotated from the one before by the sum of its turns. When the repetitions have taken every direction in equal parts, like spokes, their displacements cancel out: the line is back where it started and the figure is closed.'],
+      ['The measure.', 'The measure is the number of repetitions: 13 for Keter. Once the measure is chosen, the turn is not free. It must be a whole number of full turns divided by the number of strokes, which for Keter is 13 times 3, that is 39. With 6 turns the angle is 360 times 6 divided by 39, a little over 55 degrees.'],
+      ['The family.', 'The number of turns may change, as long as it shares no divisor with the measure: otherwise the figure would close too soon. Each allowed number gives one angle and one figure. With few turns the bend is gentle and the figure wide and empty, with many the bend is tight and the line crosses itself in stars and dense weaves. Mirror images aside, Keter has 18: the slider under the figure goes through them all.'],
+      ['Why the families do not look alike.', 'What counts is the number of strokes. Names with few, like Keter with 39 or הוד Hod, splendour, with 45, give stars, rosettes and pinwheels. Names with many, like בינה Binah, understanding, with 200, give rings and dense discs. The measures of the names are a choice of the work.'],
+    ],
+    stanze: ['The chambers.', 'The twenty-two Hebrew letters sit in nine chambers. It is the table of Aiq Bekar, named after the first two: א alef, י yod, ק qof, then ב bet, כ kaf, ר resh. The number of the chamber, from 1 to 9, is the measure of the letter.'],
+    tavole: ['The plates.', 'Once the line was found, it still needed a matter. These are the working plates, live pages with their controls, which are in Italian: the line becomes writing, then family, and in the end the method returns to the letters themselves. They open one at a time.'],
+    giri: 'turns', ritraccia: 'Draw again', misura: 'measure', figura: 'figure', di: 'of', svolta: 'turn', tratto: 'stroke', ripetizione: 'repetition', chiusa: 'closed', tratti: 'strokes', lunghezza: 'length',
+    apri: 'Open the plate', chiudi: 'Close', prima: 'Previous plate', dopo: 'Next plate', tavola: 'plate', stanza: 'chamber',
   },
 }[lingua];
 const elenco = TAVOLE.map((t) => ({ n: t.n, file: t.file, titolo: t[lingua][0] }));
+const parole = { lingua, nomi: NOMI, sensi: SENSI[lingua], misura: T.misura, figura: T.figura, di: T.di, svolta: T.svolta, giri: T.giri, tratto: T.tratto, ripetizione: T.ripetizione, chiusa: T.chiusa, tratti: T.tratti, lunghezza: T.lunghezza, tavola: T.tavola };
 ---
 <!doctype html>
 <html lang={lingua}>
@@ -71,11 +87,11 @@ const elenco = TAVOLE.map((t) => ({ n: t.n, file: t.file, titolo: t[lingua][0] }
 <style is:global>
 @font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond[wght].ttf") format("truetype"); font-weight: 300 700; font-style: normal; font-display: swap; }
 @font-face { font-family: "Cormorant"; src: url("/wish-room/font/CormorantGaramond-Italic[wght].ttf") format("truetype"); font-weight: 300 700; font-style: italic; font-display: swap; }
-:root { --notte: #000; --panna: #efe9dc; --panna-tenue: #b7b0a2; --grigio: #76716a; --filo: rgba(239, 233, 220, .14); --cielo: #7fa2dc;
-  --testo: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif; }
+:root { --notte: #000; --panna: #efe9dc; --panna-tenue: #b7b0a2; --grigio: #76716a; --filo: rgba(239, 233, 220, .14); --cielo: #7fa2dc; --ghiaccio: #ecf2fc;
+  --testo: "Cormorant", "Cormorant Garamond", Garamond, Georgia, serif; --ebraico: "Frank Ruhl Libre", "Cormorant", serif; --mono: "Space Mono", monospace; }
 * { box-sizing: border-box; }
 html, body { margin: 0; background: var(--notte); color: var(--panna); }
-body { font: 400 clamp(18px, 2.3vh, 24px)/1.5 var(--testo); overflow-x: hidden; }
+body { font: 400 clamp(18px, 2.3vh, 24px)/1.5 var(--testo); overflow-x: clip; }
 p { margin: 0; }
 .frecce { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 3vw; padding: 14px clamp(16px, 3vw, 36px);
   font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--panna-tenue);
@@ -86,14 +102,47 @@ p { margin: 0; }
 .lingue { display: flex; gap: 1em; pointer-events: auto; letter-spacing: .14em; }
 .lingue a { padding: 6px 2px; color: var(--grigio); }
 .lingue a.qui { color: var(--panna); }
-main { width: min(1320px, 100% - 8vw); margin: 0 auto; padding: 12vh 0 10vh; display: flex; flex-direction: column; gap: 3.4vh; animation: entra 1.4s ease; }
+main { width: min(1320px, 100% - 8vw); margin: 0 auto; padding: 12vh 0 10vh; animation: entra 1.4s ease; }
 @keyframes entra { from { opacity: 0; transform: translateY(1vh); } to { opacity: 1; transform: none; } }
+.testa { display: flex; flex-direction: column; gap: 3vh; margin-bottom: 7vh; }
 .marca { font: 500 clamp(12px, 1.7vh, 16px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .32em; color: var(--grigio); }
 .marca b { color: var(--panna-tenue); font-weight: 500; }
 h1 { margin: 0; font: italic 300 clamp(40px, 7.4vh, 78px)/1.02 var(--testo); letter-spacing: -.01em; }
 .motto { font: italic 400 clamp(20px, 2.9vh, 28px)/1.35 var(--testo); }
-.concetto { color: var(--panna-tenue); max-width: 62ch; }
-.galleria { list-style: none; margin: 3vh 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: clamp(22px, 3vw, 40px) clamp(16px, 2vw, 28px); }
+/* il metodo: a sinistra le parole, a destra la figura che si traccia e resta in vista */
+.metodo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
+.parole { display: flex; flex-direction: column; gap: 2.6vh; color: var(--panna-tenue); max-width: 60ch; }
+.parole b, .intro b { font-weight: 500; font-variant: small-caps; letter-spacing: .14em; color: var(--panna); }
+.stanze { display: grid; grid-template-columns: repeat(3, 1fr); direction: rtl; gap: 1px; background: var(--filo); border: 1px solid var(--filo); max-width: 420px; margin: .4vh 0 1vh; }
+.stanze div { direction: ltr; background: var(--notte); padding: 1.2vh .4em 1vh; display: flex; flex-direction: column; align-items: center; gap: .1vh; }
+.stanze .let { font: 400 clamp(20px, 2.8vh, 26px)/1.2 var(--ebraico); color: var(--ghiaccio); letter-spacing: .28em; margin-right: -.28em; direction: rtl; }
+.stanze .num { font: 400 clamp(11px, 1.5vh, 13px)/1.3 var(--mono); color: var(--cielo); }
+.scena { position: sticky; top: 64px; display: flex; flex-direction: column; align-items: center; gap: 1.2vh; }
+#nascita { display: block; width: min(100%, calc(100vh - 370px)); width: min(100%, calc(100svh - 370px)); min-width: min(100%, 320px); aspect-ratio: 1; }
+.nomi { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .2vh 1.3em; }
+.nomi button { all: unset; cursor: pointer; display: inline-flex; align-items: baseline; gap: .45em; color: var(--grigio); transition: color .5s; }
+.nomi button:hover, .nomi button:focus-visible { color: var(--panna-tenue); }
+.nomi button[aria-pressed="true"] { color: var(--panna); }
+.nomi .eb { font: 400 clamp(16px, 2.2vh, 20px)/1.3 var(--ebraico); color: var(--cielo); opacity: .6; }
+.nomi button[aria-pressed="true"] .eb { opacity: 1; color: var(--ghiaccio); }
+.nomi .tr { font: 500 clamp(11px, 1.5vh, 14px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .16em; }
+.dida { text-align: center; display: flex; flex-direction: column; gap: .3vh; min-height: 5.4em; }
+.dida .nome { font: 400 clamp(17px, 2.3vh, 22px)/1.3 var(--testo); color: var(--panna); }
+.dida .nome bdi { font-family: var(--ebraico); color: var(--ghiaccio); margin-right: .5em; font-size: 1.1em; }
+.dida .nome i { color: var(--panna-tenue); }
+.eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .22em; color: var(--grigio); }
+.comandi { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1.2vh 1.6em; width: 100%; }
+.comandi label { display: inline-flex; align-items: center; gap: .9em; }
+.comandi input[type=range] { -webkit-appearance: none; appearance: none; width: min(46vw, 260px); height: 1px; background: var(--panna-tenue); outline: none; cursor: pointer; }
+.comandi input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 13px; height: 13px; border-radius: 50%; background: var(--ghiaccio); border: 0; }
+.comandi input[type=range]::-moz-range-thumb { width: 13px; height: 13px; border-radius: 50%; background: var(--ghiaccio); border: 0; }
+.comandi input[type=range]:focus-visible { outline: 1px solid var(--cielo); outline-offset: 8px; }
+.comandi button { background: transparent; color: var(--panna); border: 1px solid var(--panna-tenue); border-radius: 0; padding: .8vh 1.5em; cursor: pointer;
+  font: 500 clamp(12px, 1.6vh, 15px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .24em; transition: background .5s, color .5s; }
+.comandi button:hover { background: var(--panna); color: var(--notte); }
+/* le tavole */
+.intro { color: var(--panna-tenue); max-width: 62ch; margin: 11vh 0 0; }
+.galleria { list-style: none; margin: 4vh 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: clamp(22px, 3vw, 40px) clamp(16px, 2vw, 28px); }
 .galleria button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 1.2vh; width: 100%; }
 .galleria .quadro { position: relative; aspect-ratio: 4 / 3; background: #000; outline: 1px solid var(--filo); overflow: hidden; transition: outline-color .6s; }
 .galleria img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: .82; transition: opacity .6s, transform 1.6s ease; }
@@ -113,9 +162,12 @@ h1 { margin: 0; font: italic 300 clamp(40px, 7.4vh, 78px)/1.02 var(--testo); let
 #lente button { border: 0; background: none; color: var(--panna-tenue); font: 300 clamp(24px, 3.6vh, 34px)/1 var(--testo); padding: 6px 14px; cursor: pointer; }
 #lente button:hover, #lente button:focus-visible { color: var(--panna); outline: none; }
 #lente iframe { flex: 1; width: 100%; border: 0; background: #000; }
-footer { margin-top: 6vh; display: flex; flex-direction: column; gap: .6vh; font: 500 clamp(11px, 1.5vh, 14px)/1.5 var(--testo); font-variant: small-caps; letter-spacing: .3em; color: var(--grigio); }
-footer span + span { letter-spacing: .18em; }
-@media (max-width: 760px) { .frecce .nome { display: none; } main { width: calc(100% - 10vw); } }
+footer { margin-top: 8vh; font: 500 clamp(11px, 1.5vh, 14px)/1.5 var(--testo); font-variant: small-caps; letter-spacing: .3em; color: var(--grigio); }
+@media (max-width: 900px) {
+  .frecce .nome { display: none; } main { width: calc(100% - 10vw); }
+  .metodo { grid-template-columns: 1fr; }
+  .scena { position: static; order: -1; } #nascita { width: 100%; }
+}
 @media (prefers-reduced-motion: reduce) { main { animation: none; } .galleria img { transition: none; } }
 </style>
 </head>
@@ -128,10 +180,38 @@ footer span + span { letter-spacing: .18em; }
   </div>
 </nav>
 <main>
-  <div class="marca"><b>{T.opera}</b> · them</div>
-  <h1>{T.titolo}</h1>
-  <p class="motto">{T.motto}</p>
-  <p class="concetto">{T.testo}</p>
+  <div class="testa">
+    <div class="marca"><b>{T.opera}</b> · them</div>
+    <h1>{T.titolo}</h1>
+    <p class="motto">{T.motto}</p>
+  </div>
+  <section class="metodo">
+    <div class="parole">
+      <p><b>{T.stanze[0]}</b> {T.stanze[1]}</p>
+      <div class="stanze" role="img" aria-label={T.stanze[0]}>
+        {STANZE.map((lettere, s) => <div><span class="let" lang="he">{lettere.join('')}</span><span class="num">{s + 1}</span></div>)}
+      </div>
+      {T.blocchi.map(([capo, p]) => <p><b>{capo}</b> {p}</p>)}
+    </div>
+    <div class="scena">
+      <ul class="nomi" id="nomi">
+        {EBRAICO.map((e, i) => (
+          <li><button type="button" data-n={i} aria-pressed={i === 0 ? 'true' : 'false'} title={SENSI[lingua][i]}><bdi class="eb" lang="he">{e}</bdi><span class="tr">{NOMI[i]}</span></button></li>
+        ))}
+      </ul>
+      <canvas id="nascita" role="img" aria-label={T.motto}></canvas>
+      <div class="dida">
+        <p class="nome" id="nome"><bdi lang="he">{EBRAICO[0]}</bdi>{NOMI[0]}, <i>{SENSI[lingua][0]}</i></p>
+        <p class="eti" id="riga1">&nbsp;</p>
+        <p class="eti" id="riga2">&nbsp;</p>
+      </div>
+      <div class="comandi">
+        <label class="eti"><span>{T.giri}</span><input type="range" id="giri" min="1" max="18" value="6" step="1" aria-label={T.giri}></label>
+        <button type="button" id="ritraccia">{T.ritraccia}</button>
+      </div>
+    </div>
+  </section>
+  <p class="intro"><b>{T.tavole[0]}</b> {T.tavole[1]}</p>
   <ul class="galleria" id="galleria">
     {TAVOLE.map((t, i) => (
       <li><button type="button" data-i={i} aria-label={`${T.apri} ${t.n}, ${t[lingua][0]}`}>
@@ -141,7 +221,7 @@ footer span + span { letter-spacing: .18em; }
       </button></li>
     ))}
   </ul>
-  <footer><span>{T.opera} · THEM</span>{T.crediti.map((c) => <span>{c}</span>)}</footer>
+  <footer>{T.opera} · THEM</footer>
 </main>
 <div id="lente" role="dialog" aria-modal="true" aria-label={T.titolo}>
   <header>
@@ -152,24 +232,36 @@ footer span + span { letter-spacing: .18em; }
       <button type="button" class="chiudi" aria-label={T.chiudi}>×</button>
     </nav>
   </header>
-  <iframe title={T.titolo} allow="autoplay"></iframe>
+  <iframe title={T.titolo}></iframe>
 </div>
-<script is:inline define:vars={{ elenco, tavola: T.tavola }}>
-const $ = s => document.querySelector(s), LENTE = $("#lente"), QUADRO = LENTE.querySelector("iframe");
-let aperta = -1, guardata = null;
-// una tavola alla volta: aprendone un'altra la precedente si scarica, chiudendo si ferma anche il suo suono
-function mostra(i) {
-  aperta = (i + elenco.length) % elenco.length; const t = elenco[aperta];
-  $("#lente-titolo").textContent = `${tavola} ${t.n} · ${t.titolo}`;
-  QUADRO.src = `/meditazioni/tavole/${t.file}.html`;
+<script is:inline src="/meditazioni/middah.js"></script>
+<script is:inline src="/meditazioni/nascita.js"></script>
+<script is:inline define:vars={{ elenco, parole }}>
+const $ = s => document.querySelector(s), P = parole;
+const numero = (n, d) => { const s = n.toFixed(d).replace(/\.?0+$/, ""); return P.lingua === "it" ? s.replace(".", ",") : s; };
+// la figura che si traccia
+function avviso(st) {
+  $("#nome").innerHTML = `<bdi lang="he">${st.parola}</bdi>${P.nomi[st.sefirah]}, <i>${P.sensi[st.sefirah]}</i>`;
+  $("#riga1").textContent = `${P.misura} ${st.misura} · ${P.figura} ${st.figura} ${P.di} ${st.figure} · ${st.giri} ${P.giri} · ${P.svolta} ${numero(st.svolta, 1)}°`;
+  $("#riga2").textContent = st.chiusa ? `${P.chiusa} · ${st.tratti} ${P.tratti} · ${P.lunghezza} ${st.lunghezza}` : `${P.tratto} ${st.tratto} ${P.di} ${st.tratti} · ${P.ripetizione} ${st.ripetizione} ${P.di} ${st.misura}`;
+  const g = $("#giri"); if (+g.max !== st.figure) g.max = st.figure; if (+g.value !== st.figura) g.value = st.figura;
+  document.querySelectorAll("#nomi button").forEach((b, i) => b.setAttribute("aria-pressed", i === st.sefirah ? "true" : "false"));
 }
+Nascita.avvia($("#nascita"), { avviso });
+$("#nomi").addEventListener("click", e => { const b = e.target.closest("button"); if (b) Nascita.parola(+b.dataset.n); });
+$("#giri").addEventListener("input", e => Nascita.sorella(+e.target.value));
+$("#ritraccia").addEventListener("click", () => Nascita.traccia());
+// le tavole: una alla volta, aprendone un'altra la precedente si scarica
+const LENTE = $("#lente"), QUADRO = LENTE.querySelector("iframe");
+let aperta = -1, guardata = null;
+function mostra(i) { aperta = (i + elenco.length) % elenco.length; const t = elenco[aperta]; $("#lente-titolo").textContent = `${P.tavola} ${t.n} · ${t.titolo}`; QUADRO.src = `/meditazioni/tavole/${t.file}.html`; }
 function apri(i) { guardata = document.activeElement; mostra(i); LENTE.classList.add("aperta"); document.body.style.overflow = "hidden"; LENTE.querySelector(".chiudi").focus(); }
 function chiudi() { LENTE.classList.remove("aperta"); document.body.style.overflow = ""; aperta = -1; QUADRO.src = "about:blank"; if (guardata) guardata.focus({ preventScroll: true }); }
 $("#galleria").addEventListener("click", e => { const b = e.target.closest("button"); if (b) apri(+b.dataset.i); });
 LENTE.querySelector(".chiudi").onclick = chiudi;
 LENTE.querySelector(".prima").onclick = () => mostra(aperta - 1);
 LENTE.querySelector(".dopo").onclick = () => mostra(aperta + 1);
-addEventListener("keydown", e => { if (aperta < 0) return; if (e.key === "Escape") chiudi(); });
+addEventListener("keydown", e => { if (aperta >= 0 && e.key === "Escape") chiudi(); });
 </script>
 </body>
 </html>
