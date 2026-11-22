@@ -65,7 +65,7 @@
     if (!GRADO.hasOwnProperty(v[i])) { k = -1; for (let j = i - 1; j >= 0; j--) if (GRADO.hasOwnProperty(v[j])) { k = j; break; } if (k < 0) for (let j = i + 1; j < v.length; j++) if (GRADO.hasOwnProperty(v[j])) { k = j; break; } }
     return { grado: k < 0 ? 0 : GRADO[v[k]], piena: k === i };
   }
-  const midiNota = (F, i, n = 0) => { const dir = ((n * F.theta_gradi) % 360 + 360) % 360, g = tono(F, i).grado + Math.floor(dir / 360 * 5 + 1e-6); return tonicaMidi(F) + PENTA[g % 5] + 12 * Math.floor(g / 5); };
+  const midiNota = (F, i, n = 0) => { let dir = ((n * F.theta_gradi) % 360 + 360) % 360; if (360 - dir < 1e-6) dir = 0; /* un giro compiuto vale zero, anche se il conto in virgola cade appena sotto */ const g = tono(F, i).grado + Math.floor(dir / 360 * 5 + 1e-6); return tonicaMidi(F) + PENTA[g % 5] + 12 * Math.floor(g / 5); };
   const freq = (F, i, n = 0) => hz(midiNota(F, i, n));
   const suonaOra = () => AC && AC.state === "running";
 
