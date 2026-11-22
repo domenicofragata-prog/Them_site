@@ -75,7 +75,8 @@
 
   /** Accende o spegne il suono. Va chiamata da un tocco. */
   function suono() {
-    if (AC) { voluto = AC.state !== "running"; voluto ? AC.resume() : AC.suspend(); setTimeout(() => avviso(stato()), 150); return; }
+    // conta ciò che è stato chiesto, non lo stato: appena creato il contesto non risulta ancora in moto
+    if (AC) { voluto = !voluto; voluto ? AC.resume() : AC.suspend(); setTimeout(() => avviso(stato()), 150); return; }
     AC = new (window.AudioContext || window.webkitAudioContext)(); voluto = true;
     USCITA = AC.createGain(); USCITA.gain.value = 0.9; USCITA.connect(AC.destination);
     const eco = AC.createConvolver(), n = AC.sampleRate * 5, imp = AC.createBuffer(2, n, AC.sampleRate);
@@ -270,7 +271,7 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
   /** Lo stato per la pagina: quale sefirah, quale figura fra quante, la svolta in gradi, il suono. In viaggio vale la figura d'arrivo. */
   function stato() {
     const inViaggio = ora - t0 >= tieni, n = ((((inViaggio ? ki + 1 : ki) % KK.length) + KK.length) % KK.length), F = figura(n);
-    return { sefirah: quale, figura: n + 1, figure: KK.length, svolta: F.theta_gradi, suono: suonaOra() || (!!AC && voluto), inViaggio };
+    return { sefirah: quale, figura: n + 1, figure: KK.length, svolta: F.theta_gradi, suono: !!AC && voluto, contesto: AC ? AC.state : null, inViaggio };
   }
 
   /* ------------------------------------------------------------------ il giro */
