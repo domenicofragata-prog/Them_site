@@ -14,7 +14,8 @@
     ["נצח", 40], ["הוד", 15], ["יסוד", 18], ["מלכות", 10], ["דעת", 11]];
   const U = 1600;                      // il lato della tavola d'origine: tutte le misure sono in questi punti
   const M = 4000, TIENI = 10, MIGRA = 12, ALONE = 46, NEBBIA = 1.35, SFUMA = 2.4, LUCE_NASCITA = 0.6;
-  const TETTO = 1600, QUADRI = 30;     // lato massimo della tela in punti veri, quadri al secondo
+  const TETTO = 2048, QUADRI = 30;     // lato massimo della tela in punti veri, quadri al secondo
+  const AGIO = 0.8;                    // la figura occupa meno tela: intorno resta spazio nero dove la nebbia si allarga senza essere tagliata
   const LETTERE = [..."אבגדהוזחטיכלמנסעפצקרשתךםןףץ"], CELLA = 128, CORPO = 96;
   const dolce = e => e * e * (3 - 2 * e);
   const caso = (() => { let s = 11; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
@@ -146,7 +147,7 @@ void main(){
   vA = min(1.0, g2.y*(g2.z>0.5?vel:1.0)*(0.72+0.28*sin(t*g1.w*1.7+g1.z*2.0))*nascita);
   vC = g2.x>26.0 ? vec3(236.,242.,252.)/255. : vec3(127.,162.,220.)/255.;
   vL = e<0.5 ? pa.z : pb.z;
-  gl_Position = vec4(p.x/800.0-1.0, 1.0-p.y/800.0, 0.0, 1.0);
+  gl_Position = vec4((p.x/800.0-1.0)*${AGIO.toFixed(3)}, (1.0-p.y/800.0)*${AGIO.toFixed(3)}, 0.0, 1.0);
   gl_PointSize = min(massimo, g2.x*${(CELLA / CORPO).toFixed(4)}*scala);
 }`;
   const FS_GRANI = `#version 300 es
@@ -218,7 +219,7 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
   function posti() { if (!gl) return; gl.bindBuffer(gl.ARRAY_BUFFER, bufA); gl.bufferData(gl.ARRAY_BUFFER, A, gl.DYNAMIC_DRAW); gl.bindBuffer(gl.ARRAY_BUFFER, bufB); gl.bufferData(gl.ARRAY_BUFFER, B, gl.DYNAMIC_DRAW); }
 
   function disegna(t, e, nascita) {
-    const neb = 1 + SFUMA * Math.sin(Math.PI * e), vel = 1 - 0.35 * Math.sin(Math.PI * e), T = tele, s = lato / U;
+    const neb = 1 + SFUMA * Math.sin(Math.PI * e), vel = 1 - 0.35 * Math.sin(Math.PI * e), T = tele, s = lato / U * AGIO;
     gl.disable(gl.DEPTH_TEST);
     // la polvere, netta, sulla tela nascosta
     gl.bindFramebuffer(gl.FRAMEBUFFER, T.netta.fb); gl.viewport(0, 0, lato, lato); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);

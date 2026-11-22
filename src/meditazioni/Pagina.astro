@@ -119,14 +119,18 @@ button.suono:hover { background: var(--panna); color: var(--notte); }
 button.suono.acceso { border-color: var(--filo); color: var(--panna-tenue); }
 button.suono.acceso:hover { background: transparent; color: var(--panna); border-color: var(--panna-tenue); }
 .scena { display: flex; flex-direction: column; align-items: center; gap: 1.4vh; min-width: 0; }
-#tela { display: block; width: min(100%, calc(100vh - 215px)); width: min(100%, calc(100svh - 215px)); aspect-ratio: 1; cursor: pointer; touch-action: manipulation; }
+/* il palco tiene il posto nella pagina; la tela è più grande e lo oltrepassa, sfumando nel nero, così la nebbia si allarga senza bordo */
+.palco { position: relative; width: min(100%, calc(100vh - 215px)); width: min(100%, calc(100svh - 215px)); aspect-ratio: 1; }
+#tela { position: absolute; left: 50%; top: 50%; width: 160%; aspect-ratio: 1; transform: translate(-50%, -50%); cursor: pointer; touch-action: manipulation;
+  -webkit-mask-image: radial-gradient(closest-side, #000 80%, transparent 100%); mask-image: radial-gradient(closest-side, #000 80%, transparent 100%); }
+.colonna, .dida { position: relative; z-index: 1; }
 .dida { text-align: center; display: flex; flex-direction: column; gap: .3vh; min-height: 4.2em; }
 .dida .nome { font: 400 clamp(17px, 2.3vh, 22px)/1.3 var(--testo); color: var(--panna); }
 .dida .nome bdi { font-family: var(--ebraico); color: var(--ghiaccio); margin-right: .5em; font-size: 1.1em; }
 .dida .nome i { color: var(--panna-tenue); }
 .eti { font: 500 clamp(11px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); }
 .senza { display: none; color: var(--panna-tenue); font-style: italic; text-align: center; max-width: 30ch; }
-.scena.ferma #tela, .scena.ferma .dida { display: none; } .scena.ferma .senza { display: block; }
+.scena.ferma .palco, .scena.ferma .dida { display: none; } .scena.ferma .senza { display: block; }
 .concetto b { font-weight: 500; font-variant: small-caps; letter-spacing: .14em; color: var(--panna); }
 .oltre { align-self: flex-start; margin-top: 2vh; display: inline-flex; align-items: center; gap: .9em; color: var(--panna); text-decoration: none; border: 1px solid var(--panna-tenue); padding: 1.4vh 2.2em; font: 500 clamp(13px, 1.8vh, 17px)/1.3 var(--testo); font-variant: small-caps; letter-spacing: .28em; transition: background .5s, color .5s; }
 .oltre:hover { background: var(--panna); color: var(--notte); }
@@ -139,7 +143,7 @@ footer span + span { letter-spacing: .18em; }
   main { width: min(100% - 10vw, 640px); }
   .opera { grid-template-columns: 1fr; gap: 3vh; min-height: 0; }
   .colonna, .scena { display: contents; }
-  .marca { order: 1; } h1 { order: 2; } .motto { order: 3; } #tela { order: 4; width: 100%; margin: 0 auto; } .dida { order: 5; } .senza { order: 5; } button.suono { order: 6; align-self: center; } .nomi { order: 7; }
+  .marca { order: 1; } h1 { order: 2; } .motto { order: 3; } .palco { order: 4; width: 100%; margin: 0 auto; } .dida { order: 5; } .senza { order: 5; } button.suono { order: 6; align-self: center; } .nomi { order: 7; }
   .opera { display: flex; flex-direction: column; }
   .nomi { flex-direction: row; flex-wrap: wrap; gap: .2vh 1.6em; justify-content: center; }
   .nomi li { flex: none; } .nomi button { display: inline-flex; width: auto; gap: .5em; } .nomi .sen { display: none; }
@@ -169,7 +173,7 @@ footer span + span { letter-spacing: .18em; }
       <button type="button" class="suono" id="suono">{T.accendi}</button>
     </div>
     <div class="scena" id="scena">
-      <canvas id="tela" role="img" aria-label={T.titolo}></canvas>
+      <div class="palco"><canvas id="tela" role="img" aria-label={T.titolo}></canvas></div>
       <div class="dida">
         <p class="nome" id="nome"><bdi lang="he">{SEFIROT[0].ebraico}</bdi>{SEFIROT[0].nome}, <i>{SEFIROT[0][lingua]}</i></p>
         <p class="eti" id="quale">&nbsp;</p>
