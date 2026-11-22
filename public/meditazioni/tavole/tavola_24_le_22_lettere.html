@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 24, le 22 lettere</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:26px 40px 44px;background:#000;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:26px;margin:0}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC}
+.testa{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.testa a{color:#7FA2DC;text-decoration:none;border-bottom:1px solid transparent}.testa a:hover{border-color:#7FA2DC}
+.g{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:26px 24px}
+.g.c .cella:nth-child(19){grid-column-start:2}
+.cella{min-width:0}
+svg{display:block;width:100%;aspect-ratio:1;margin-bottom:6px}
+.eb{font-family:"Frank Ruhl Libre",serif;font-size:17px;color:#ECF2FC}
+.riga{font-size:15px;line-height:1.35}
+.riga i{color:#A3AFCB}
+.sig{color:#A3AFCB;font-style:italic;font-size:14px;margin-bottom:6px}
+.p{font-size:13px;line-height:1.4;color:#A3AFCB;margin-top:3px}
+.p .eb{font-size:14px;color:#DCE6F7}
+.p i{color:#7FA2DC}
+.p b{font-family:"Space Mono",monospace;font-weight:400;font-size:8.5px;letter-spacing:.12em;text-transform:uppercase;color:#7FA2DC;margin-right:6px}
+.pie{margin-top:34px;max-width:1200px;font-size:15px;line-height:1.5;color:#A3AFCB}
+</style></head><body>
+<div class="testa"><h1>Le 22 lettere, i nomi come ornamenti</h1><div class="m" id="sotto"></div></div>
+<div class="g" id="g"></div>
+<div class="pie" id="pie"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="lettere_72.js"></script>
+<script>
+/* Tavola 24: ogni lettera è disegnata con la Middah del proprio nome, svolta 72°. La prima scrittura del nome porta
+   le sue lettere sui tratti, le ripetizioni sono il filo lieve. Sotto, le parole della Tanakh con lo stesso ornamento.
+   ?grafie=tutte mostra anche le grafie non standard dei nomi; ?quante= parole per grado, 3 se non detto. */
+const Q=new URLSearchParams(location.search), TUTTE=Q.get("grafie")==="tutte", QUANTE=+(Q.get("quante")||3), TH=LETTERE.meta.svolta;
+const CHIARO="#ECF2FC", LIEVE="#7FA2DC";
+function rosa(grafia){
+  const F=Middah.figura(grafia,{theta:TH}), S=200, s=S*0.42/F.raggio, X=p=>S/2+(p[0]-F.baricentro[0])*s, Y=p=>S/2+(p[1]-F.baricentro[1])*s;
+  const tutto=F.punti.map(p=>`${X(p).toFixed(2)},${Y(p).toFixed(2)}`).join(" ");
+  const primo=F.punti.slice(0,F.m+1).map(p=>`${X(p).toFixed(2)},${Y(p).toFixed(2)}`).join(" ");
+  let lettere="";
+  for(const t of F.tratti.slice(0,F.m)){
+    const mx=(X(t.da)+X(t.a))/2, my=(Y(t.da)+Y(t.a))/2, dx=mx-S/2, dy=my-S/2, d=Math.hypot(dx,dy)||1;
+    lettere+=`<text x="${(mx+dx/d*9).toFixed(1)}" y="${(my+dy/d*9).toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-family="Frank Ruhl Libre" font-size="13" fill="${CHIARO}">${t.lettera}</text>`;
+  }
+  return `<svg viewBox="0 0 ${S} ${S}"><polyline points="${tutto}" fill="none" stroke="${LIEVE}" stroke-width=".7" opacity=".55" stroke-linejoin="round"/>
+  <polyline points="${primo}" fill="none" stroke="${CHIARO}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>${lettere}</svg>`;
+}
+const breve=s=>s.split(",")[0].trim();
+function grado(nome,lst,tot){
+  if(!tot)return `<div class="p"><b>${nome}</b>nessuna</div>`;
+  const voci=lst.slice(0,QUANTE).map(v=>`<span class="eb">${v.forma}</span> <i>${v.trasl}</i> ${breve(v.senso)}`).join(" · ");
+  return `<div class="p"><b>${nome} ${tot}</b>${voci}</div>`;
+}
+const celle=[];
+for(const L of LETTERE.lettere)for(const g of L.grafie){
+  if(!TUTTE&&!g.standard)continue;
+  celle.push(`<div class="cella">${rosa(g.grafia)}
+  <div class="riga"><span class="eb">${L.lettera}</span> ${L.nome} · <span class="eb">${g.grafia}</span> <i>${g.trasl}</i> · ${g.misure.join("·")}${g.ripetizioni?"":" · fregio"}</div>
+  <div class="sig">${L.significato}</div>
+  ${grado("uguali",g.uguali,g.uguali_totale)}${grado("ruotate",g.ruotate,g.ruotate_totale)}${grado("specchio",g.specchio,g.specchio_totale)}</div>`);
+}
+const G=document.getElementById("g");G.innerHTML=celle.join("");G.classList.toggle("c",celle.length===22);
+document.getElementById("sotto").innerHTML=`middah · svolta ${TH}° · ${celle.length} ornamenti · <a href="${TUTTE?"?":"?grafie=tutte"}">${TUTTE?"solo le grafie standard":"tutte le grafie dei nomi"}</a>`;
+document.getElementById("pie").textContent=`Ogni lettera è tracciata con la Middah del proprio nome: ogni lettera del nome è un tratto lungo quanto la sua camera, dopo ogni tratto la linea svolta di ${TH} gradi, e il nome si ripete finché la linea torna al punto di partenza; a ${TH} gradi ogni nome chiude in cinque ripetizioni. La prima scrittura del nome porta le sue lettere, le ripetizioni sono il filo lieve. Sotto ogni rosa, le parole della Tanakh che disegnano lo stesso ornamento: uguali, con le stesse misure nello stesso ordine; ruotate, stesso ciclo da un altro punto di partenza; a specchio, ciclo rovesciato. Corpus: Codice di Leningrado, ${LETTERE.meta.parole_totali.toLocaleString("it")} parole scritte, nomi propri esclusi; i sensi sono quelli del lemma, in italiano dove tradotto. Grafie dei nomi di Celestial.`;
+</script></body></html>

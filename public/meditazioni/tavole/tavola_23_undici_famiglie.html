@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 23, le undici famiglie</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:22px 30px 50px;background:#000;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:27px;margin:0 0 4px}
+p{margin:0 0 20px;font-size:17px;color:#7FA2DC;font-style:italic}
+.riga{display:grid;grid-template-columns:150px repeat(7,minmax(0,1fr));gap:10px;align-items:center;margin-bottom:16px}
+.nome{font-family:"Frank Ruhl Libre",serif;font-size:26px;color:#ECF2FC;line-height:1.1}
+.nome a{color:inherit;text-decoration:none}
+.m{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#7FA2DC;margin-top:3px}
+canvas{width:100%;height:auto;display:block}
+.qui canvas{outline:1px solid #7FA2DC;outline-offset:2px}
+</style></head><body>
+<h1>Le undici famiglie a colpo d'occhio</h1>
+<p>Per ogni sefirah sette figure prese a distanze uguali lungo la sua famiglia, dalla prima all'ultima; quella incorniciata è la più vicina alla figura di partenza. Il nome apre la famiglia intera.</p>
+<div id="g"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js?v=2"></script>
+<script>
+// quante figure ha ogni famiglia e come cambia: serve a scegliere quali mettere nei video
+function avvio(){const g=document.getElementById("g");let coda=[];
+  Griglia.SEFIROT.forEach(([w,r,nome],i)=>{const m=Middah.pulisci(w).length,K=Middah.kAmmessi(r,m).filter(k=>k<=r*m/2),k0=Griglia.kVicino(r,m),p0=K.indexOf(k0);
+    const scelte=[...new Set(Array.from({length:7},(_, j)=>Math.round(j*(K.length-1)/6)))],vicina=scelte.reduce((b,q)=>Math.abs(q-p0)<Math.abs(b-p0)?q:b,scelte[0]);
+    const riga=document.createElement("div");riga.className="riga";
+    riga.innerHTML=`<div><div class="nome"><a href="tavola_11_famiglia.html?n=${i}">${w}</a></div><div class="m">${nome}<br>misura ${r} · ${r*m} tratti<br>${K.length} figure</div></div>`;g.appendChild(riga);
+    for(const q of scelte){const d=document.createElement("div"),c=document.createElement("canvas");if(q===vicina)d.className="qui";d.appendChild(c);
+      d.insertAdjacentHTML("beforeend",`<div class="m">${K[q]} giri</div>`);riga.appendChild(d);coda.push([c,w,r,K[q]]);}});
+  (function avanti(){for(let n=0;n<4&&coda.length;n++){const [c,w,r,k]=coda.shift();Griglia.disegna(c,Middah.figura(w,{r,k}),{lato:360,col:34,min:.6,max:1.7,soglia:.7,sovrapposte:true,fondo:"#000"});}
+    if(coda.length)requestAnimationFrame(avanti);})();}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

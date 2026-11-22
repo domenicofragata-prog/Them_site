@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 3, il pezzo sul nero</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;background:#000;overflow:hidden;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:27px;margin:0 0 4px}
+p{margin:0 0 14px;font-size:17px;color:#7FA2DC;font-style:italic}
+
+canvas{max-height:100vh;max-width:100vw;width:auto;height:auto;display:block;margin:0 auto;cursor:pointer}
+h1,p,.p,.m,.r{display:none!important}.g{display:block}
+.schermo canvas{border-radius:22px}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;margin-top:10px}
+.r{font-style:italic;font-size:16px;color:#DCE6F7}
+.p{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 20px;align-items:baseline}
+.p button{all:unset;cursor:pointer;font-family:"Frank Ruhl Libre",serif;font-size:22px;color:#7FA2DC;border-bottom:1px solid transparent}
+.p button.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p small{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+</style></head><body>
+<h1>Lettere sovrapposte, in movimento</h1>
+<p>La macchina scrive il comando, poi traccia la figura lettera per lettera; dove la linea ripassa le lettere crescono. Lo stesso pezzo su tre fondi.</p>
+<div class="p" id="p"></div>
+<div class="g" id="g"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js"></script>
+<script>
+const Q=new URLSearchParams(location.search), L=1200, N=+(Q.get("col")||44), BANDA=Math.round(L*0.115), FPS=15;
+let quale=0;const FONDI_TUTTI=[
+  {id:"schermo",nome:"1 · Schermo spento",frase:"quasi nero, fosforo azzurro, righe del tubo, un tremito leggero",chiaro:"236,242,252",lieve:"127,162,220",op:"lighter",alone:9,righe:true},
+  {id:"notte",nome:"2 · Notte profonda",frase:"un blu che si spegne verso i bordi, senza righe, solo un alone",chiaro:"236,242,252",lieve:"127,162,220",op:"lighter",alone:5,righe:false},
+  {id:"carta",nome:"3 · Carta",frase:"la stessa scrittura stampata, cobalto su carta, niente luce",chiaro:"27,42,86",lieve:"46,79,163",op:"multiply",alone:0,righe:false},
+];
+const FONDI=FONDI_TUTTI.slice(0,1);
+function prossima(){quale=(quale+1)%Griglia.SEFIROT.length;const [w,r]=Griglia.SEFIROT[quale];parola(w,r);}
+function fondo(x,f){const H=L+BANDA;
+  if(f.id==="schermo"){x.fillStyle="#010204";x.fillRect(0,0,L,H);}
+  else if(f.id==="notte"){const g=x.createRadialGradient(L/2,L/2,L*0.05,L/2,L/2,L*0.8);g.addColorStop(0,"#16224A");g.addColorStop(1,"#070B1C");x.fillStyle=g;x.fillRect(0,0,L,H);}
+  else{x.fillStyle="#EDF1F8";x.fillRect(0,0,L,H);}}
+// la figura sulla griglia, tratto per tratto: quali celle tocca ogni tratto e quanto
+function prepara(F){const cw=L/N,s=L*0.43/F.raggio,X=p=>L/2+(p[0]-F.baricentro[0])*s,Y=p=>L/2+(p[1]-F.baricentro[1])*s,tot=new Map();
+  const passi=F.tratti.map(t=>{const ax=X(t.da),ay=Y(t.da),bx=X(t.a),by=Y(t.a),n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/2)),m=new Map();
+    for(let i=0;i<=n;i++){const cx=Math.floor((ax+(bx-ax)*i/n)/cw),cy=Math.floor((ay+(by-ay)*i/n)/cw);if(cx<0||cx>=N||cy<0||cy>=N)continue;const k=cy*N+cx;m.set(k,(m.get(k)||0)+1);tot.set(k,(tot.get(k)||0)+1);}
+    return {lettera:t.lettera,stanza:t.stanza,celle:[...m],capo:[bx,by]};});
+  return {F,cw,passi,max:Math.max(...tot.values())*0.7};}
+let P, tele=[], t0=0, fatti=0, stato;
+function azzera(){stato=new Map();fatti=0;t0=performance.now();}
+function avanza(fino){for(;fatti<fino;fatti++){const p=P.passi[fatti];for(const [k,n] of p.celle){let q=stato.get(k);if(!q){q={per:{},ultimo:0};stato.set(k,q);}q.per[p.lettera]=(q.per[p.lettera]||0)+n;q.ultimo=fatti;}}}
+const strato=document.createElement("canvas");strato.width=L;strato.height=L+BANDA;
+function quadro(ora){
+  const F=P.F,tot=P.passi.length,cmd=["> middah ",F.parola,`  r ${F.r}  k ${F.k}  svolta ${Griglia.virgola(F.theta_gradi)}°`];
+  const battute=cmd[0].length+1+cmd[2].length,tBatti=battute/26,vel=Math.max(7,tot/15),tTraccia=tot/vel,t=(ora-t0)/1000;
+  if(t>tBatti+0.5+tTraccia+8){prossima();return;}
+  const scritte=Math.min(battute,Math.floor(t*26)),j=Math.max(0,Math.min(tot,Math.floor((t-tBatti-0.5)*vel)));
+  avanza(j);const lampo=Math.floor(t*2.2)%2===0, finita=j>=tot;
+  for(const {x,f} of tele){
+    const y=strato.getContext("2d");y.clearRect(0,0,L,L+BANDA);y.textAlign="center";y.textBaseline="middle";
+    for(const [k,q] of stato){const px=(k%N+0.5)*P.cw,py=(Math.floor(k/N)+0.5)*P.cw,fresco=!finita&&fatti-q.ultimo<4;
+      for(const lett in q.per){const v=Math.min(1,q.per[lett]/P.max);
+        y.font=`${Math.round(P.cw*(0.6+v*1.1))}px "Frank Ruhl Libre"`;
+        y.fillStyle=`rgba(${fresco||v>0.65?f.chiaro:f.lieve},${fresco?1:0.38+v*0.6})`;y.fillText(lett,px,py);}}
+    // la testa della linea: un cursore pieno, che lampeggia a figura chiusa
+    if(j>0&&(!finita||lampo)){const c=P.passi[j-1].capo;y.fillStyle=`rgba(${f.chiaro},0.95)`;y.fillRect(c[0]-P.cw*0.28,c[1]-P.cw*0.42,P.cw*0.56,P.cw*0.84);}
+    // le due righe del terminale
+    const ym=L+BANDA*0.3,yn=L+BANDA*0.68,corpo=Math.round(L*0.021),mono=`${corpo}px "Space Mono"`,ebr=`${Math.round(corpo*1.45)}px "Frank Ruhl Libre"`;
+    y.textAlign="left";let cx=L*0.04;
+    const pezzo=(testo,font,col,riga)=>{y.font=font;y.fillStyle=col;y.fillText(testo,cx,riga);cx+=y.measureText(testo).width;};
+    const a=cmd[0].slice(0,scritte);pezzo(a,mono,`rgba(${f.lieve},0.9)`,ym);
+    if(scritte>cmd[0].length){pezzo(cmd[1],ebr,`rgba(${f.chiaro},1)`,ym);pezzo(cmd[2].slice(0,scritte-cmd[0].length-1),mono,`rgba(${f.lieve},0.9)`,ym);}
+    if(scritte<battute&&lampo)pezzo("▮",mono,`rgba(${f.chiaro},0.9)`,ym);
+    cx=L*0.04;
+    if(finita){pezzo(`chiusa  lunghezza ${F.numeri.lunghezza}  valore ${F.numeri.valore_totale} `,mono,`rgba(${f.chiaro},0.9)`,yn);if(lampo)pezzo("▮",mono,`rgba(${f.chiaro},0.9)`,yn);}
+    else if(j>0){const p=P.passi[j-1];pezzo(`${String(j).padStart(3,"0")}/${tot}  `,mono,`rgba(${f.lieve},0.8)`,yn);pezzo(p.lettera,ebr,`rgba(${f.chiaro},1)`,yn);pezzo(`  avanti ${p.stanza}`,mono,`rgba(${f.lieve},0.8)`,yn);}
+    // composizione sul fondo
+    x.globalCompositeOperation="source-over";x.globalAlpha=1;x.filter="none";fondo(x,f);
+    x.globalCompositeOperation=f.op;
+    if(f.alone){x.filter=`blur(${f.alone}px)`;x.globalAlpha=0.75;x.drawImage(strato,0,0);x.filter="none";}
+    x.globalAlpha=f.righe?0.9+Math.random()*0.1:1;x.drawImage(strato,0,0);
+    x.globalCompositeOperation="source-over";x.globalAlpha=1;
+    if(f.righe){x.fillStyle="rgba(0,0,0,0.3)";for(let r=0;r<L+BANDA;r+=4)x.fillRect(0,r,L,1.6);
+      const g=x.createRadialGradient(L/2,(L+BANDA)/2,L*0.35,L/2,(L+BANDA)/2,L*0.78);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,0.55)");x.fillStyle=g;x.fillRect(0,0,L,L+BANDA);}
+  }
+}
+function parola(w,r,k){P=prepara(Griglia.figuraDi(w,r,k));azzera();[...document.querySelectorAll("#p button")].forEach(b=>b.classList.toggle("qui",b.dataset.w===w));}
+function avvio(){
+  const p=document.getElementById("p"),g=document.getElementById("g");
+  for(const [w,r,nome] of Griglia.SEFIROT){const b=document.createElement("button");b.dataset.w=w;b.innerHTML=`${w}<small>${nome}</small>`;b.onclick=()=>parola(w,r);p.appendChild(b);}
+  for(const f of FONDI){const d=document.createElement("div"),c=document.createElement("canvas");d.className=f.id;c.width=L;c.height=L+BANDA;d.appendChild(c);
+    d.insertAdjacentHTML("beforeend",`<div class="m">${f.nome}</div><div class="r">${f.frase}</div>`);c.onclick=prossima;g.appendChild(d);tele.push({x:c.getContext("2d"),f});}
+  parola(Q.get("w")||"כתר",+(Q.get("r")||13),+(Q.get("k")||0));
+  let ultimo=0;(function giro(ora){if(ora-ultimo>1000/FPS){ultimo=ora;quadro(ora);}requestAnimationFrame(giro);})(performance.now());
+}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

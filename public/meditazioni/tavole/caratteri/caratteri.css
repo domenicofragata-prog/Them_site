@@ -1,0 +1,6 @@
+/* I caratteri delle tavole, serviti dal sito: nessuna richiesta a servizi esterni. */
+@font-face{font-family:"Frank Ruhl Libre";font-weight:400;font-display:swap;src:url("frank-ruhl-libre-hebrew-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Frank Ruhl Libre";font-weight:500;font-display:swap;src:url("frank-ruhl-libre-hebrew-500-normal.woff2") format("woff2")}
+@font-face{font-family:"Space Mono";font-weight:400;font-display:swap;src:url("space-mono-latin-400-normal.woff2") format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:300 700;font-style:normal;font-display:swap;src:url("/wish-room/font/CormorantGaramond[wght].ttf") format("truetype")}
+@font-face{font-family:"Cormorant Garamond";font-weight:300 700;font-style:italic;font-display:swap;src:url("/wish-room/font/CormorantGaramond-Italic[wght].ttf") format("truetype")}

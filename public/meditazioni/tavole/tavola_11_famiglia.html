@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 11, la famiglia di una sefirah</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:22px 30px 50px;background:#000;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:27px;margin:0 0 4px}
+p{margin:0 0 14px;font-size:17px;color:#7FA2DC;font-style:italic}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+canvas{width:100%;height:auto;display:block}
+.m{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#7FA2DC;margin-top:4px}
+.poi canvas{outline:1px dashed #2E4FA3;outline-offset:3px}
+.qui .m{color:#ECF2FC}.qui canvas{outline:1px solid #7FA2DC;outline-offset:3px}
+.p{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 20px;align-items:baseline}
+.p button{all:unset;cursor:pointer;font-family:"Frank Ruhl Libre",serif;font-size:22px;color:#7FA2DC;border-bottom:1px solid transparent}
+.p button.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p small{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+</style></head><body>
+<h1 id="tit"></h1>
+<p>La stessa parola, la stessa misura, tutti i giri che chiudono la figura. Quella incorniciata è la figura di partenza, con la svolta più vicina a 60 gradi; le due tratteggiate sono le sorelle che la seguono nel video di prova. Le altre sono le sue sorelle: la parola le contiene già tutte.</p>
+<div class="p" id="p"></div>
+<div class="g" id="g"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js?v=2"></script>
+<script>
+function mostra(i){const [w,r,nome]=Griglia.SEFIROT[i],m=Middah.pulisci(w).length,K=Middah.kAmmessi(r,m).filter(k=>k<=r*m/2),k0=Griglia.kVicino(r,m),g=document.getElementById("g");
+  [...document.querySelectorAll("#p button")].forEach((b,n)=>b.classList.toggle("qui",n===i));
+  document.getElementById("tit").innerHTML=`<span style="font-family:'Frank Ruhl Libre'">${w}</span> ${nome}, ${r} ripetizioni: ${K.length} figure`;g.innerHTML="";
+  let n=0;(function avanti(){for(let q=0;q<6&&n<K.length;q++,n++){const k=K[n],F=Middah.figura(w,{r,k}),d=document.createElement("div"),c=document.createElement("canvas");
+      Griglia.disegna(c,F,{lato:440,col:34,min:.6,max:1.7,soglia:.7,sovrapposte:true,fondo:"#000"});if(k===k0)d.className="qui";else if(n-K.indexOf(k0)>0&&n-K.indexOf(k0)<3)d.className="poi";
+      d.appendChild(c);d.insertAdjacentHTML("beforeend",`<div class="m">${k} giri · ${Griglia.virgola(F.theta_gradi,1)}°</div>`);g.appendChild(d);}
+    if(n<K.length&&g.dataset.i==i)requestAnimationFrame(avanti);})();}
+function avvio(){const p=document.getElementById("p"),g=document.getElementById("g");
+  Griglia.SEFIROT.forEach(([w,r,nome],i)=>{const b=document.createElement("button");b.innerHTML=`${w}<small>${nome}</small>`;b.onclick=()=>{g.dataset.i=i;mostra(i);};p.appendChild(b);});
+  const n=+(new URLSearchParams(location.search).get("n")||0);g.dataset.i=n;mostra(n);}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

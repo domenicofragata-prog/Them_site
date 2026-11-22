@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 14, la famiglia nuda</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:22px 30px 40px;background:#000;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+canvas{display:block;margin:0 auto;max-height:calc(100vh - 190px);max-width:100%;width:auto;height:auto;cursor:pointer}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;margin-top:10px;text-align:center}
+.p{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 16px;align-items:baseline}
+.p button{all:unset;cursor:pointer;font-family:"Frank Ruhl Libre",serif;font-size:22px;color:#7FA2DC;border-bottom:1px solid transparent}
+.p button.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p a{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;cursor:pointer;border-bottom:1px solid transparent}.p a.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p small{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+</style></head><body>
+<div class="p" id="p"></div>
+<div class="p" id="d"></div>
+<canvas id="c"></canvas>
+<div class="m" id="et"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js?v=2"></script>
+<script>
+/* La famiglia di una sefirah, una figura alla volta, nuda come nella tavola 11: solo le lettere sul nero.
+   La figura si traccia, resta mentre la linea la ripercorre, poi la sorella si scrive mentre lei si disfa: lo schermo non torna mai nero.
+   ?n= parola da 0 a 10, ?col= celle per lato, ?tieni= secondi, ?scia= tratti accesi dietro la testa, 0 la spegne. */
+const Q=new URLSearchParams(location.search), L=1600, N=+(Q.get("col")||70), CW=L/N, TIENI=+(Q.get("tieni")||7), SCIA=+(Q.get("scia")??12), FPS=15;
+const CHIARO="236,242,252", LIEVE="127,162,220";
+const tela=document.getElementById("c");tela.width=tela.height=L;const x=tela.getContext("2d");
+let P,V=null,KK=[],ki=0,quale=0,t0=0;
+function prepara(F){const s=L*0.44/F.raggio,X=p=>L/2+(p[0]-F.baricentro[0])*s,Y=p=>L/2+(p[1]-F.baricentro[1])*s,tot=new Map();
+  const passi=F.tratti.map(t=>{const ax=X(t.da),ay=Y(t.da),bx=X(t.a),by=Y(t.a),n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/2)),m=new Map();
+    for(let i=0;i<=n;i++){const k=Math.floor((ax+(bx-ax)*i/n)/CW)+N*Math.floor((ay+(by-ay)*i/n)/CW);m.set(k,(m.get(k)||0)+1);tot.set(k,(tot.get(k)||0)+1);}
+    return {lettera:t.lettera,celle:[...m]};});
+  return {F,passi,max:Math.max(...tot.values())*0.7,stato:new Map(),fatti:0};}
+// le lettere lasciate dai tratti da «da» ad «a» di una figura; con la scia, le più vicine alla testa sono più chiare
+function scrivi(F,da,a,jm){const S=new Map(),tot=F.passi.length;
+  for(let i=da;i<a;i++){const p=F.passi[i],e=jm==null?1e9:((jm-i)%tot+tot)%tot;for(const [k,n] of p.celle){let q=S.get(k);if(!q){q={per:{},eta:1e9};S.set(k,q);}q.per[p.lettera]=(q.per[p.lettera]||0)+n;if(e<q.eta)q.eta=e;}}
+  for(const [k,q] of S){const scia=SCIA?Math.max(0,1-q.eta/SCIA):0;
+    for(const g in q.per){const v=Math.min(1,q.per[g]/F.max);
+      x.font=`${Math.round(CW*(0.6+v*1.1))}px "Frank Ruhl Libre"`;x.fillStyle=`rgba(${scia>0.3||v>0.65?CHIARO:LIEVE},${Math.min(1,0.4+v*0.6+scia*0.6)})`;x.fillText(g,(k%N+0.5)*CW,(Math.floor(k/N)+0.5)*CW);}}}
+// senza mai tornare al nero: mentre la figura nuova si scrive, la vecchia si disfa nello stesso ordine in cui era stata scritta
+function quadro(ora){const t=(ora-t0)/1000,tot=P.passi.length,vel=Math.max(7,tot/15),jf=Math.max(0,t*vel),j=Math.min(tot,Math.floor(jf));
+  if(t>tot/vel+TIENI){ki=(ki+1)%KK.length;figuraK();return;}
+  x.globalCompositeOperation="source-over";x.fillStyle="#000";x.fillRect(0,0,L,L);x.globalCompositeOperation="lighter";x.textAlign="center";x.textBaseline="middle";
+  if(V&&j<tot)scrivi(V,Math.floor(j/tot*V.passi.length),V.passi.length,null);
+  scrivi(P,0,j,jf%tot);
+}
+function figuraK(){const [w,r]=Griglia.SEFIROT[quale];V=P||null;P=prepara(Middah.figura(w,{r,k:KK[ki]}));t0=performance.now();
+  document.getElementById("et").textContent=`figura ${ki+1} di ${KK.length} · ${KK[ki]} giri · svolta ${Griglia.virgola(P.F.theta_gradi,1)}°`;}
+function parola(i){quale=i;const [w,r]=Griglia.SEFIROT[i],m=Middah.pulisci(w).length;KK=Middah.kAmmessi(r,m).filter(k=>k<=r*m/2);ki=Math.max(0,KK.indexOf(Griglia.kVicino(r,m)));figuraK();
+  [...document.querySelectorAll("#p button")].forEach((b,n)=>b.classList.toggle("qui",n===i));}
+function avvio(){const p=document.getElementById("p");
+  Griglia.SEFIROT.forEach(([w,r,nome],i)=>{const b=document.createElement("button");b.innerHTML=`${w}<small>${nome}</small>`;b.onclick=()=>parola(i);p.appendChild(b);});
+  for(const c of [34,50,70,100,140]){const a=document.createElement("a");a.textContent=c+" celle";if(c===N)a.className="qui";a.onclick=()=>{location.search=`?n=${quale}&col=${c}`;};document.getElementById("d").appendChild(a);}
+  tela.onclick=()=>{ki=(ki+1)%KK.length;figuraK();};parola(+(Q.get("n")||0));
+  let ultimo=0;(function giro(ora){if(ora-ultimo>1000/FPS){ultimo=ora;quadro(ora);}requestAnimationFrame(giro);})(performance.now());}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

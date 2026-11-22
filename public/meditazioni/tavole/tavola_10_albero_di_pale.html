@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Tree of Artificial Life, undici pale</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+html,body{margin:0;background:#000}
+canvas{display:block;margin:0 auto;height:100vh;width:auto;max-width:100vw;cursor:zoom-in}
+canvas.largo{height:auto;width:100%;max-width:1460px;cursor:zoom-out}
+</style></head><body>
+<canvas id="c"></canvas>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js"></script>
+<script>
+/* Undici pale olografiche nei posti dell'Albero. In ognuna la figura della sua parola, a strati: ogni ripetizione
+   su un suo piano. Ogni figura oscilla per conto suo e la sua linea continua a ripercorrerla. Un tocco ingrandisce. */
+const Q=new URLSearchParams(location.search), D=420, DX=450, DY=260, MARG=70, N=+(Q.get("col")||30), CW=D/N, VEL=+(Q.get("vel")||7), FPS=12;
+const PROF=+(Q.get("prof")||0.6)*D, GIRO=+(Q.get("giro")||0.75), W=2*DX+D+2*MARG, H=Math.round(7.8*DY+D+2*MARG);
+const CHIARO="236,242,252", LIEVE="127,162,220", MODI=["alterna","nodi","insieme","diventa"];
+const POSTI={"כתר":[0,0],"חכמה":[1,1],"בינה":[-1,1],"דעת":[0,2],"חסד":[1,3],"גבורה":[-1,3],"תפארת":[0,4],"נצח":[1,5],"הוד":[-1,5],"יסוד":[0,6],"מלכות":[0,7.8]};
+const cifra=g=>g.length===1&&g>="1"&&g<="9";
+function pala(w,r,i){const F=Griglia.figuraDi(w,r),modo=MODI[i%4],s=D*0.38/F.raggio,X=p=>(p[0]-F.baricentro[0])*s,Y=p=>(p[1]-F.baricentro[1])*s,tot=new Map();
+  const passi=F.tratti.map(t=>{const ax=X(t.da),ay=Y(t.da),bx=X(t.a),by=Y(t.a),n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/2)),m=new Map();
+    for(let k=0;k<=n;k++){const cx=Math.floor((ax+(bx-ax)*k/n)/CW),cy=Math.floor((ay+(by-ay)*k/n)/CW),c=cx+"|"+cy;if(!m.has(c))m.set(c,{cx,cy,n:0});m.get(c).n++;tot.set(c,(tot.get(c)||0)+1);}
+    return [...m.values()].map((c,k)=>{const g=modo==="alterna"?(k%2?String(t.stanza):t.lettera):modo==="nodi"?(k===0?String(t.stanza):t.lettera):t.lettera;
+      return {k:c.cx+"|"+c.cy+"|"+g,x:(c.cx+0.5)*CW,y:(c.cy+0.5)*CW,n:c.n,g,st:String(t.stanza),z:(F.r>1?t.q/(F.r-1)-0.5:0)*PROF};});});
+  return {passi,max:Math.max(...tot.values())*0.7,modo,conti:new Map(),fatti:0,cx:W/2+POSTI[w][0]*DX,cy:MARG+D/2+POSTI[w][1]*DY,fase:i*1.7};}
+const tela=document.getElementById("c");tela.width=W;tela.height=H;tela.onclick=()=>tela.classList.toggle("largo");
+const x=tela.getContext("2d"),strato=document.createElement("canvas");strato.width=W;strato.height=H;const y=strato.getContext("2d");
+let PALE=[],t0=0;
+function quadro(ora){const t=(ora-t0)/1000,jf=Math.max(0,(t-0.5)*VEL),j=Math.floor(jf),fuoco=2.4*D;
+  y.clearRect(0,0,W,H);y.textAlign="center";y.textBaseline="middle";
+  for(const A of PALE){const tot=A.passi.length,jm=jf%tot;
+    for(;A.fatti<Math.min(j,tot);A.fatti++)for(const c of A.passi[A.fatti])A.conti.set(c.k,(A.conti.get(c.k)||0)+c.n);
+    const an=GIRO*Math.sin(t*0.45+A.fase),bn=0.22*Math.sin(t*0.29+A.fase*0.6),ca=Math.cos(an),sa=Math.sin(an),cb=Math.cos(bn),sb=Math.sin(bn);
+    const punto=c=>{const x1=c.x*ca+c.z*sa,z1=-c.x*sa+c.z*ca,y1=c.y*cb-z1*sb,z2=c.y*sb+z1*cb,k=fuoco/(fuoco-z2);return [A.cx+x1*k,A.cy+y1*k,k,z2];};
+    for(let i=0;i<A.fatti;i++){const eta=((jm-i)%tot+tot)%tot,scia=Math.max(0,1-eta/18);
+      for(const c of A.passi[i]){const v=Math.min(1,A.conti.get(c.k)/A.max),[sx,sy,k,z2]=punto(c),vicino=Math.max(0.25,0.55+0.45*(z2/(PROF*0.6)+0.5));
+        const g=A.modo==="diventa"&&scia>0.4?c.st:c.g,corpo=CW*(0.6+v*1.1)*k,alfa=Math.min(1,(0.2+v*0.35)*vicino+scia*0.8);
+        y.font=cifra(g)?`${Math.round(corpo*0.8)}px "Space Mono"`:`${Math.round(corpo)}px "Frank Ruhl Libre"`;
+        y.fillStyle=`rgba(${scia>0.3||v>0.65?CHIARO:LIEVE},${alfa})`;y.fillText(g,sx,sy);
+        if(A.modo==="insieme"){y.font=`${Math.round(CW*0.4*k)}px "Space Mono"`;y.fillStyle=`rgba(${LIEVE},${alfa*0.8})`;y.fillText(c.st,sx+CW*0.36*k,sy+CW*0.34*k);}}}
+    if(j>0){const p=A.passi[(j-1)%tot],[sx,sy,k]=punto(p[p.length-1]);y.fillStyle=`rgba(${CHIARO},0.95)`;y.fillRect(sx-CW*0.28*k,sy-CW*0.42*k,CW*0.56*k,CW*0.84*k);}}
+  x.globalCompositeOperation="source-over";x.globalAlpha=1;x.filter="none";x.fillStyle="#000";x.fillRect(0,0,W,H);
+  x.globalCompositeOperation="lighter";x.filter="blur(8px)";x.globalAlpha=0.8;x.drawImage(strato,0,0);x.filter="none";x.globalAlpha=1;x.drawImage(strato,0,0);
+}
+function avvio(){PALE=Griglia.SEFIROT.map(([w,r],i)=>pala(w,r,i));t0=performance.now();
+  let ultimo=0;(function giro(ora){if(ora-ultimo>1000/FPS){ultimo=ora;quadro(ora);}requestAnimationFrame(giro);})(performance.now());}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

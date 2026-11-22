@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 16, polvere</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:22px 30px 40px;background:#000;color:#DCE6F7}
+canvas{display:block;margin:0 auto;max-height:calc(100vh - 225px);max-width:100%;width:auto;height:auto;cursor:pointer}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;margin-top:10px;text-align:center}
+.p{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 16px;align-items:baseline}
+.p button{all:unset;cursor:pointer;font-family:"Frank Ruhl Libre",serif;font-size:22px;color:#7FA2DC;border-bottom:1px solid transparent}
+.p button.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p a{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;cursor:pointer;border-bottom:1px solid transparent}.p a.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p small{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+</style></head><body>
+<div class="p" id="p"></div>
+<div class="p" id="d"></div>
+<div class="p" id="e"></div>
+<canvas id="c"></canvas>
+<div class="m" id="et"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js?v=2"></script>
+<script>
+/* Polvere: la famiglia di una sefirah come pulviscolo di lettere. Due strati di granelli lungo la linea, un nucleo
+   stretto e chiaro e un alone largo, minuto e lieve. I granelli non si spengono mai: quando viene la sorella
+   ognuno migra al suo posto nuovo. Un tocco passa subito alla sorella.
+   ?n= parola da 0 a 10, ?granelli= quanti, ?tieni= e ?migra= secondi, ?alone= larghezza dell'alone in punti,
+   ?nebbia= quanto è sparsa la polvere, 1 è la prima versione, ?sfuma= quanto si allarga nel passaggio, 0 lo spegne. */
+const Q=new URLSearchParams(location.search), L=1600, FPS=20, M=+(Q.get("granelli")||4000), TIENI=+(Q.get("tieni")||10), MIGRA=+(Q.get("migra")||12), ALONE=+(Q.get("alone")||46), NEBBIA=+(Q.get("nebbia")||1.35), SFUMA=+(Q.get("sfuma")||2.4);
+const CHIARO="236,242,252", LIEVE="127,162,220";
+const tela=document.getElementById("c");tela.width=tela.height=L;const x=tela.getContext("2d"),s0=document.createElement("canvas");s0.width=s0.height=L;const y=s0.getContext("2d");
+const dolce=e=>e*e*(3-2*e), caso=(()=>{let s=11;return()=>(s=(s*16807)%2147483647)/2147483647;})(), campana=()=>caso()+caso()+caso()-1.5;
+// ogni granello: scarto dalla linea, fase, passo dell'oscillazione, corpo, luce. Uno su tre sta nel nucleo, gli altri nell'alone
+const G=Array.from({length:M},(_, i)=>{const nucleo=i%3===0,larg=(nucleo?9:ALONE)*NEBBIA;return {dx:campana()*larg,dy:campana()*larg,f:caso()*6.28,w:0.2+caso()*0.45,
+  c:nucleo?Math.round(15+caso()*caso()*26):Math.round(8+caso()*9),a:nucleo?0.3+caso()*0.55:0.08+caso()*0.22,nucleo};});
+let quale=0,KK=[],ki=0,A,B,t0=0;
+const figura=i=>{const [w,r]=Griglia.SEFIROT[quale];return Middah.figura(w,{r,k:KK[((i%KK.length)+KK.length)%KK.length]});};
+function granelli(F){const s=L*0.4/F.raggio,X=p=>L/2+(p[0]-F.baricentro[0])*s,Y=p=>L/2+(p[1]-F.baricentro[1])*s,tot=F.numeri.lunghezza,out=[];let t=0,fatta=0;
+  for(let i=0;i<M;i++){const d=(i+0.5)/M*tot;while(t<F.tratti.length-1&&fatta+F.tratti[t].stanza<d){fatta+=F.tratti[t].stanza;t++;}
+    const T=F.tratti[t],u=(d-fatta)/T.stanza;out.push([X(T.da)+(X(T.a)-X(T.da))*u,Y(T.da)+(Y(T.a)-Y(T.da))*u,T.lettera]);}
+  return out;}
+function etichetta(){const F=figura(ki);document.getElementById("et").textContent=`figura ${((ki%KK.length)+KK.length)%KK.length+1} di ${KK.length} · ${F.k} giri · svolta ${Griglia.virgola(F.theta_gradi,1)}°`;}
+function quadro(t){let e=(t-t0-TIENI)/MIGRA;if(e>=1){ki++;A=B;B=granelli(figura(ki+1));t0=t;e=-1;etichetta();}e=e<0?0:dolce(e);
+  y.clearRect(0,0,L,L);y.textAlign="center";y.textBaseline="middle";
+  // nel passaggio la polvere si allarga in nebbia e poi si raccoglie sulla figura nuova
+  const neb=1+SFUMA*Math.sin(Math.PI*e),vel=1-0.35*Math.sin(Math.PI*e);
+  for(let i=0;i<M;i++){const a=A[i],b=B[i],g=G[i],px=a[0]+(b[0]-a[0])*e+g.dx*neb+6*Math.sin(t*g.w+g.f),py=a[1]+(b[1]-a[1])*e+g.dy*neb+6*Math.cos(t*g.w*0.8+g.f);
+    y.font=`${g.c}px "Frank Ruhl Libre"`;y.fillStyle=`rgba(${g.c>26?CHIARO:LIEVE},${g.a*(g.nucleo?vel:1)*(0.72+0.28*Math.sin(t*g.w*1.7+g.f*2))})`;y.fillText(e<0.5?a[2]:b[2],px,py);}
+  x.globalCompositeOperation="source-over";x.globalAlpha=1;x.filter="none";x.fillStyle="#000";x.fillRect(0,0,L,L);
+  x.globalCompositeOperation="lighter";x.filter=`blur(${Math.round(34*NEBBIA)}px)`;x.globalAlpha=0.55;x.drawImage(s0,0,0);x.filter="blur(14px)";x.globalAlpha=0.6;x.drawImage(s0,0,0);x.filter="none";x.globalAlpha=1;x.drawImage(s0,0,0);}
+function parola(i,ora){quale=i;const [w,r]=Griglia.SEFIROT[i],m=Middah.pulisci(w).length;KK=Middah.kAmmessi(r,m).filter(k=>k<=r*m/2);ki=Math.max(0,KK.indexOf(Griglia.kVicino(r,m)));
+  // anche cambiando parola la polvere migra: la figura in vista resta il punto di partenza
+  if(A&&ora!=null){ki--;B=granelli(figura(ki+1));t0=ora-TIENI;}else{A=granelli(figura(ki));B=granelli(figura(ki+1));t0=performance.now()/1000;}
+  etichetta();[...document.querySelectorAll("#p button")].forEach((b,n)=>b.classList.toggle("qui",n===i));}
+function avvio(){const p=document.getElementById("p");
+  Griglia.SEFIROT.forEach(([w,r,nome],i)=>{const b=document.createElement("button");b.innerHTML=`${w}<small>${nome}</small>`;b.onclick=()=>parola(i,performance.now()/1000);p.appendChild(b);});
+  for(const c of [1,1.35,1.8,2.4]){const a=document.createElement("a");a.textContent="nebbia "+String(c).replace(".",",");if(c===NEBBIA)a.className="qui";a.onclick=()=>{location.search=`?n=${quale}&granelli=${M}&nebbia=${c}`;};document.getElementById("e").appendChild(a);}
+  for(const c of [1500,4000,8000,14000]){const a=document.createElement("a");a.textContent=c+" granelli";if(c===M)a.className="qui";a.onclick=()=>{location.search=`?n=${quale}&granelli=${c}&nebbia=${NEBBIA}`;};document.getElementById("d").appendChild(a);}
+  tela.onclick=()=>{const t=performance.now()/1000;if(t-t0<TIENI)t0=t-TIENI;};parola(+(Q.get("n")||0));
+  let ultimo=0;(function giro(ora){if(ora-ultimo>1000/FPS){ultimo=ora;quadro(ora/1000);}requestAnimationFrame(giro);})(performance.now());}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

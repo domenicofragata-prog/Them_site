@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 13, la famiglia in piano</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:26px 30px 60px;background:#000;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:27px;margin:0 0 4px}
+p{margin:0 0 14px;font-size:17px;color:#7FA2DC;font-style:italic}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:26px}
+.g.uno{display:block}.g.uno canvas{max-height:calc(100vh - 40px);width:auto;max-width:100%;margin:0 auto}
+canvas{width:100%;height:auto;display:block;border-radius:22px;cursor:pointer}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;margin-top:10px}
+.r{font-style:italic;font-size:16px;color:#DCE6F7}
+.p{display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 20px;align-items:baseline}
+.p button{all:unset;cursor:pointer;font-family:"Frank Ruhl Libre",serif;font-size:22px;color:#7FA2DC;border-bottom:1px solid transparent}
+.p button.qui{color:#ECF2FC;border-color:#7FA2DC}
+.p small{font-family:"Space Mono",monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-left:5px}
+</style></head><body>
+<h1>Una sefirah e la sua famiglia, in piano</h1>
+<p>Il pezzo sul nero di prima. Traccia una figura, la tiene, poi passa alla sorella con i giri seguenti, cambiando a ogni figura il modo di scrivere i numeri. In alto scegli la sefirah, un tocco sulla tela salta alla figura dopo.</p>
+<div class="p" id="p"></div>
+<div class="g" id="g"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js"></script>
+<script>
+const Q=new URLSearchParams(location.search), L=900, N=+(Q.get("col")||44), BANDA=Math.round(L*0.115), H=L+BANDA, FPS=15;
+const CHIARO="236,242,252", LIEVE="127,162,220";
+const MODI=[
+  {id:"alterna",nome:"1 · Alternati",frase:"lungo ogni tratto una cella porta la lettera e la seguente il numero della sua stanza"},
+  {id:"nodi",nome:"2 · Numeri ai nodi",frase:"dove un tratto comincia sta il numero della stanza, poi la lettera lo percorre"},
+  {id:"insieme",nome:"3 · Lettera e numero insieme",frase:"ogni cella porta la lettera e, piccolo al piede, il suo numero"},
+  {id:"diventa",nome:"4 · Il numero diventa lettera",frase:"la testa della linea scrive numeri, che raffreddandosi diventano lettere"},
+];
+const TUTTI=MODI.slice();MODI.length=1;
+let KK=[],ki=0;
+const cifra=g=>g.length===1&&g>="1"&&g<="9";
+// la figura sulla griglia, tratto per tratto: le celle che ogni tratto tocca, nell'ordine in cui le percorre
+function prepara(F){const cw=L/N,s=L*0.43/F.raggio,X=p=>L/2+(p[0]-F.baricentro[0])*s,Y=p=>L/2+(p[1]-F.baricentro[1])*s,tot=new Map();
+  const passi=F.tratti.map(t=>{const ax=X(t.da),ay=Y(t.da),bx=X(t.a),by=Y(t.a),n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/2)),m=new Map();
+    for(let i=0;i<=n;i++){const cx=Math.floor((ax+(bx-ax)*i/n)/cw),cy=Math.floor((ay+(by-ay)*i/n)/cw);if(cx<0||cx>=N||cy<0||cy>=N)continue;const k=cy*N+cx;m.set(k,(m.get(k)||0)+1);tot.set(k,(tot.get(k)||0)+1);}
+    return {lettera:t.lettera,stanza:t.stanza,celle:[...m],capo:[bx,by]};});
+  return {F,cw,passi,max:Math.max(...tot.values())*0.7};}
+let P, tele=[], t0=0, quale=0;
+function azzera(){for(const T of tele){T.stato=new Map();T.fatti=0;}t0=performance.now()+350;}
+function avanza(T,fino){for(;T.fatti<fino;T.fatti++){const p=P.passi[T.fatti];p.celle.forEach(([k,n],i)=>{
+    const g=T.m.id==="alterna"?(i%2?String(p.stanza):p.lettera):T.m.id==="nodi"?(i===0?String(p.stanza):p.lettera):p.lettera;
+    let q=T.stato.get(k);if(!q){q={per:{},ultimo:0};T.stato.set(k,q);}q.per[g]=(q.per[g]||0)+n;q.ultimo=T.fatti;});}}
+const tela3=()=>{const c=document.createElement("canvas");c.width=L;c.height=H;return c;},strato=tela3(),piatto=tela3(),mezzo=tela3();
+function quadro(ora){
+  const F=P.F,tot=P.passi.length,cmd=["> middah ",F.parola,`  r ${F.r}  k ${F.k}  svolta ${Griglia.virgola(F.theta_gradi)}°`];
+  const battute=cmd[0].length+1+cmd[2].length,tBatti=battute/26,vel=Math.max(7,tot/15),tTraccia=tot/vel,t=(ora-t0)/1000;
+  if(t>tBatti+0.5+tTraccia+8){prossima();return;}
+  const jf=(t-tBatti-0.5)*vel,scritte=Math.max(0,Math.min(battute,Math.floor(t*26))),j=Math.max(0,Math.min(tot,Math.floor(jf)));
+  const lampo=Math.floor(t*2.2)%2===0, finita=j>=tot;
+  for(const T of tele){avanza(T,j);
+    const x=T.x,modo=T.m.id,y=strato.getContext("2d");y.clearRect(0,0,L,H);y.textAlign="center";y.textBaseline="middle";
+    for(const [k,q] of T.stato){const px=(k%N+0.5)*P.cw,py=(Math.floor(k/N)+0.5)*P.cw,scia=Math.max(0,1-(jf-q.ultimo)/18);
+      for(const g0 in q.per){const v=Math.min(1,q.per[g0]/P.max),corpo=P.cw*(0.6+v*1.1);
+        const g=modo==="diventa"&&scia>0.4?String(Middah.stanza(g0)):g0, alfa=Math.min(1,0.38+v*0.6+scia*0.7), col=scia>0.3||v>0.65?CHIARO:LIEVE;
+        y.font=cifra(g)?`${Math.round(corpo*0.8)}px "Space Mono"`:`${Math.round(corpo)}px "Frank Ruhl Libre"`;
+        y.fillStyle=`rgba(${col},${alfa})`;y.fillText(g,px,py);
+        if(modo==="insieme"){y.font=`${Math.round(P.cw*(0.36+v*0.3))}px "Space Mono"`;y.fillStyle=`rgba(${LIEVE},${alfa*0.85})`;y.fillText(String(Middah.stanza(g0)),px+P.cw*0.36,py+P.cw*0.34);}}}
+    if(j>0&&(!finita||lampo)){const c=P.passi[j-1].capo;y.fillStyle=`rgba(${CHIARO},0.95)`;y.fillRect(c[0]-P.cw*0.28,c[1]-P.cw*0.42,P.cw*0.56,P.cw*0.84);}
+    // le due righe del terminale
+    const ym=L+BANDA*0.3,yn=L+BANDA*0.68,corpo=Math.round(L*0.021),mono=`${corpo}px "Space Mono"`,ebr=`${Math.round(corpo*1.45)}px "Frank Ruhl Libre"`;
+    y.textAlign="left";let cx=L*0.04;
+    const pezzo=(testo,font,col,riga)=>{y.font=font;y.fillStyle=col;y.fillText(testo,cx,riga);cx+=y.measureText(testo).width;};
+    pezzo(cmd[0].slice(0,scritte),mono,`rgba(${LIEVE},0.9)`,ym);
+    if(scritte>cmd[0].length){pezzo(cmd[1],ebr,`rgba(${CHIARO},1)`,ym);pezzo(cmd[2].slice(0,scritte-cmd[0].length-1),mono,`rgba(${LIEVE},0.9)`,ym);}
+    if(scritte<battute&&lampo)pezzo("▮",mono,`rgba(${CHIARO},0.9)`,ym);
+    cx=L*0.04;
+    if(finita){pezzo(`chiusa  lunghezza ${F.numeri.lunghezza}  valore ${F.numeri.valore_totale} `,mono,`rgba(${CHIARO},0.9)`,yn);if(lampo)pezzo("▮",mono,`rgba(${CHIARO},0.9)`,yn);}
+    else if(j>0){const p=P.passi[j-1];pezzo(`${String(j).padStart(3,"0")}/${tot}  `,mono,`rgba(${LIEVE},0.8)`,yn);pezzo(p.lettera,ebr,`rgba(${CHIARO},1)`,yn);pezzo(`  avanti ${p.stanza}`,mono,`rgba(${LIEVE},0.8)`,yn);}
+    // fosforo sul nero
+    const z=piatto.getContext("2d");z.globalCompositeOperation="source-over";z.globalAlpha=1;z.filter="none";z.fillStyle="#010204";z.fillRect(0,0,L,H);
+    z.globalCompositeOperation="lighter";z.filter="blur(9px)";z.globalAlpha=0.75;z.drawImage(strato,0,0);z.filter="none";
+    z.globalAlpha=0.88+Math.random()*0.12;z.drawImage(strato,0,0);
+    // il vetro bombato
+    const S=72,BOMBA=0.045,m1=mezzo.getContext("2d");m1.fillStyle="#000";m1.fillRect(0,0,L,H);
+    for(let i=0;i<S;i++){const y0=Math.floor(i*H/S),h=Math.ceil(H/S),d=(i+0.5)/S*2-1,w=L*(1-BOMBA*d*d);m1.drawImage(piatto,0,y0,L,h,(L-w)/2,y0,w,h);}
+    x.fillStyle="#000";x.fillRect(0,0,L,H);
+    for(let i=0;i<S;i++){const x0=Math.floor(i*L/S),w=Math.ceil(L/S),d=(i+0.5)/S*2-1,h=H*(1-BOMBA*d*d);x.drawImage(mezzo,x0,0,w,H,x0,(H-h)/2,w,h);}
+    x.fillStyle="rgba(0,0,0,0.3)";for(let r=0;r<H;r+=4)x.fillRect(0,r,L,1.6);
+    const gr=x.createRadialGradient(L/2,H/2,L*0.35,L/2,H/2,L*0.78);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,"rgba(0,0,0,0.55)");x.fillStyle=gr;x.fillRect(0,0,L,H);
+  }
+}
+function figuraK(){const [w,r]=Griglia.SEFIROT[quale];P=prepara(Middah.figura(w,{r,k:KK[ki]}));azzera();const T=tele[0];T.m=TUTTI[ki%4];
+  T.et.textContent=`figura ${ki+1} di ${KK.length} · ${KK[ki]} giri · ${T.m.nome.slice(4)}`;T.fr.textContent="";}
+function parola(i){quale=i;const [w,r]=Griglia.SEFIROT[i],m=Middah.pulisci(w).length;KK=Middah.kAmmessi(r,m).filter(k=>k<=r*m/2);ki=Math.max(0,KK.indexOf(Griglia.kVicino(r,m)));figuraK();
+  [...document.querySelectorAll("#p button")].forEach((b,n)=>b.classList.toggle("qui",n===i));}
+function prossima(){ki=(ki+1)%KK.length;figuraK();}
+function avvio(){
+  const p=document.getElementById("p"),g=document.getElementById("g");if(MODI.length===1)g.className="g uno";
+  Griglia.SEFIROT.forEach(([w,r,nome],i)=>{const b=document.createElement("button");b.dataset.w=w;b.innerHTML=`${w}<small>${nome}</small>`;b.onclick=()=>parola(i);p.appendChild(b);});
+  for(const m of MODI){const d=document.createElement("div"),c=document.createElement("canvas");c.width=L;c.height=H;d.appendChild(c);
+    c.onclick=prossima;
+    d.insertAdjacentHTML("beforeend",`<div class="m">${m.nome}</div><div class="r">${m.frase}</div>`);g.appendChild(d);tele.push({x:c.getContext("2d"),m,et:d.querySelector(".m"),fr:d.querySelector(".r")});}
+  parola(+(Q.get("n")||0));
+  let ultimo=0;(function giro(ora){if(ora-ultimo>1000/FPS){ultimo=ora;quadro(ora);}requestAnimationFrame(giro);})(performance.now());
+}
+Griglia.pronti().then(avvio,avvio);
+</script></body></html>

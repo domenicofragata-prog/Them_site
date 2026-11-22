@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><title>Tavola 1, la griglia di lettere</title>
+<link href="caratteri/caratteri.css" rel="stylesheet">
+<style>
+body{margin:0;padding:26px 30px 60px;background:#0E1630;color:#DCE6F7;font-family:"Cormorant Garamond",serif}
+h1{font-weight:400;font-size:27px;margin:0 0 4px}h2{font-weight:400;font-size:23px;margin:44px 0 4px}
+p{margin:0 0 18px;font-size:17px;color:#7FA2DC;font-style:italic}
+.g{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:24px}
+.s{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.c{cursor:pointer}.c canvas{outline:1px solid transparent;outline-offset:4px}.c.scelta canvas{outline-color:#7FA2DC}
+canvas{width:100%;height:auto;display:block;background:#1B2A56}
+.m{font-family:"Space Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7FA2DC;margin-top:9px}
+.r{font-style:italic;font-size:16px;color:#DCE6F7}
+.e{font-family:"Frank Ruhl Libre",serif;font-size:19px;color:#DCE6F7;letter-spacing:0;text-transform:none}
+</style></head><body>
+<h1 id="tit"></h1>
+<p>La linea è sempre quella del motore. Otto modi di scriverla sulla griglia: tocca una variante per vedere sotto le undici parole scritte allo stesso modo.</p>
+<div class="g" id="g"></div>
+<h2 id="tit2"></h2>
+<p>Ogni parola con le sue ripetizioni e i giri di partenza.</p>
+<div class="g s" id="s"></div>
+<script src="/meditazioni/middah.js"></script>
+<script src="griglia.js"></script>
+<script>
+const Q=new URLSearchParams(location.search), W=Q.get("w")||"כתר", R=+(Q.get("r")||13);
+const F=Griglia.figuraDi(W,R,+(Q.get("k")||0));
+document.getElementById("tit").innerHTML=`<bdi class="e" style="font-size:30px">${F.parola}</bdi>, ${F.r} ripetizioni: la griglia di lettere`;
+const VARIANTI=[
+  ["1 · Com'era","la tavola che hai scelto, 62 celle per lato",{col:62}],
+  ["2 · Passo largo","34 celle: poche lettere grandi, la figura si legge come una scritta",{col:34,min:.6,max:1.15}],
+  ["3 · Passo fitto","100 celle: le lettere diventano grana, da lontano torna la linea",{col:100,min:.7,max:1.2}],
+  ["4 · Corpi in scala","lettere minute dove la linea passa una volta, grandi dove si incrocia",{col:50,min:.3,max:2,soglia:.8}],
+  ["5 · Lettere sovrapposte","dove passano più tratti le loro lettere stanno una sull'altra e fanno luce",{col:44,min:.6,max:1.7,soglia:.7,sovrapposte:true}],
+  ["6 · Vuoto puntinato","un punto in ogni cella dove la linea non passa",{col:62,vuote:"punti"}],
+  ["7 · Vuoto scritto","nelle celle vuote la parola continua a scriversi, appena visibile",{col:62,vuote:"lettere"}],
+  ["8 · Con la firma","sotto la figura la riga che la genera",{col:62,firma:true}],
+];
+let scelta=0;
+function sefirot(){const o=VARIANTI[scelta][2],S=document.getElementById("s");S.innerHTML="";
+  document.getElementById("tit2").textContent=`Le undici parole, variante ${VARIANTI[scelta][0].toLowerCase()}`;
+  for(const [w,r,nome] of Griglia.SEFIROT){const d=document.createElement("div"),c=document.createElement("canvas"),f=Griglia.figuraDi(w,r);
+    Griglia.disegna(c,f,Object.assign({},o,{lato:800}));d.appendChild(c);
+    d.insertAdjacentHTML("beforeend",`<div class="m"><span class="e">${w}</span> &nbsp;${nome} · ${r} ripetizioni · ${f.k} giri</div>`);S.appendChild(d);}}
+function tutte(){const g=document.getElementById("g");
+  VARIANTI.forEach(([nome,frase,o],i)=>{const d=document.createElement("div"),c=document.createElement("canvas");d.className="c"+(i===scelta?" scelta":"");
+    Griglia.disegna(c,F,o);d.appendChild(c);d.insertAdjacentHTML("beforeend",`<div class="m">${nome}</div><div class="r">${frase}</div>`);
+    d.onclick=()=>{scelta=i;[...g.children].forEach((e,j)=>e.classList.toggle("scelta",j===i));sefirot();document.getElementById("tit2").scrollIntoView({behavior:"smooth"});};
+    g.appendChild(d);});
+  sefirot();}
+Griglia.pronti().then(tutte,tutte);
+</script></body></html>
