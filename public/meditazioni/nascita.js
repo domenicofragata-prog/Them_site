@@ -46,7 +46,7 @@
   function stato() {
     const [w, r] = SEFIROT[quale], tot = F.tratti.length, i = Math.min(tot, Math.floor(fatti) + (fatti < tot ? 1 : 0));
     return { sefirah: quale, parola: w, misura: r, lettere: F.lettere, stanze: F.stanze, figura: fi + 1, figure: KK.length, giri: KK[fi], svolta: F.theta_gradi,
-      tratto: i, tratti: tot, ripetizione: Math.min(r, Math.floor((Math.max(1, i) - 1) / F.m) + 1), chiusa: fatti >= tot, lunghezza: F.numeri.lunghezza };
+      tratto: i, tratti: tot, ripetizione: Math.min(r, Math.floor((Math.max(1, i) - 1) / F.m) + 1), chiusa: fatti >= tot, lunghezza: F.numeri.lunghezza, totale: F.numeri.valore_totale };
   }
   function giro(adesso) {
     if (!gira) return;

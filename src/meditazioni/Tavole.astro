@@ -30,7 +30,7 @@ const MISURE = [
   { r: 31, it: 'Trentuno, il valore di אל El, Dio, il nome divino di Chesed: alef 1 e lamed 30.', en: 'Thirty-one, the value of אל El, God, the divine name of Chesed: alef 1 and lamed 30.' },
   { r: 42, it: 'Quarantadue, come le lettere del nome che la tradizione assegna a Gevurah.', en: 'Forty-two, as the letters of the name that tradition assigns to Gevurah.' },
   { r: 26, it: 'Ventisei, il valore del nome di quattro lettere, che è il nome divino di Tiferet: yod 10, he 5, vav 6, he 5.', en: 'Twenty-six, the value of the four-letter name, which is the divine name of Tiferet: yod 10, he 5, vav 6, he 5.' },
-  { r: 40, it: 'Quaranta, il valore ordinale di Netzach: nun è la quattordicesima lettera, tsadi la diciottesima, chet l’ottava. Quaranta sono anche i giorni di Mosè sul Sinai. È un accostamento dell’opera.', en: 'Forty, the ordinal value of Netzach: nun is the fourteenth letter, tsadi the eighteenth, chet the eighth. Forty are also the days of Moses on Sinai. It is a pairing made by the work.' },
+  { r: 40, it: 'Quaranta, il valore ordinale di Netzach: nun è la quattordicesima lettera, tsadi la diciottesima, chet l’ottava. Quaranta è il numero della purificazione: quaranta giorni dura il diluvio, quaranta se’ah misura l’acqua del miqveh, il bagno rituale, quaranta giorni resta Mosè sul Sinai. Il legame con Netzach è un accostamento dell’opera.', en: 'Forty, the ordinal value of Netzach: nun is the fourteenth letter, tsadi the eighteenth, chet the eighth. Forty is the number of purification: forty days the flood lasts, forty se’ah is the measure of water of the miqveh, the ritual bath, forty days Moses stays on Sinai. The tie with Netzach is a pairing made by the work.' },
   { r: 15, it: 'Quindici, il valore di Hod: he 5, vav 6, dalet 4. È lo stesso di יה Yah, la forma breve del nome divino. È un accostamento dell’opera.', en: 'Fifteen, the value of Hod: he 5, vav 6, dalet 4. It is the same as יה Yah, the short form of the divine name. It is a pairing made by the work.' },
   { r: 18, it: 'Diciotto, il valore di חי chai, vivente: chet 8 e yod 10. Il nome divino di Yesod è El Chai, il Dio vivente.', en: 'Eighteen, the value of חי chai, living: chet 8 and yod 10. The divine name of Yesod is El Chai, the living God.' },
   { r: 10, it: 'Dieci: Malkhut è la decima sefirah e riceve le altre nove.', en: 'Ten: Malkhut is the tenth sefirah and receives the other nine.' },
@@ -62,10 +62,13 @@ const T = {
       ['La famiglia.', 'Il numero dei giri può cambiare, purché non abbia divisori in comune con la misura: altrimenti la figura si chiuderebbe prima. Ogni numero ammesso dà una svolta e una figura. Con pochi giri la svolta è dolce e la figura è larga e vuota, con molti la svolta è stretta e la linea si incrocia in stelle e trame fitte. Tolte le speculari, Keter ne ha 18: il cursore sotto la figura le scorre tutte.'],
       ['Perché le famiglie non si somigliano.', 'Conta il numero dei tratti. I nomi che ne hanno pochi, come Keter con 39 o הוד Hod, splendore, con 45, danno stelle, rosoni e girandole. Quelli che ne hanno molti, come בינה Binah, intelligenza, con 200, danno anelli e dischi fitti.'],
     ],
+    regola: { capo: 'La regola.', testo: 'È deterministica: date la parola, la misura e il numero dei giri, la figura è una sola, e chi rifà il conto la ritrova identica. Per Keter, misura 13 e 6 giri:',
+      righe: [['la parola', 'כתר Keter, corona · valore 20 + 400 + 200 = 620'], ['le stanze', '2 · 4 · 2 · tre tratti, somma 8'], ['la svolta', '360 × giri ∕ (misura × lettere) = 360 × 6 ∕ 39 = 55,4°'], ['la chiusura', 'ripetizioni = 360 ∕ MCD(lettere × svolta, 360) = 13'], ['valore totale', 'misura × valore = 13 × 620 = 8.060'], ['linea', 'misura × somma delle stanze = 13 × 8 = 104']],
+      dopo: 'La famiglia comincia dalla figura con la svolta più vicina a 60 gradi, l’angolo dell’esagono, e prosegue in ordine di giri. Se una ripetizione girasse di un numero intero di giri la linea non si chiuderebbe: sarebbe un fregio che avanza. Le nove stanze vengono dalla tradizione. Il tracciato a misura e svolta è il metodo dell’opera, un’invenzione nostra.' },
     stanze: ['Le stanze.', 'Le ventidue lettere ebraiche stanno in nove stanze. È la tavola di Aiq Bekar, che prende il nome dalle prime due: א alef, י yod, ק qof, poi ב bet, כ kaf, ר resh. Nella stessa stanza stanno le lettere che in ghematria valgono lo stesso numero in unità, decine e centinaia: alef 1, yod 10, qof 100. Il numero della stanza, da 1 a 9, è la misura della lettera.'],
     misure: ['Le misure.', 'In ghematria ogni lettera è anche un numero, e il valore di una parola è la somma delle sue lettere. La misura di ogni nome è un numero che la tradizione lega a quella sefirah, oppure il valore di un suo nome divino. Dove il legame è nostro, è detto.'],
     tavole: ['Le tavole.', 'Trovata la linea, restava da darle una materia. Queste sono le tavole di lavoro, pagine vive con i loro comandi: la linea diventa scrittura, poi famiglia, e alla fine il metodo torna sulle lettere stesse. Si aprono una alla volta.'],
-    giri: 'giri', ritraccia: 'Traccia da capo', misura: 'misura', figura: 'figura', di: 'di', svolta: 'svolta', tratto: 'tratto', ripetizione: 'ripetizione', chiusa: 'chiusa', tratti: 'tratti', lunghezza: 'lunghezza',
+    giri: 'giri', ritraccia: 'Traccia da capo', misura: 'misura', figura: 'figura', di: 'di', svolta: 'svolta', tratto: 'tratto', ripetizione: 'ripetizione', chiusa: 'chiusa', tratti: 'tratti', lunghezza: 'linea', totale: 'valore totale',
     apri: 'Apri la tavola', chiudi: 'Chiudi', prima: 'Tavola precedente', dopo: 'Tavola seguente', tavola: 'tavola', stanza: 'stanza',
   },
   en: {
@@ -80,15 +83,18 @@ const T = {
       ['The family.', 'The number of turns may change, as long as it shares no divisor with the measure: otherwise the figure would close too soon. Each allowed number gives one angle and one figure. With few turns the bend is gentle and the figure wide and empty, with many the bend is tight and the line crosses itself in stars and dense weaves. Mirror images aside, Keter has 18: the slider under the figure goes through them all.'],
       ['Why the families do not look alike.', 'What counts is the number of strokes. Names with few, like Keter with 39 or הוד Hod, splendour, with 45, give stars, rosettes and pinwheels. Names with many, like בינה Binah, understanding, with 200, give rings and dense discs.'],
     ],
+    regola: { capo: 'The rule.', testo: 'It is deterministic: given the word, the measure and the number of turns, the figure is one only, and whoever redoes the count finds it identical. For Keter, measure 13 and 6 turns:',
+      righe: [['the word', 'כתר Keter, crown · value 20 + 400 + 200 = 620'], ['the chambers', '2 · 4 · 2 · three strokes, sum 8'], ['the turn', '360 × turns ∕ (measure × letters) = 360 × 6 ∕ 39 = 55.4°'], ['the closing', 'repetitions = 360 ∕ GCD(letters × turn, 360) = 13'], ['total value', 'measure × value = 13 × 620 = 8,060'], ['line', 'measure × sum of the chambers = 13 × 8 = 104']],
+      dopo: 'The family starts from the figure whose turn is closest to 60 degrees, the angle of the hexagon, and goes on in order of turns. If one repetition turned by a whole number of full turns the line would not close: it would be a frieze moving on. The nine chambers come from tradition. Drawing by measure and turn is the method of the work, an invention of ours.' },
     stanze: ['The chambers.', 'The twenty-two Hebrew letters sit in nine chambers. It is the table of Aiq Bekar, named after the first two: א alef, י yod, ק qof, then ב bet, כ kaf, ר resh. In the same chamber sit the letters that in gematria are worth the same number in units, tens and hundreds: alef 1, yod 10, qof 100. The number of the chamber, from 1 to 9, is the measure of the letter.'],
     misure: ['The measures.', 'In gematria every letter is also a number, and the value of a word is the sum of its letters. The measure of each name is a number that tradition ties to that sefirah, or the value of one of its divine names. Where the tie is ours, it is said.'],
     tavole: ['The plates.', 'Once the line was found, it still needed a matter. These are the working plates, live pages with their controls, which are in Italian: the line becomes writing, then family, and in the end the method returns to the letters themselves. They open one at a time.'],
-    giri: 'turns', ritraccia: 'Draw again', misura: 'measure', figura: 'figure', di: 'of', svolta: 'turn', tratto: 'stroke', ripetizione: 'repetition', chiusa: 'closed', tratti: 'strokes', lunghezza: 'length',
+    giri: 'turns', ritraccia: 'Draw again', misura: 'measure', figura: 'figure', di: 'of', svolta: 'turn', tratto: 'stroke', ripetizione: 'repetition', chiusa: 'closed', tratti: 'strokes', lunghezza: 'line', totale: 'total value',
     apri: 'Open the plate', chiudi: 'Close', prima: 'Previous plate', dopo: 'Next plate', tavola: 'plate', stanza: 'chamber',
   },
 }[lingua];
 const elenco = TAVOLE.map((t) => ({ n: t.n, file: t.file, titolo: t[lingua][0] }));
-const parole = { lingua, nomi: NOMI, sensi: SENSI[lingua], misura: T.misura, figura: T.figura, di: T.di, svolta: T.svolta, giri: T.giri, tratto: T.tratto, ripetizione: T.ripetizione, chiusa: T.chiusa, tratti: T.tratti, lunghezza: T.lunghezza, tavola: T.tavola };
+const parole = { lingua, nomi: NOMI, sensi: SENSI[lingua], misura: T.misura, figura: T.figura, di: T.di, svolta: T.svolta, giri: T.giri, tratto: T.tratto, ripetizione: T.ripetizione, chiusa: T.chiusa, tratti: T.tratti, lunghezza: T.lunghezza, totale: T.totale, tavola: T.tavola };
 ---
 <!doctype html>
 <html lang={lingua}>
@@ -136,6 +142,9 @@ h1 { margin: 0; font: italic 300 clamp(40px, 7.4vh, 78px)/1.02 var(--testo); let
 .stanze div { direction: ltr; background: var(--notte); padding: 1.2vh .4em 1vh; display: flex; flex-direction: column; align-items: center; gap: .1vh; }
 .stanze .let { font: 400 clamp(20px, 2.8vh, 26px)/1.2 var(--ebraico); color: var(--ghiaccio); letter-spacing: .28em; margin-right: -.28em; direction: rtl; }
 .stanze .num { font: 400 clamp(11px, 1.5vh, 13px)/1.3 var(--mono); color: var(--cielo); }
+.schema { margin: 0; display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 1.1vh 1.4em; padding: 1.8vh 1.2em; border: 1px solid var(--filo); align-items: baseline; }
+.schema dt { font: 500 clamp(12px, 1.6vh, 15px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .2em; color: var(--grigio); }
+.schema dd { margin: 0; font: 400 clamp(12px, 1.7vh, 15px)/1.5 var(--mono); color: var(--ghiaccio); }
 .scena { position: sticky; top: 64px; display: flex; flex-direction: column; align-items: center; gap: 1.2vh; }
 #nascita { display: block; width: min(100%, calc(100vh - 370px)); width: min(100%, calc(100svh - 370px)); min-width: min(100%, 320px); aspect-ratio: 1; }
 .nomi { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: .2vh 1.3em; }
@@ -219,7 +228,13 @@ footer { margin-top: 8vh; font: 500 clamp(11px, 1.5vh, 14px)/1.5 var(--testo); f
       <div class="stanze" role="img" aria-label={T.stanze[0]}>
         {STANZE.map((lettere, s) => <div><span class="let" lang="he">{lettere.join('')}</span><span class="num">{s + 1}</span></div>)}
       </div>
-      {T.blocchi.map(([capo, p]) => <p><b>{capo}</b> {p}</p>)}
+      {T.blocchi.slice(0, 4).map(([capo, p]) => <p><b>{capo}</b> {p}</p>)}
+      <p><b>{T.regola.capo}</b> {T.regola.testo}</p>
+      <dl class="schema">
+        {T.regola.righe.map(([nome, conto]) => <><dt>{nome}</dt><dd>{conto}</dd></>)}
+      </dl>
+      <p>{T.regola.dopo}</p>
+      {T.blocchi.slice(4).map(([capo, p]) => <p><b>{capo}</b> {p}</p>)}
     </div>
     <div class="scena">
       <ul class="nomi" id="nomi">
@@ -277,7 +292,7 @@ const numero = (n, d) => { const s = n.toFixed(d).replace(/\.?0+$/, ""); return 
 function avviso(st) {
   $("#nome").innerHTML = `<bdi lang="he">${st.parola}</bdi>${P.nomi[st.sefirah]}, <i>${P.sensi[st.sefirah]}</i>`;
   $("#riga1").textContent = `${P.misura} ${st.misura} · ${P.figura} ${st.figura} ${P.di} ${st.figure} · ${st.giri} ${P.giri} · ${P.svolta} ${numero(st.svolta, 1)}°`;
-  $("#riga2").textContent = st.chiusa ? `${P.chiusa} · ${st.tratti} ${P.tratti} · ${P.lunghezza} ${st.lunghezza}` : `${P.tratto} ${st.tratto} ${P.di} ${st.tratti} · ${P.ripetizione} ${st.ripetizione} ${P.di} ${st.misura}`;
+  $("#riga2").textContent = st.chiusa ? `${P.chiusa} · ${st.tratti} ${P.tratti} · ${P.lunghezza} ${st.lunghezza} · ${P.totale} ${st.totale.toLocaleString(P.lingua === "it" ? "it-IT" : "en-US")}` : `${P.tratto} ${st.tratto} ${P.di} ${st.tratti} · ${P.ripetizione} ${st.ripetizione} ${P.di} ${st.misura}`;
   const g = $("#giri"); if (+g.max !== st.figure) g.max = st.figure; if (+g.value !== st.figura) g.value = st.figura;
   document.querySelectorAll("#nomi button").forEach((b, i) => b.setAttribute("aria-pressed", i === st.sefirah ? "true" : "false"));
 }
