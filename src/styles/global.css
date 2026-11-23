@@ -49,8 +49,9 @@ nav.top a:hover{opacity:1}
 .mobile-menu-foot{margin-top:2.2rem}
 .mobile-menu-foot .langtog{font-size:.85rem}
 html.menu-open,html.menu-open body{overflow:hidden}
-@media(max-width:760px){nav.top{display:none}.nav-toggle{display:inline-flex}}
-@media(min-width:761px){.mobile-menu{display:none}}
+/* sette voci: sotto i 1000px la barra non le contiene, passa al menu */
+@media(max-width:1000px){nav.top{display:none}.nav-toggle{display:inline-flex}}
+@media(min-width:1001px){.mobile-menu{display:none}}
 
 /* Hero */
 .hero{position:relative;height:100svh;min-height:600px;display:flex;align-items:flex-end;overflow:hidden}

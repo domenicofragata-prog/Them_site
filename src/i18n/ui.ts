@@ -53,6 +53,7 @@ export const ui = {
     'about.2': 'Frutto di uno scambio costante con artisti, ingegneri, programmatori e intelligenze artificiali, THEM è una pratica relazionale e dialogica, dove il creare diventa una forma di autorialità diffusa.',
     'about.3': 'Radicato nella formazione di Fragata, filosofo, scrittore e divulgatore culturale, il progetto interroga il confine sempre più labile tra identità umana e tecnologica. Indaga come linguaggio, mito e memoria si intreccino nell\u2019età degli algoritmi, ridefinendo che cosa significa essere umani.',
     'nav.bio': 'Bio',
+    'nav.contatti': 'Contatti',
     'bio.lead': 'Domenico Fragata, filosofo, scrittore e divulgatore culturale.',
     'bio.more': 'Leggi la bio',
   },
@@ -107,6 +108,7 @@ export const ui = {
     'about.2': 'Emerging from a continuous exchange with artists, engineers, programmers, and artificial intelligences, THEM embodies a relational and dialogical practice in which creation becomes a form of distributed authorship.',
     'about.3': 'Rooted in Fragata\u2019s background as a philosopher, writer, and cultural communicator, the project investigates the porous boundary between human and technological identity. It explores how language, myth, and memory intertwine in the age of algorithms to redefine what it means to be human.',
     'nav.bio': 'Bio',
+    'nav.contatti': 'Contact',
     'bio.lead': 'Domenico Fragata, philosopher, writer and cultural communicator.',
     'bio.more': 'Read the bio',
   }

@@ -1,0 +1,159 @@
+---
+// Pagina contatti, la stessa struttura per le due lingue. I recapiti sono quelli già pubblicati nel footer.
+import Base from '../layouts/Base.astro';
+import FacePage from './FacePage.astro';
+import CodeTexture from './CodeTexture.astro';
+import { t, type Lang } from '../i18n/ui';
+
+const lang = (Astro.currentLocale ?? 'it') as Lang;
+const tr = t(lang);
+const en = lang === 'en';
+
+const EMAIL = 'domenico.fragata@gmail.com';
+const PHONE = '+39 338 642 7639';
+const WHATSAPP = 'https://wa.me/393386427639';
+const mail = (subject?: string) => `mailto:${EMAIL}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`;
+
+const copy = en
+  ? {
+      title: 'Contact · THEM',
+      desc: 'How to reach Domenico Fragata and the THEM project: email, WhatsApp and channels, for exhibitions, training, music and press.',
+      lead: 'For an exhibition, a course, a collaboration or a question about the work of THEM, write to me. I answer in person.',
+      direct: 'Write', directKicker: 'Domenico Fragata',
+      emailLabel: 'Email', waLabel: 'WhatsApp',
+      reasons: 'Subjects', reasonsKicker: 'What to write about',
+      write: 'Write',
+      channels: 'Channels', channelsKicker: 'Where the work appears',
+      open: 'Open',
+      topics: [
+        { name: 'Works and exhibitions', desc: 'Works, exhibition projects and installations, from the series Gods of the Digital Age, Archetipi and Essence.', subject: 'Works and exhibitions' },
+        { name: 'Training', desc: 'Courses and workshops on artificial intelligence for schools, companies and public administrations, shaped around those who host them.', subject: 'Training' },
+        { name: 'Music and performance', desc: 'Live sets, electronic rites and talks, together with the performances that accompany the exhibitions.', subject: 'Music and performance' },
+        { name: 'Press and writing', desc: 'Interviews, articles, invitations to conferences and editorial proposals.', subject: 'Press and writing' },
+      ],
+      channelList: [
+        { name: 'Instagram', handle: '@them_artproject', desc: 'Works and images', href: 'https://www.instagram.com/them_artproject/' },
+        { name: 'YouTube', handle: '@THEMartProject', desc: 'Video', href: 'https://www.youtube.com/@THEMartProject' },
+        { name: 'SoundCloud', handle: 'THEM', desc: 'Music', href: 'https://soundcloud.com/them-802089407' },
+        { name: 'Artuu', handle: 'Visioni Sintetiche', desc: 'The column', href: 'https://www.artuu.it/author/domenico-fragata/' },
+      ],
+    }
+  : {
+      title: 'Contatti · THEM',
+      desc: 'Come raggiungere Domenico Fragata e il progetto THEM: email, WhatsApp e canali, per mostre, formazione, musica e stampa.',
+      lead: 'Per una mostra, un corso, una collaborazione o una domanda sul lavoro di THEM, scrivimi. Rispondo di persona.',
+      direct: 'Scrivere', directKicker: 'Domenico Fragata',
+      emailLabel: 'Email', waLabel: 'WhatsApp',
+      reasons: 'Argomenti', reasonsKicker: 'Di che cosa scrivere',
+      write: 'Scrivi',
+      channels: 'Canali', channelsKicker: 'Dove appare il lavoro',
+      open: 'Apri',
+      topics: [
+        { name: 'Opere e mostre', desc: 'Opere, progetti espositivi e installazioni, dalle serie Gods of the Digital Age, Archetipi ed Essence.', subject: 'Opere e mostre' },
+        { name: 'Formazione', desc: 'Corsi e laboratori sull’intelligenza artificiale per scuole, aziende e pubbliche amministrazioni, costruiti intorno a chi li ospita.', subject: 'Formazione' },
+        { name: 'Musica e performance', desc: 'Live, riti elettronici e talk, insieme alle performance che accompagnano le mostre.', subject: 'Musica e performance' },
+        { name: 'Stampa e scrittura', desc: 'Interviste, articoli, inviti a convegni e proposte editoriali.', subject: 'Stampa e scrittura' },
+      ],
+      channelList: [
+        { name: 'Instagram', handle: '@them_artproject', desc: 'Opere e immagini', href: 'https://www.instagram.com/them_artproject/' },
+        { name: 'YouTube', handle: '@THEMartProject', desc: 'Video', href: 'https://www.youtube.com/@THEMartProject' },
+        { name: 'SoundCloud', handle: 'THEM', desc: 'Musica', href: 'https://soundcloud.com/them-802089407' },
+        { name: 'Artuu', handle: 'Visioni Sintetiche', desc: 'La rubrica', href: 'https://www.artuu.it/author/domenico-fragata/' },
+      ],
+    };
+
+const site = Astro.site ?? new URL('https://themproject.ai');
+const pageUrl = new URL(en ? '/en/contatti' : '/contatti', site).href;
+const jsonld = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': pageUrl + '#contactpage',
+  url: pageUrl,
+  name: copy.title,
+  inLanguage: lang,
+  mainEntity: { '@id': `${site.origin}/#person` },
+};
+---
+<Base title={copy.title} description={copy.desc} jsonld={jsonld}>
+  <CodeTexture word="THEM" />
+  <FacePage title={tr('nav.contatti')} lead={copy.lead} animate={true}>
+    <section class="contact">
+      <div class="wrap">
+
+        <div class="sec-head c-head reveal">
+          <h2 aria-label={copy.direct}><span class="ascii-text" aria-hidden="true">{copy.direct}</span></h2>
+          <span class="mono">{copy.directKicker}</span>
+        </div>
+        <div class="c-direct">
+          <a class="c-main reveal" href={mail()}>
+            <span class="mono c-label">{copy.emailLabel}</span>
+            <span class="c-value">{EMAIL}</span>
+          </a>
+          <a class="c-main reveal" href={WHATSAPP} target="_blank" rel="noopener noreferrer">
+            <span class="mono c-label">{copy.waLabel}</span>
+            <span class="c-value">{PHONE}</span>
+          </a>
+        </div>
+
+        <div class="sec-head reveal">
+          <h2 aria-label={copy.reasons}><span class="ascii-text" aria-hidden="true">{copy.reasons}</span></h2>
+          <span class="mono">{copy.reasonsKicker}</span>
+        </div>
+        <div class="c-rows">
+          {copy.topics.map((it) => (
+            <a class="c-row reveal" href={mail(`THEM · ${it.subject}`)}>
+              <span class="c-name">{it.name}</span>
+              <span class="c-desc">{it.desc}</span>
+              <span class="c-meta">{copy.write} <span class="arrow">&#8594;</span></span>
+            </a>
+          ))}
+        </div>
+
+        <div class="sec-head reveal">
+          <h2 aria-label={copy.channels}><span class="ascii-text" aria-hidden="true">{copy.channels}</span></h2>
+          <span class="mono">{copy.channelsKicker}</span>
+        </div>
+        <div class="c-rows">
+          {copy.channelList.map((it) => (
+            <a class="c-row reveal" href={it.href} target="_blank" rel="noopener noreferrer">
+              <span class="c-name">{it.name}</span>
+              <span class="c-desc"><span class="c-handle">{it.handle}</span>{it.desc}</span>
+              <span class="c-meta">{copy.open} <span class="arrow">&#8599;</span></span>
+            </a>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  </FacePage>
+</Base>
+
+<style>
+  .contact{position:relative;padding-bottom:clamp(4rem,9vh,7rem)}
+  .c-head{padding-top:clamp(1rem,3vh,2rem)}
+
+  .c-direct{display:grid;grid-template-columns:1.5fr 1fr;gap:2px}
+  .c-main{display:flex;flex-direction:column;gap:1.1rem;padding:clamp(1.5rem,3vw,2.4rem);border:1px solid var(--hair);background:rgba(12,12,12,.55);transition:border-color .35s ease,background .35s ease}
+  .c-main:hover{border-color:var(--bronze);background:rgba(180,154,114,.06)}
+  .c-label{color:var(--bronze)}
+  .c-value{font-family:var(--mono);font-size:clamp(1rem,2.1vw,1.55rem);letter-spacing:.02em;color:var(--bone);overflow-wrap:anywhere;transition:color .35s ease}
+  .c-main:hover .c-value{color:var(--bronze-hi)}
+
+  .c-rows{display:flex;flex-direction:column;border-top:1px solid var(--hair)}
+  .c-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,.6fr);align-items:center;gap:2rem;padding:1.6rem 0;border-bottom:1px solid var(--hair);transition:padding-left .4s ease}
+  .c-row:hover{padding-left:1.1rem}
+  .c-name{font-family:var(--display);font-weight:600;font-size:clamp(1.25rem,2.4vw,1.75rem);transition:color .4s ease}
+  .c-row:hover .c-name{color:var(--bronze)}
+  .c-desc{color:#b9b1a4;font-size:1.02rem;line-height:1.55}
+  .c-handle{display:block;font-family:var(--mono);font-size:.82rem;letter-spacing:.06em;color:var(--bone);margin-bottom:.25rem}
+  .c-meta{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);text-align:right;white-space:nowrap;transition:color .4s ease}
+  .c-row:hover .c-meta{color:var(--bronze)}
+  .c-meta .arrow{display:inline-block;color:var(--bronze);transition:transform .4s ease}
+  .c-row:hover .c-meta .arrow{transform:translateX(5px)}
+
+  @media(max-width:820px){
+    .c-direct{grid-template-columns:1fr}
+    .c-row{grid-template-columns:1fr;gap:.5rem;padding:1.4rem 0}
+    .c-meta{text-align:left}
+  }
+</style>
