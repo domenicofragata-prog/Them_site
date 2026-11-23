@@ -79,6 +79,15 @@
     // conta ciò che è stato chiesto, non lo stato: appena creato il contesto non risulta ancora in moto
     if (AC) { voluto = !voluto; voluto ? AC.resume() : AC.suspend(); regola(); setTimeout(() => avviso(stato()), 150); return; }
     AC = new (window.AudioContext || window.webkitAudioContext)(); voluto = true;
+    // sul telefono: il contesto appena nato può restare fermo finché non lo si avvia dentro il tocco, e su iPhone
+    // il tasto del silenzioso zittisce questo suono, a meno di dichiararlo musica da ascoltare
+    try { if (navigator.audioSession) navigator.audioSession.type = "playback"; else if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.maxTouchPoints > 1 && /Mac/.test(navigator.platform))) {
+      // sistemi più vecchi: un suono muto in un elemento audio porta con sé anche il resto
+      const n = 4410, b = new DataView(new ArrayBuffer(44 + n * 2)), s = (o, t) => { for (let i = 0; i < t.length; i++) b.setUint8(o + i, t.charCodeAt(i)); };
+      s(0, "RIFF"); b.setUint32(4, 36 + n * 2, true); s(8, "WAVEfmt "); b.setUint32(16, 16, true); b.setUint16(20, 1, true); b.setUint16(22, 1, true); b.setUint32(24, 44100, true); b.setUint32(28, 88200, true); b.setUint16(32, 2, true); b.setUint16(34, 16, true); s(36, "data"); b.setUint32(40, n * 2, true);
+      const muto = new Audio(URL.createObjectURL(new Blob([b.buffer], { type: "audio/wav" }))); muto.loop = true; muto.setAttribute("playsinline", ""); muto.play().catch(() => {});
+    } } catch (e) {}
+    AC.resume();
     USCITA = AC.createGain(); USCITA.gain.value = 0.9; USCITA.connect(AC.destination);
     const eco = AC.createConvolver(), n = AC.sampleRate * 5, imp = AC.createBuffer(2, n, AC.sampleRate);
     for (let c = 0; c < 2; c++) { const d = imp.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, 3.2); }
