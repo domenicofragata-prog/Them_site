@@ -1,6 +1,7 @@
 ---
 // Meditazioni cabalistiche: una pagina a sé, come la Wish Room, in italiano e in inglese.
 // Il pezzo è public/meditazioni/polvere.js, portato da meaning-machine/esperimenti-middah, tavola 22;
+// le materie di linea, fili e radiografia, sono in public/meditazioni/linee.js, dalla tavola 28;
 // public/meditazioni/middah.js è il motore, copia fedele, non si modifica qui.
 // Nei testi niente parentesi, ogni parola ebraica ha accanto traslitterazione e traduzione.
 import '@fontsource/frank-ruhl-libre/hebrew-400.css';
@@ -34,11 +35,15 @@ const T = {
     indietro: 'Vibe coding',
     accendi: 'Accendi il suono', spegni: 'Spegni il suono',
     figura: 'figura', di: 'di', svolta: 'svolta', tocco: 'un tocco sulla figura chiama la sorella',
+    materia: 'Materia', fili: 'Fili', radiografia: 'Radiografia', polvere: 'Polvere',
     senza: 'Questo browser non riesce a disegnare il pezzo. Serve un browser recente con WebGL 2.',
     testo: [
       ['Middah, la misura.', 'Ogni lettera è un tratto, lungo quanto la sua stanza: le nove stanze di Aiq Bekar, dove א alef, י yod e ק qof valgono 1, ב bet, כ kaf e ר resh 2, fino a ט tet e צ tzadi 9. Dopo ogni tratto la linea svolta di un angolo fisso, e la parola si ripete finché la linea torna da dove è partita. Il tracciato a misura e svolta è il metodo dell’opera.'],
       ['La famiglia.', 'L’opera dà a ogni nome una misura, cioè quante volte il nome si ripete nella linea: 13 per כתר Keter, corona, 10 per מלכות Malkhut, regno. Con la stessa misura la figura si chiude per molte svolte diverse. Tolte le speculari, sono da 10 a 45 figure secondo il nome. La pagina le attraversa tutte, in ordine di svolta, e dopo l’ultima torna alla prima.'],
-      ['La polvere.', 'La figura è fatta di 4000 lettere del nome: un terzo strette sulla linea e chiare, le altre in un alone largo e lieve. Resta una decina di secondi. Poi ogni lettera migra al suo posto nella figura seguente, in dodici secondi, e a metà strada la polvere si allarga in nebbia. Lo schermo non torna mai nero.'],
+      ['Le tre materie.', 'La stessa figura si può guardare in tre materie. Resta una decina di secondi, poi diventa la figura seguente in dodici secondi. Lo schermo non torna mai nero.'],
+      ['I fili.', 'Da ogni punto del nome parte un filo dritto, teso fino allo stesso punto della ripetizione seguente, poi di quella dopo, poi della terza. Nessun filo è curvo: le curve che si vedono nascono dall’incrocio. Alle svolte della linea le lettere del nome fanno da chiodi.'],
+      ['La radiografia.', 'La linea si ripete verso il centro, ogni volta più piccola e un poco voltata, sottile e trasparente come una conchiglia vista in controluce. La figura seguente nasce dal centro e arriva per ultima al bordo.'],
+      ['La polvere.', 'La figura è fatta di 4000 lettere del nome: un terzo strette sulla linea e chiare, le altre in un alone largo e lieve. Ogni lettera migra al suo posto nella figura seguente, e a metà strada la polvere si allarga in nebbia.'],
       ['Il nome.', 'Poco prima di ogni passaggio una voce dice il nome in ebraico. La figura nuova nasce in risposta e si schiarisce mentre si forma.'],
       ['La musica.', 'Ogni tratto è una nota d’arpa. A ogni figura la musica riparte dall’inizio della linea e ne suona la prima parte, il nome ripetuto alcune volte. La stanza della lettera dà la durata, il segno vocalico della lettera dà l’altezza, e le lettere senza vocale propria risuonano piano sul tono della vocale vicina. La direzione della linea sposta il motivo lungo una scala di cinque note. La svolta della figura sceglie la tonica, al semitono. Sotto stanno un bordone e una voce morbida che lega le note.'],
       ['Fonti.', 'Le dieci sefirot, דעת Da’at, conoscenza, e le nove stanze di Aiq Bekar vengono dalla tradizione della cabala. Le vocali come toni prendono spunto da Abraham Abulafia nella lettura di Moshe Idel: nel recitare le lettere dei nomi divini holam è il tono alto, hiriq il basso. L’ordine delle altre vocali e l’uso sui nomi delle sefirot sono scelte di questo lavoro. Middah, le misure dei nomi e la regola della musica sono il metodo dell’opera, uno studio di THEM costruito in vibe coding.'],
@@ -56,11 +61,15 @@ const T = {
     indietro: 'Vibe coding',
     accendi: 'Turn the sound on', spegni: 'Turn the sound off',
     figura: 'figure', di: 'of', svolta: 'turning angle', tocco: 'a touch on the figure calls its sister',
+    materia: 'Matter', fili: 'Threads', radiografia: 'X-ray', polvere: 'Dust',
     senza: 'This browser cannot draw the piece. It needs a recent browser with WebGL 2.',
     testo: [
       ['Middah, the measure.', 'Each letter is a stroke, as long as its chamber: the nine chambers of Aiq Bekar, where א alef, י yod and ק qof are worth 1, ב bet, כ kaf and ר resh 2, up to ט tet and צ tzadi 9. After each stroke the line turns by a fixed angle, and the word repeats until the line returns to where it began. Drawing by measure and turn is the method of the work.'],
       ['The family.', 'The work gives each name a measure, the number of times the name repeats in the line: 13 for כתר Keter, crown, 10 for מלכות Malkhut, kingdom. With the same measure the figure closes at many different turning angles. Mirror images aside, there are from 10 to 45 figures depending on the name. The page goes through all of them, in order of turning angle, and after the last it returns to the first.'],
-      ['The dust.', 'The figure is made of 4000 letters of the name: a third close to the line and bright, the rest in a wide, faint halo. It stays for some ten seconds. Then each letter migrates to its place in the next figure, in twelve seconds, and halfway the dust spreads into mist. The screen never goes black.'],
+      ['The three matters.', 'The same figure can be seen in three matters. It stays for some ten seconds, then becomes the next figure in twelve seconds. The screen never goes black.'],
+      ['The threads.', 'From each point of the name a straight thread is stretched to the same point of the next repetition, then of the one after, then of the third. No thread is curved: the curves you see are born where the threads cross. At the turns of the line the letters of the name serve as nails.'],
+      ['The X-ray.', 'The line repeats towards the centre, each time smaller and slightly turned, thin and transparent like a shell held against the light. The next figure is born at the centre and reaches the edge last.'],
+      ['The dust.', 'The figure is made of 4000 letters of the name: a third close to the line and bright, the rest in a wide, faint halo. Each letter migrates to its place in the next figure, and halfway the dust spreads into mist.'],
       ['The name.', 'Just before each passage a voice says the name in Hebrew. The new figure is born in answer and brightens as it forms.'],
       ['The music.', 'Each stroke is a harp note. At each figure the music starts again from the beginning of the line and plays its first part, the name repeated a few times. The chamber of the letter gives the length, the vowel sign of the letter gives the pitch, and the letters with no vowel of their own sound softly on the tone of the nearest vowel. The direction of the line shifts the motif along a five-note scale. The turning angle of the figure chooses the tonic, to the semitone. Beneath lie a drone and a soft voice that ties the notes.'],
       ['Sources.', 'The ten sefirot, דעת Da’at, knowledge, and the nine chambers of Aiq Bekar come from the tradition of Kabbalah. Vowels as tones take their cue from Abraham Abulafia as read by Moshe Idel: in reciting the letters of the divine names holam is the high tone, hiriq the low. The order of the other vowels and their use on the names of the sefirot are choices of this work. Middah, the measures of the names and the rule of the music are the method of the work, a study by THEM built in vibe coding.'],
@@ -100,7 +109,9 @@ const dati = {
     },
   ],
 };
+const MATERIE = [['fili', T.fili], ['radiografia', T.radiografia], ['polvere', T.polvere]];
 const pagina = { lingua, sefirot: SEFIROT.map((s) => ({ ebraico: s.ebraico, nome: s.nome, senso: s[lingua] })), accendi: T.accendi, spegni: T.spegni, figura: T.figura, di: T.di, svolta: T.svolta };
+// la materia che si vede per prima: i fili, scelta di Dome del 24 novembre 2026
 ---
 <!doctype html>
 <html lang={lingua}>
@@ -169,11 +180,17 @@ button.suono.acceso { border-color: var(--filo); color: var(--panna-tenue); }
 button.suono.acceso:hover { background: transparent; color: var(--panna); border-color: var(--panna-tenue); }
 .scena { display: flex; flex-direction: column; align-items: center; gap: 1.4vh; min-width: 0; }
 /* il palco tiene il posto nella pagina; la tela è più grande e lo oltrepassa, sfumando nel nero, così la nebbia si allarga senza bordo */
-.palco { position: relative; width: min(100%, calc(100vh - 215px)); width: min(100%, calc(100svh - 215px)); aspect-ratio: 1; }
-#tela { position: absolute; left: 50%; top: 50%; width: 145%; aspect-ratio: 1; transform: translate(-50%, -50%); cursor: pointer; touch-action: manipulation;
+.palco { position: relative; width: min(100%, calc(100vh - 250px)); width: min(100%, calc(100svh - 250px)); aspect-ratio: 1; }
+#tela, #tela2 { position: absolute; left: 50%; top: 50%; width: 145%; aspect-ratio: 1; transform: translate(-50%, -50%); cursor: pointer; touch-action: manipulation;
   -webkit-mask-image: radial-gradient(closest-side, #000 80%, transparent 100%); mask-image: radial-gradient(closest-side, #000 80%, transparent 100%); }
+.scena[data-materia="polvere"] #tela2, .scena:not([data-materia="polvere"]) #tela { visibility: hidden; }
+.materie { display: flex; justify-content: center; gap: 1.8em; margin-top: 1vh; }
+.materie button { all: unset; cursor: pointer; padding: 4px 0; font: 500 clamp(12px, 1.7vh, 16px)/1.4 var(--testo); font-variant: small-caps; letter-spacing: .26em; color: var(--grigio); border-bottom: 1px solid transparent; transition: color .6s, border-color .6s; }
+.materie button:hover, .materie button:focus-visible { color: var(--panna-tenue); }
+.materie button[aria-pressed="true"] { color: var(--panna); border-color: var(--panna-tenue); }
+.materie button[hidden] { display: none; }
 .colonna, .dida { position: relative; z-index: 1; }
-.dida { text-align: center; display: flex; flex-direction: column; gap: .3vh; min-height: 4.2em; }
+.dida { text-align: center; display: flex; flex-direction: column; gap: .3vh; min-height: 6.4em; }
 .dida .nome { font: 400 clamp(17px, 2.3vh, 22px)/1.3 var(--testo); color: var(--panna); }
 .dida .nome bdi { font-family: var(--ebraico); color: var(--ghiaccio); margin-right: .5em; font-size: 1.1em; }
 .dida .nome i { color: var(--panna-tenue); }
@@ -222,11 +239,14 @@ footer span + span { letter-spacing: .18em; }
       <button type="button" class="suono" id="suono">{T.accendi}</button>
     </div>
     <div class="scena" id="scena">
-      <div class="palco"><canvas id="tela" role="img" aria-label={T.titolo}></canvas></div>
+      <div class="palco"><canvas id="tela" aria-hidden="true"></canvas><canvas id="tela2" role="img" aria-label={T.titolo}></canvas></div>
       <div class="dida">
         <p class="nome" id="nome"><bdi lang="he">{SEFIROT[0].ebraico}</bdi>{SEFIROT[0].nome}, <i>{SEFIROT[0][lingua]}</i></p>
         <p class="eti" id="quale">&nbsp;</p>
         <p class="eti" style="opacity:.7">{T.tocco}</p>
+        <div class="materie" id="materie" role="group" aria-label={T.materia}>
+          {MATERIE.map(([m, nome]) => <button type="button" data-m={m} aria-pressed={m === 'fili' ? 'true' : 'false'}>{nome}</button>)}
+        </div>
       </div>
       <p class="senza">{T.senza}</p>
     </div>
@@ -239,6 +259,7 @@ footer span + span { letter-spacing: .18em; }
   <footer><span>{T.titolo} · THEM</span>{T.crediti.map((c) => <span>{c}</span>)}</footer>
 </main>
 <script is:inline src="/meditazioni/middah.js"></script>
+<script is:inline src="/meditazioni/linee.js"></script>
 <script is:inline src="/meditazioni/polvere.js"></script>
 <script is:inline define:vars={{ pagina }}>
 const $ = s => document.querySelector(s);
@@ -249,11 +270,16 @@ function avviso(st) {
   $("#quale").textContent = `${pagina.figura} ${st.figura} ${pagina.di} ${st.figure} · ${pagina.svolta} ${numero(st.svolta, 1)}°`;
   document.querySelectorAll("#nomi button").forEach((b, i) => b.setAttribute("aria-pressed", i === st.sefirah ? "true" : "false"));
   const b = $("#suono"); b.textContent = st.suono ? pagina.spegni : pagina.accendi; b.classList.toggle("acceso", st.suono);
+  $("#scena").dataset.materia = st.materia;
+  document.querySelectorAll("#materie button").forEach(m => { m.setAttribute("aria-pressed", m.dataset.m === st.materia ? "true" : "false"); if (m.dataset.m === "polvere") m.hidden = !st.polvere; });
 }
 const chiesta = Math.max(0, Math.min(10, parseInt(new URLSearchParams(location.search).get("n") || "0", 10) || 0));
-Polvere.avvia($("#tela"), { sefirah: chiesta, avviso }).then(va => { if (!va) $("#scena").classList.add("ferma"); });
+const materia = new URLSearchParams(location.search).get("m") || "fili";
+Polvere.avvia($("#tela"), { sefirah: chiesta, avviso, telaLinee: $("#tela2"), materia }).then(va => { if (!va) $("#scena").classList.add("ferma"); });
 $("#nomi").addEventListener("click", e => { const b = e.target.closest("button"); if (b) Polvere.parola(+b.dataset.n); });
 $("#tela").addEventListener("click", () => Polvere.sorella());
+$("#tela2").addEventListener("click", () => Polvere.sorella());
+$("#materie").addEventListener("click", e => { const b = e.target.closest("button"); if (b) Polvere.materia(b.dataset.m); });
 $("#suono").addEventListener("click", () => Polvere.suono());
 </script>
 </body>

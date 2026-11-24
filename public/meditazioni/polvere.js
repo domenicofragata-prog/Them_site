@@ -7,7 +7,9 @@
      in piccolo, a un quarto e a un ottavo del lato, poi si somma;
    - la tela segue lo schermo fino a un tetto; fuori vista non si disegna, e a suono spento il giro si ferma;
    - il suono si scarica e parte solo dopo un tocco.
-   Espone window.Polvere. Ha bisogno di window.Middah. */
+   Dal 24 novembre 2026 la figura ha tre materie: fili, la prima che si vede, radiografia e polvere. Le prime due
+   si disegnano in linee.js; tempo, musica e nome detto restano qui e valgono per tutte.
+   Espone window.Polvere. Ha bisogno di window.Middah e, per le linee, di window.Linee. */
 (function () {
   "use strict";
   const SEFIROT = [["כתר", 13], ["חכמה", 32], ["בינה", 50], ["חסד", 31], ["גבורה", 42], ["תפארת", 26],
@@ -33,6 +35,8 @@
     return K.reduce((b, k) => Math.abs(k - meta) < Math.abs(b - meta) ? k : b, K[0]);
   }
 
+  // la materia in vista: fili e radiografia si disegnano in linee.js su una tela loro, la polvere qui
+  let materia = "fili", haLinee = false;
   let tela, gl, quale = 0, KK = [], ki = 0, A, B, t0 = 0, ora = 0, tieni = TIENI, gira = false, inVista = true, avviso = () => {};
   const figura = i => { const [w, r] = SEFIROT[quale]; return Middah.figura(w, { r, k: KK[((i % KK.length) + KK.length) % KK.length] }); };
   /** I posti dei granelli lungo la linea della figura: x, y, lettera. */
@@ -253,11 +257,12 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
 
   function quadro(t) {
     let e = (t - t0 - tieni) / MIGRA;
-    if (e >= 1) { ki++; A = B; B = granelli(figura(ki + 1)); posti(); t0 = t; e = -1; intona(figura(ki), t); avviso(stato()); }
+    if (e >= 1) { ki++; A = B; B = granelli(figura(ki + 1)); posti(); if (haLinee) Linee.passa(figura(ki + 1)); t0 = t; e = -1; intona(figura(ki), t); avviso(stato()); }
     musica(t, e);
     // quanta luce: cresce mentre la figura nuova si forma, è piena quando è nata, poi si posa piano
     const nascita = 1 + LUCE_NASCITA * (e >= 0 ? e * e : Math.exp(-(t - t0) / 3.5));
-    if (inVista) disegna(t, e < 0 ? 0 : dolce(e), nascita); // fuori vista il tempo e la musica vanno avanti, il disegno no
+    // fuori vista il tempo e la musica vanno avanti, il disegno no
+    if (inVista) { if (materia === "polvere") { if (gl) disegna(t, e < 0 ? 0 : dolce(e), nascita); } else Linee.quadro(materia, t, t - t0, tieni, e, nascita); }
   }
 
   /** Sceglie la sefirah. La polvere in vista migra verso la prima figura della famiglia nuova, senza nero. */
@@ -265,7 +270,7 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
     const prima = A == null; let e = prima ? 0 : (ora - t0 - tieni) / MIGRA;
     quale = i; const [w, r] = SEFIROT[i], m = Middah.pulisci(w).length;
     KK = Middah.kAmmessi(r, m).filter(k => k <= r * m / 2); ki = Math.max(0, KK.indexOf(kVicino(r, m)));
-    if (prima) { A = granelli(figura(ki)); B = granelli(figura(ki + 1)); t0 = ora; intona(figura(ki), ora); }
+    if (prima) { A = granelli(figura(ki)); B = granelli(figura(ki + 1)); t0 = ora; intona(figura(ki), ora); if (haLinee) Linee.inizia(figura(ki), figura(ki + 1)); }
     else {
       if (e > 0) { // a metà di un passaggio: la polvere riparte da dove si trova, nebbia compresa
         e = dolce(Math.min(1, e)); const neb = SFUMA * Math.sin(Math.PI * e), C = new Float32Array(M * 3);
@@ -273,15 +278,19 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
         A = C; detto = false;
       }
       ki--; B = granelli(figura(ki + 1)); t0 = ora - tieni;
+      if (haLinee) Linee.cambia(figura(ki + 1), e > 0 ? e : 0);
     }
     posti(); avviso(stato());
   }
+  const MATERIE = ["fili", "radiografia", "polvere"];
+  /** Sceglie la materia. Il tempo, la figura e la musica non cambiano: cambia solo di che cosa è fatta la figura. */
+  function sceglie(nome) { if (!MATERIE.includes(nome) || (nome === "polvere" ? !gl : !haLinee)) return; materia = nome; regola(); avviso(stato()); }
   /** Chiama subito la sorella, se la figura è ferma. */
   function sorella() { if (ora - t0 < tieni) t0 = ora - tieni; }
   /** Lo stato per la pagina: quale sefirah, quale figura fra quante, la svolta in gradi, il suono. In viaggio vale la figura d'arrivo. */
   function stato() {
     const inViaggio = ora - t0 >= tieni, n = ((((inViaggio ? ki + 1 : ki) % KK.length) + KK.length) % KK.length), F = figura(n);
-    return { sefirah: quale, figura: n + 1, figure: KK.length, svolta: F.theta_gradi, suono: !!AC && voluto, contesto: AC ? AC.state : null, inViaggio };
+    return { sefirah: quale, figura: n + 1, figure: KK.length, svolta: F.theta_gradi, suono: !!AC && voluto, contesto: AC ? AC.state : null, inViaggio, materia, polvere: !!gl };
   }
 
   /* ------------------------------------------------------------------ il giro */
@@ -290,13 +299,13 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
     if (!gira) return; requestAnimationFrame(giro);
     if (adesso - ultimo < 1000 / QUADRI - 4) return;
     const dt = Math.min(0.25, (adesso - ultimo) / 1000); if (ultimo) cadenze.push(adesso - ultimo); ultimo = adesso; ora += dt;
-    const a = performance.now(); quadro(ora); if (Polvere.misuraFine) gl.finish(); tempi.push(performance.now() - a);
+    const a = performance.now(); quadro(ora); if (Polvere.misuraFine && gl && materia === "polvere") gl.finish(); tempi.push(performance.now() - a);
     if (tempi.length > 600) { tempi.shift(); cadenze.shift(); }
     if (stato().inViaggio !== vecchio) { vecchio = stato().inViaggio; avviso(stato()); }
   }
   function regola() {
     // con il suono acceso il pezzo continua anche quando la pagina scorre e la tela esce di vista; si ferma solo a scheda nascosta
-    const deve = !document.hidden && !!gl && (inVista || (!!AC && voluto));
+    const deve = !document.hidden && (materia === "polvere" ? !!gl : haLinee) && (inVista || (!!AC && voluto));
     if (deve && !gira) { gira = true; ultimo = 0; requestAnimationFrame(giro); if (AC && voluto) AC.resume(); }
     else if (!deve && gira) { gira = false; if (AC) AC.suspend(); }
   }
@@ -304,10 +313,14 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
   async function avvia(telaPagina, opzioni = {}) {
     tela = telaPagina; avviso = opzioni.avviso || avviso;
     try { await document.fonts.load(`${CORPO}px "Frank Ruhl Libre"`, "אבג"); } catch (e) {}
+    haLinee = !!(opzioni.telaLinee && window.Linee && Linee.avvia(opzioni.telaLinee));
+    if (MATERIE.includes(opzioni.materia)) materia = opzioni.materia;
     parola(opzioni.sefirah || 0);
     let va = false; try { va = prepara(); } catch (e) { console.warn("Polvere:", e); gl = null; }
-    if (!va) return false;
-    posti();
+    // senza WebGL 2 la polvere non si disegna, ma fili e radiografia sì; senza la tela delle linee resta la polvere
+    if (!va && !haLinee) return false;
+    if (!va && materia === "polvere") materia = "fili"; if (!haLinee) materia = "polvere";
+    if (va) posti();
     tela.addEventListener("webglcontextlost", ev => { ev.preventDefault(); gl = null; regola(); });
     tela.addEventListener("webglcontextrestored", () => { try { prepara(); posti(); } catch (e) { gl = null; } regola(); });
     new ResizeObserver(misura).observe(tela);
@@ -320,6 +333,6 @@ void main(){ vec3 c = texture(netta, uv).rgb + 0.6*texture(stretta, uv).rgb + 0.
     const ord = a => [...a].sort((x, y) => x - y), med = a => a.reduce((s, v) => s + v, 0) / (a.length || 1), o = ord(tempi), c = ord(cadenze);
     return { quadri: tempi.length, lato, lavoro_medio: +med(tempi).toFixed(2), lavoro_95: +(o[Math.floor(o.length * 0.95)] || 0).toFixed(2), lavoro_peggiore: +(o[o.length - 1] || 0).toFixed(2), cadenza_media: +med(cadenze).toFixed(1), cadenza_95: +(c[Math.floor(c.length * 0.95)] || 0).toFixed(1), mezzoFloat };
   }
-  const Polvere = { avvia, parola, sorella, suono, stato, tempo, SEFIROT, misuraFine: false };
+  const Polvere = { avvia, parola, sorella, suono, stato, tempo, materia: sceglie, SEFIROT, misuraFine: false };
   window.Polvere = Polvere;
 })();
