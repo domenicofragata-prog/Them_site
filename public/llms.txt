@@ -15,6 +15,9 @@
 - [Formazione / Training](https://themproject.ai/formazione): teaching artificial intelligence through culture and image — techno-ethics and philosophy of technology, AI creativity tools, AI for public administration and business.
 - [Divulgazione / Writing](https://themproject.ai/blog): essays and articles where the philosophy of technology meets symbolism and myth, from the column "Visioni Sintetiche".
 - [Vibe coding](https://themproject.ai/vibe-coding): interfaces and tools born from dialogue with the machine, including THEM Visual Tools — a suite that turns images, video, audio and words into character-based art.
+- [Meditazioni cabalistiche / Kabbalistic Meditations](https://themproject.ai/en/kabbalistic-meditations): eleven generative meditations on the Kabbalistic Tree of Life. The Hebrew name of each of the ten sefirot, and of Da'at, is drawn as a closed figure made of its own letters: each letter becomes a stroke as long as its chamber in the table of Aiq Bekar, the line turns by a fixed angle, and the word repeats until the line closes. A voice says the name and a harp plays it letter by letter. The work is inspired by the tradition of Kabbalah and does not claim to be one of its practices. Italian version: https://themproject.ai/meditazioni-cabalistiche
+- [Preparatory plates](https://themproject.ai/en/kabbalistic-meditations/plates): how each figure is born and why it closes, the rule, and the reason for the measure given to each sefirah.
+- [The eleven meditations on video](https://www.youtube.com/playlist?list=PLNiY7-vHQ4ag): Keter, Chokhmah, Binah, Chesed, Gevurah, Tiferet, Netzach, Hod, Yesod, Malkhut, Da'at, about twenty minutes each.
 
 ## Contact
 - Email: domenico.fragata@gmail.com

@@ -53,7 +53,9 @@ const TAVOLE = [
 const T = {
   it: {
     titolo: 'Tavole preparatorie', opera: 'Meditazioni cabalistiche',
-    descrizione: 'Come nasce una figura delle Meditazioni cabalistiche e perché si chiude: le stanze, il tratto, la svolta, la misura, la famiglia, e le tavole di lavoro.',
+    descrizione: 'Come nasce una figura delle Meditazioni cabalistiche e perché si chiude: le nove stanze di Aiq Bekar, le misure delle sefirot, la famiglia, e le tavole di lavoro.',
+    titoloPagina: 'Tavole preparatorie delle Meditazioni cabalistiche: sefirot, Aiq Bekar, Albero della vita',
+    temi: ['cabala', 'sefirot', 'Albero della vita', 'Aiq Bekar', 'lettere ebraiche'],
     motto: 'Come nasce una figura, e perché si chiude.',
     blocchi: [
       ['Il tratto.', 'Ogni lettera diventa un tratto, lungo quanto il numero della sua stanza. כתר Keter, corona, ha tre lettere: כ kaf sta nella stanza 2, ת tav nella 4, ר resh nella 2. La parola è una spezzata di tre tratti lunghi 2, 4 e 2.'],
@@ -74,7 +76,9 @@ const T = {
   },
   en: {
     titolo: 'Preparatory plates', opera: 'Kabbalistic Meditations',
-    descrizione: 'How a figure of the Kabbalistic Meditations is born and why it closes: the chambers, the stroke, the turning angle, the measure, the family, and the working plates.',
+    descrizione: 'How a figure of the Kabbalistic Meditations is born and why it closes: the nine chambers of Aiq Bekar, the measures of the sefirot, the family, and the working plates.',
+    titoloPagina: 'Preparatory plates of the Kabbalistic Meditations: sefirot, Aiq Bekar, Tree of Life',
+    temi: ['Kabbalah', 'sefirot', 'Tree of Life', 'Aiq Bekar', 'Hebrew letters'],
     motto: 'How a figure is born, and why it closes.',
     blocchi: [
       ['The stroke.', 'Each letter becomes a stroke, as long as the number of its chamber. כתר Keter, crown, has three letters: כ kaf is in chamber 2, ת tav in 4, ר resh in 2. The word is a broken line of three strokes, 2, 4 and 2 long.'],
@@ -96,16 +100,35 @@ const T = {
 }[lingua];
 const elenco = TAVOLE.map((t) => ({ n: t.n, file: t.file, titolo: t[lingua][0] }));
 const parole = { lingua, nomi: NOMI, sensi: SENSI[lingua], misura: T.misura, figura: T.figura, di: T.di, svolta: T.svolta, giri: T.giri, tratto: T.tratto, ripetizione: T.ripetizione, chiusa: T.chiusa, tratti: T.tratti, lunghezza: T.lunghezza, totale: T.totale, tavola: T.tavola };
+// Quello che la pagina dichiara ai motori di ricerca: un articolo sull'opera, con autore e temi.
+const dati = {
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: T.titoloPagina, description: T.descrizione, inLanguage: lingua, url: `https://themproject.ai${VIE[lingua]}`,
+  image: 'https://themproject.ai/meditazioni/og.jpg', keywords: T.temi.join(', '),
+  about: T.temi.slice(0, 4).map((t) => ({ '@type': 'Thing', name: t })),
+  author: { '@type': 'Person', '@id': 'https://themproject.ai/#person', name: 'Domenico Fragata', url: 'https://themproject.ai/' },
+  isPartOf: { '@id': 'https://themproject.ai/meditazioni-cabalistiche#opera' },
+};
 ---
 <!doctype html>
 <html lang={lingua}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{T.titolo} · {T.opera} · THEM</title>
+<title>{T.titoloPagina} · THEM</title>
 <meta name="description" content={T.descrizione}>
-<meta property="og:title" content={`${T.titolo} · ${T.opera} · THEM`}>
+<meta name="keywords" content={T.temi.join(', ')}>
+<meta name="author" content="Domenico Fragata">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="THEM">
+<meta property="og:title" content={`${T.titoloPagina} · THEM`}>
 <meta property="og:description" content={T.descrizione}>
+<meta property="og:url" content={`https://themproject.ai${VIE[lingua]}`}>
+<meta property="og:image" content="https://themproject.ai/meditazioni/og.jpg">
+<meta property="og:locale" content={lingua === 'it' ? 'it_IT' : 'en_US'}>
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="x-default" href={`https://themproject.ai${VIE.it}`}>
+<script type="application/ld+json" set:html={JSON.stringify(dati)} />
 <link rel="canonical" href={`https://themproject.ai${VIE[lingua]}`}>
 <link rel="alternate" hreflang="it" href={`https://themproject.ai${VIE.it}`}>
 <link rel="alternate" hreflang="en" href={`https://themproject.ai${VIE.en}`}>
